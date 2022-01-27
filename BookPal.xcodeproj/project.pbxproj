@@ -14,6 +14,9 @@
 		241B36D727A335A6002C233A /* BookPalTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 241B36D627A335A6002C233A /* BookPalTests.swift */; };
 		241B36E127A335A6002C233A /* BookPalUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 241B36E027A335A6002C233A /* BookPalUITests.swift */; };
 		241B36E327A335A6002C233A /* BookPalUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 241B36E227A335A6002C233A /* BookPalUITestsLaunchTests.swift */; };
+		241B36F027A338EA002C233A /* TimeFunctions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 241B36EF27A338EA002C233A /* TimeFunctions.swift */; };
+		241B36F227A33BF3002C233A /* Model.swift in Sources */ = {isa = PBXBuildFile; fileRef = 241B36F127A33BF3002C233A /* Model.swift */; };
+		241B36F427A33F0D002C233A /* TimeFunctionsTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 241B36F327A33F0D002C233A /* TimeFunctionsTest.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -44,6 +47,9 @@
 		241B36DC27A335A6002C233A /* BookPalUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = BookPalUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		241B36E027A335A6002C233A /* BookPalUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BookPalUITests.swift; sourceTree = "<group>"; };
 		241B36E227A335A6002C233A /* BookPalUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BookPalUITestsLaunchTests.swift; sourceTree = "<group>"; };
+		241B36EF27A338EA002C233A /* TimeFunctions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimeFunctions.swift; sourceTree = "<group>"; };
+		241B36F127A33BF3002C233A /* Model.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Model.swift; sourceTree = "<group>"; };
+		241B36F327A33F0D002C233A /* TimeFunctionsTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimeFunctionsTest.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -98,6 +104,8 @@
 				241B36C727A335A5002C233A /* ContentView.swift */,
 				241B36C927A335A6002C233A /* Assets.xcassets */,
 				241B36CB27A335A6002C233A /* Preview Content */,
+				241B36EF27A338EA002C233A /* TimeFunctions.swift */,
+				241B36F127A33BF3002C233A /* Model.swift */,
 			);
 			path = BookPal;
 			sourceTree = "<group>";
@@ -114,6 +122,7 @@
 			isa = PBXGroup;
 			children = (
 				241B36D627A335A6002C233A /* BookPalTests.swift */,
+				241B36F327A33F0D002C233A /* TimeFunctionsTest.swift */,
 			);
 			path = BookPalTests;
 			sourceTree = "<group>";
@@ -259,6 +268,8 @@
 			files = (
 				241B36C827A335A5002C233A /* ContentView.swift in Sources */,
 				241B36C627A335A5002C233A /* BookPalApp.swift in Sources */,
+				241B36F027A338EA002C233A /* TimeFunctions.swift in Sources */,
+				241B36F227A33BF3002C233A /* Model.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -266,6 +277,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				241B36F427A33F0D002C233A /* TimeFunctionsTest.swift in Sources */,
 				241B36D727A335A6002C233A /* BookPalTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
