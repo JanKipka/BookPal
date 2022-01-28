@@ -43,6 +43,14 @@ class DataController: ObservableObject {
             if let error = error {
                 fatalError("Error: \(error.localizedDescription)")
             }
+            
+            self.container.viewContext.mergePolicy = NSMergePolicy.mergeByPropertyObjectTrump
+            
+            let user = User(context: self.container.viewContext)
+            user.firstName = "John"
+            user.lastName = "Test"
+            user.username = "johntest1"
+            self.save()
         }
     }
     
@@ -52,9 +60,21 @@ class DataController: ObservableObject {
         if context.hasChanges {
             do {
                 try context.save()
-            } catch {
-                // Show some error here
+            } catch let error {
+                print(error.localizedDescription)
             }
         }
+    }
+    
+    func deleteAll(entityName name: String) {
+        let fetchRequest: NSFetchRequest<NSFetchRequestResult> = NSFetchRequest(entityName: name)
+        let deleteRequest = NSBatchDeleteRequest(fetchRequest: fetchRequest)
+        do {
+            save()
+            try container.viewContext.execute(deleteRequest)
+        } catch let error {
+            print(error.localizedDescription)
+        }
+        
     }
 }
