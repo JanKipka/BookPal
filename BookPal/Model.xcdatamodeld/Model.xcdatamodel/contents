@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="19574" systemVersion="21C52" minimumToolsVersion="Automatic" sourceLanguage="Swift" userDefinedModelVersionIdentifier="">
+    <entity name="Author" representedClassName="Author" syncable="YES" codeGenerationType="class">
+        <attribute name="firstName" optional="YES" attributeType="String"/>
+        <attribute name="id" optional="YES" attributeType="UUID" usesScalarValueType="NO"/>
+        <attribute name="lastName" optional="YES" attributeType="String"/>
+        <relationship name="books" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Book" inverseName="authors" inverseEntity="Book"/>
+    </entity>
+    <entity name="Book" representedClassName="Book" syncable="YES" codeGenerationType="class">
+        <attribute name="cover" optional="YES" attributeType="URI"/>
+        <attribute name="id" optional="YES" attributeType="UUID" usesScalarValueType="NO"/>
+        <attribute name="isbn" optional="YES" attributeType="String"/>
+        <attribute name="numOfPages" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="title" optional="YES" attributeType="String"/>
+        <relationship name="authors" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Author" inverseName="books" inverseEntity="Author"/>
+        <relationship name="genre" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Genre" inverseName="books" inverseEntity="Genre"/>
+        <relationship name="readingCycles" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="ReadingCycle" inverseName="book" inverseEntity="ReadingCycle"/>
+        <relationship name="user" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="User" inverseName="books" inverseEntity="User"/>
+        <uniquenessConstraints>
+            <uniquenessConstraint>
+                <constraint value="isbn"/>
+            </uniquenessConstraint>
+        </uniquenessConstraints>
+    </entity>
+    <entity name="Genre" representedClassName="Genre" syncable="YES" codeGenerationType="class">
+        <attribute name="id" optional="YES" attributeType="UUID" usesScalarValueType="NO"/>
+        <attribute name="name" optional="YES" attributeType="String"/>
+        <relationship name="books" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Book" inverseName="genre" inverseEntity="Book"/>
+        <uniquenessConstraints>
+            <uniquenessConstraint>
+                <constraint value="name"/>
+            </uniquenessConstraint>
+        </uniquenessConstraints>
+    </entity>
+    <entity name="ReadingActivity" representedClassName="ReadingActivity" syncable="YES" codeGenerationType="class">
+        <attribute name="finishedAt" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
+        <attribute name="id" optional="YES" attributeType="UUID" usesScalarValueType="NO"/>
+        <attribute name="notes" optional="YES" attributeType="String"/>
+        <attribute name="startedAt" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
+        <relationship name="readingCycle" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="ReadingCycle" inverseName="readingActivity" inverseEntity="ReadingCycle"/>
+    </entity>
+    <entity name="ReadingCycle" representedClassName="ReadingCycle" syncable="YES" codeGenerationType="class">
+        <attribute name="active" optional="YES" attributeType="Boolean" usesScalarValueType="YES"/>
+        <attribute name="finishedAt" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
+        <attribute name="id" optional="YES" attributeType="UUID" usesScalarValueType="NO"/>
+        <attribute name="notes" optional="YES" attributeType="String"/>
+        <attribute name="remainingTime" optional="YES" attributeType="Integer 32" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="startedAt" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
+        <relationship name="book" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Book" inverseName="readingCycles" inverseEntity="Book"/>
+        <relationship name="readingActivity" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="ReadingActivity" inverseName="readingCycle" inverseEntity="ReadingActivity"/>
+    </entity>
+    <entity name="User" representedClassName="User" syncable="YES" codeGenerationType="class">
+        <attribute name="firstName" optional="YES" attributeType="String"/>
+        <attribute name="lastName" optional="YES" attributeType="String"/>
+        <attribute name="username" optional="YES" attributeType="String"/>
+        <relationship name="books" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Book" inverseName="user" inverseEntity="Book"/>
+        <uniquenessConstraints>
+            <uniquenessConstraint>
+                <constraint value="username"/>
+            </uniquenessConstraint>
+        </uniquenessConstraints>
+    </entity>
+    <elements>
+        <element name="Author" positionX="-18" positionY="108" width="128" height="89"/>
+        <element name="Book" positionX="-36" positionY="27" width="128" height="164"/>
+        <element name="Genre" positionX="-54" positionY="-9" width="128" height="74"/>
+        <element name="ReadingActivity" positionX="0" positionY="99" width="128" height="104"/>
+        <element name="ReadingCycle" positionX="-18" positionY="81" width="128" height="149"/>
+        <element name="User" positionX="18" positionY="117" width="128" height="89"/>
+    </elements>
+</model>
