@@ -12,6 +12,7 @@ struct ContentView: View {
     @FetchRequest(sortDescriptors: []) var users: FetchedResults<User>
     @FetchRequest(sortDescriptors: []) var books: FetchedResults<Book>
     @FetchRequest(sortDescriptors: []) var genres: FetchedResults<Genre>
+    @FetchRequest(sortDescriptors: []) var cycles: FetchedResults<ReadingCycle>
     @Environment(\.managedObjectContext) var moc
     let dataController = DataController.shared
     var user: User {
@@ -20,7 +21,8 @@ struct ContentView: View {
     @State var bookTitle: String = ""
     @State var genreName: String = ""
     @State var selectedGenre: Genre = Genre()
-    var id = UUID()
+    @State var selectedBook: Book = Book()
+    @State var activeCycles: [ReadingCycle] = []
     
     var body: some View {
         NavigationView {
@@ -57,9 +59,23 @@ struct ContentView: View {
                         }
                     }
                 }
-                Section("All books") {
-                    List(books) { book in
-                        Text(book.title ?? "")
+                Section("Reading cycles") {
+                    Picker("Book", selection: $selectedBook) {
+                        ForEach(books, id: \.self) { book in
+                            Text(book.title ?? "").tag(book)
+                        }
+                    }
+                    Button("Add reading cycle") {
+                        let cycle = ReadingCycle(context: moc)
+                        cycle.startedAt = Date()
+                        cycle.active = true
+                        cycle.book = selectedBook
+                        cycle.id = UUID()
+                        dataController.save()
+                        activeCycles = filterCycles()
+                    }
+                    List(activeCycles) {
+                        Text(formatDate($0.startedAt ?? Date()))
                     }
                 }
                 Button("Delete All") {
@@ -67,9 +83,24 @@ struct ContentView: View {
                     dataController.deleteAll(entityName: "Book")
                 }
             }
-        }.navigationTitle("BookPal")
+        }.navigationTitle("BookPal").onAppear() {
+            activeCycles = filterCycles()
+        }
+    }
+    
+    func filterCycles() -> [ReadingCycle] {
+        return cycles.filter({$0.active})
+    }
+    
+    func formatDate(_ d: Date) -> String {
+        let formatter = DateFormatter()
+        formatter.dateStyle = .full
+        formatter.locale = Locale(identifier: "de_DE")
+        return formatter.string(from: d)
     }
 }
+
+
 
 struct ContentView_Previews: PreviewProvider {
     static var previews: some View {
