@@ -29,6 +29,8 @@ public struct Authors {
     init(_ names: [String]) {
         self.namesArray = names
     }
-    
-    
+}
+
+enum BookPalError: Error {
+    case runtimeError(String)
 }

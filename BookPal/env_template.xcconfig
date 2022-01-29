@@ -1,0 +1,15 @@
+//
+//  env_template.xcconfig
+//  BookPal
+//
+//  Created by Jan Kipka on 29.01.22.
+//
+
+// Configuration settings file format documentation can be found at:
+// https://help.apple.com/xcode/#/dev745c5c974
+
+// Rename this file to env.xcconfig
+// Verify that the file is set in your project configuration in the debug section
+
+// Configure an API Key for the Google Books API
+// API_KEY=
