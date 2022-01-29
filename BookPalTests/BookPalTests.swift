@@ -8,16 +8,16 @@
 import XCTest
 @testable import BookPal
 
-class Book {
+class TestBook {
     var title: String
     var authors: Authors
     var isbn: String
     var cover: String?
     var numOfPages: Int
-    var genre: Genre
-    var readingCycles: [ReadingCycle]
+    var genre: TestGenre
+    var readingCycles: [TestReadingCycle]
     
-    init(title: String, authors: Authors, isbn: String, cover: String?, numOfPages: Int, genre: Genre) {
+    init(title: String, authors: Authors, isbn: String, cover: String?, numOfPages: Int, genre: TestGenre) {
         self.title = title
         self.authors = authors
         self.isbn = isbn
@@ -28,30 +28,30 @@ class Book {
         genre.addBook(self)
     }
     
-    func addReadingCycle(_ cycle: ReadingCycle) {
+    func addReadingCycle(_ cycle: TestReadingCycle) {
         self.readingCycles.append(cycle)
     }
 }
 
-class Genre {
+class TestGenre {
     var name: String
-    var books: [Book]
+    var books: [TestBook]
     
     init(name: String) {
         self.name = name
         books = []
     }
     
-    func addBook(_ book: Book) {
+    func addBook(_ book: TestBook) {
         self.books.append(book)
     }
 }
 
-class ReadingCycle {
+class TestReadingCycle {
     var startetAt: Date
     var finishedAt: Date
-    var book: Book
-    var readingActivities: [ReadingActivity]
+    var book: TestBook
+    var readingActivities: [TestReadingActivity]
     var notes: String?
     var remainingTime: TimeUnit {
         get {
@@ -82,7 +82,7 @@ class ReadingCycle {
         }
     }
     
-    init(startedAt: Date, finishedAt: Date, book: Book) {
+    init(startedAt: Date, finishedAt: Date, book: TestBook) {
         self.startetAt = startedAt
         self.finishedAt = finishedAt
         self.book = book
@@ -111,13 +111,13 @@ class ReadingCycle {
         return totalPages - amountOfPagesRead
     }
     
-    func addReadingActivity(_ readingActivity: ReadingActivity) {
+    func addReadingActivity(_ readingActivity: TestReadingActivity) {
         self.readingActivities.append(readingActivity)
     }
     
 }
 
-class ReadingActivity {
+class TestReadingActivity {
     var startetAt: Date
     var finishedAt: Date
     var amountOfPagesRead: Int
@@ -144,20 +144,20 @@ class ReadingActivity {
 class BookPalTests: XCTestCase {
     
     func testNewReadingCycleScenario() {
-        let genre = Genre(name: "Horror")
-        let book = Book(title: "Test", authors: Authors(["Michael Test"]), isbn: "1234562731^", cover: "", numOfPages: 470, genre: genre)
+        let genre = TestGenre(name: "Horror")
+        let book = TestBook(title: "Test", authors: Authors(["Michael Test"]), isbn: "1234562731^", cover: "", numOfPages: 470, genre: genre)
         XCTAssertEqual(book.authors.names, "Michael Test")
         
         var startDate = Date()
         let timePassedReadingTheBook = 430800
         let endDate = startDate.addingTimeInterval(TimeInterval(timePassedReadingTheBook))
-        let cycle = ReadingCycle(startedAt: startDate, finishedAt: endDate, book: book)
+        let cycle = TestReadingCycle(startedAt: startDate, finishedAt: endDate, book: book)
         
         let endDateFirstActivity = startDate.addingTimeInterval(TimeInterval(5400))
         var pagesLeft = book.numOfPages
         var amountOfPagesRead = 90
         pagesLeft = pagesLeft - amountOfPagesRead
-        let readingActivity1 = ReadingActivity(startedAt: startDate, finishedAt: endDateFirstActivity, amountOfPagesRead: amountOfPagesRead)
+        let readingActivity1 = TestReadingActivity(startedAt: startDate, finishedAt: endDateFirstActivity, amountOfPagesRead: amountOfPagesRead)
         cycle.addReadingActivity(readingActivity1)
         XCTAssertEqual(cycle.totalPagesRead, 90)
         XCTAssertEqual(cycle.averagePagesPerMinute, 1)
@@ -168,7 +168,7 @@ class BookPalTests: XCTestCase {
         let endDateSecondActivty = startDate.addingTimeInterval(TimeInterval(7800))
         amountOfPagesRead = 260
         pagesLeft = pagesLeft - amountOfPagesRead
-        let readingActivity2 = ReadingActivity(startedAt: startDate, finishedAt: endDateSecondActivty, amountOfPagesRead: amountOfPagesRead)
+        let readingActivity2 = TestReadingActivity(startedAt: startDate, finishedAt: endDateSecondActivty, amountOfPagesRead: amountOfPagesRead)
         cycle.addReadingActivity(readingActivity2)
         XCTAssertEqual(cycle.totalPagesRead, 350)
         XCTAssertEqual(cycle.averagePagesPerMinute, 1.5)
@@ -177,7 +177,7 @@ class BookPalTests: XCTestCase {
         let pauseAfterSecondActivity = 172800
         startDate = endDateSecondActivty.addingTimeInterval(TimeInterval(pauseAfterSecondActivity))
         let endDateThirdActivity = endDate
-        let readingActivity3 = ReadingActivity(startedAt: startDate, finishedAt: endDateThirdActivity, amountOfPagesRead: pagesLeft)
+        let readingActivity3 = TestReadingActivity(startedAt: startDate, finishedAt: endDateThirdActivity, amountOfPagesRead: pagesLeft)
         cycle.addReadingActivity(readingActivity3)
         XCTAssertEqual(cycle.totalPagesRead, 470)
         XCTAssertEqual(cycle.averagePagesPerMinute, 4/3)
