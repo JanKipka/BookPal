@@ -22,13 +22,13 @@ struct ContentView: View {
     
     var body: some View {
         NavigationView {
-//            if !self.$hasActiveCycles.wrappedValue {
-//                NavigationLink("Start a new book") {
-//                    navigateToNewCycleView = true
-//                }
-//            } else {
-//
-//            }
+            if !self.$hasActiveCycles.wrappedValue {
+                NavigationLink(destination: NewReadingCycleView()) {
+                    Text("Start a new book")
+                }
+            } else {
+                Text("You're currently reading \(activeCycles.count) books")
+            }
             
             Button("Delete All") {
                 dataController.deleteAll(entityName: "Genre")
@@ -38,15 +38,16 @@ struct ContentView: View {
         }.navigationTitle("BookPal").onAppear() {
             activeCycles = filterCycles()
             hasActiveCycles = !activeCycles.isEmpty
-        }.task {
-            do {
-                try await apiController.queryForBooks("Harry Potter") { (results) in
-                    print(results!)
-                }
-            } catch let error {
-                print(error.localizedDescription)
-            }
         }
+//        .task {
+//            do {
+//                try await apiController.queryForBooks("Harry Potter") { (results) in
+//                    print(results!)
+//                }
+//            } catch let error {
+//                print(error.localizedDescription)
+//            }
+//        }
     }
     
     func filterCycles() -> [ReadingCycle] {

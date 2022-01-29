@@ -21,6 +21,7 @@
 		243598A927A493CD00764CD3 /* DataController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 243598A827A493CD00764CD3 /* DataController.swift */; };
 		24DD566727A55C11006949DB /* BooksAPIController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24DD566627A55C11006949DB /* BooksAPIController.swift */; };
 		24DD566D27A57B79006949DB /* ReadingCycleView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24DD566C27A57B79006949DB /* ReadingCycleView.swift */; };
+		24DD566F27A5A537006949DB /* BookAutocompletion.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24DD566E27A5A537006949DB /* BookAutocompletion.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -61,6 +62,7 @@
 		24DD566A27A55D55006949DB /* env.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = env.xcconfig; sourceTree = "<group>"; };
 		24DD566B27A55EA0006949DB /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		24DD566C27A57B79006949DB /* ReadingCycleView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReadingCycleView.swift; sourceTree = "<group>"; };
+		24DD566E27A5A537006949DB /* BookAutocompletion.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BookAutocompletion.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -124,6 +126,7 @@
 				24DD566927A55D13006949DB /* env_template.xcconfig */,
 				24DD566A27A55D55006949DB /* env.xcconfig */,
 				24DD566C27A57B79006949DB /* ReadingCycleView.swift */,
+				24DD566E27A5A537006949DB /* BookAutocompletion.swift */,
 			);
 			path = BookPal;
 			sourceTree = "<group>";
@@ -287,6 +290,7 @@
 				241B36C827A335A5002C233A /* ContentView.swift in Sources */,
 				243598A927A493CD00764CD3 /* DataController.swift in Sources */,
 				241B36C627A335A5002C233A /* BookPalApp.swift in Sources */,
+				24DD566F27A5A537006949DB /* BookAutocompletion.swift in Sources */,
 				24DD566727A55C11006949DB /* BooksAPIController.swift in Sources */,
 				243598A727A4923E00764CD3 /* Model.xcdatamodeld in Sources */,
 				241B36F027A338EA002C233A /* TimeFunctions.swift in Sources */,
