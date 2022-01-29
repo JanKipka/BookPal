@@ -81,6 +81,7 @@ struct ContentView: View {
                 Button("Delete All") {
                     dataController.deleteAll(entityName: "Genre")
                     dataController.deleteAll(entityName: "Book")
+                    dataController.deleteAll(entityName: "ReadingCycle")
                 }
             }
         }.navigationTitle("BookPal").onAppear() {

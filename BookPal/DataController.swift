@@ -15,6 +15,8 @@ class DataController: ObservableObject {
     // Storage for Core Data
     let container: NSPersistentContainer
     
+    let modelName = "Model"
+    
     // A test configuration for SwiftUI previews
     static var preview: DataController = {
         let controller = DataController(inMemory: true)
@@ -33,7 +35,7 @@ class DataController: ObservableObject {
     init(inMemory: Bool = false) {
         // If you didn't name your model Main you'll need
         // to change this name below.
-        container = NSPersistentContainer(name: "Model")
+        container = NSPersistentContainer(name: modelName)
         
         if inMemory {
             container.persistentStoreDescriptions.first?.url = URL(fileURLWithPath: "/dev/null")
@@ -45,12 +47,6 @@ class DataController: ObservableObject {
             }
             
             self.container.viewContext.mergePolicy = NSMergePolicy.mergeByPropertyObjectTrump
-            
-            let user = User(context: self.container.viewContext)
-            user.firstName = "John"
-            user.lastName = "Test"
-            user.username = "johntest1"
-            self.save()
         }
     }
     

@@ -1,12 +1,18 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="19574" systemVersion="21C52" minimumToolsVersion="Automatic" sourceLanguage="Swift" userDefinedModelVersionIdentifier="">
+    <entity name="Author" representedClassName="Author" syncable="YES" codeGenerationType="class">
+        <attribute name="firstName" optional="YES" attributeType="String"/>
+        <attribute name="id" optional="YES" attributeType="UUID" usesScalarValueType="NO"/>
+        <attribute name="lastName" optional="YES" attributeType="String"/>
+        <relationship name="books" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Book" inverseName="authors" inverseEntity="Book"/>
+    </entity>
     <entity name="Book" representedClassName="Book" syncable="YES" codeGenerationType="class">
-        <attribute name="authors" optional="YES" attributeType="String"/>
         <attribute name="cover" optional="YES" attributeType="URI"/>
         <attribute name="id" optional="YES" attributeType="UUID" usesScalarValueType="NO"/>
         <attribute name="isbn" optional="YES" attributeType="String"/>
         <attribute name="numOfPages" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES"/>
         <attribute name="title" optional="YES" attributeType="String"/>
+        <relationship name="authors" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Author" inverseName="books" inverseEntity="Author"/>
         <relationship name="genre" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Genre" inverseName="books" inverseEntity="Genre"/>
         <relationship name="readingCycles" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="ReadingCycle" inverseName="book" inverseEntity="ReadingCycle"/>
         <relationship name="user" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="User" inverseName="books" inverseEntity="User"/>
@@ -55,10 +61,11 @@
         </uniquenessConstraints>
     </entity>
     <elements>
-        <element name="Genre" positionX="-54" positionY="-9" width="128" height="74"/>
         <element name="Book" positionX="-36" positionY="27" width="128" height="164"/>
-        <element name="ReadingCycle" positionX="-18" positionY="81" width="128" height="149"/>
+        <element name="Genre" positionX="-54" positionY="-9" width="128" height="74"/>
         <element name="ReadingActivity" positionX="0" positionY="99" width="128" height="104"/>
+        <element name="ReadingCycle" positionX="-18" positionY="81" width="128" height="149"/>
         <element name="User" positionX="18" positionY="117" width="128" height="89"/>
+        <element name="Author" positionX="-18" positionY="108" width="128" height="89"/>
     </elements>
 </model>
