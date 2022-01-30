@@ -10,80 +10,152 @@ import SwiftUI
 
 struct NewReadingCycleView: View {
     
-    @State var searchQuery: String = ""
-    @State var volumes: [Volume] = []
     @State var selectedVolume: VolumeInfo = VolumeInfo()
     @State var startedAtDate: Date = Date()
-    @State var selectionMade = false
     @State var titleAsString: String = ""
-    
-    @State var apiController: GoogleBooksAPIController = GoogleBooksAPIController()
+    @State var showingAlert = false
+    @State var readingCycle = ReadingCycle()
+    @State var showSearchSheet = false
     
     @Environment(\.managedObjectContext) var moc
+    @Environment(\.dismiss) var dismiss
     
     let dataController = DataController.shared
     
     var body: some View {
-            VStack {
-                Form {
-                    Section("Dates") {
-                        DatePicker("Start Date", selection: $startedAtDate)
-                            .padding(.horizontal, 10)
-                    }
-                    Section("Book") {
-                        TextField("Book Choice", text: $titleAsString)
-                            .disabled(true)
-                    }
-                    Button("Start reading") {
-                        
-                    }.disabled(!selectionMade)
-                    
-                    Section("Search") {
-                        TextField("Search for a book...", text: $searchQuery)
-                            .onChange(of: searchQuery) { query in
-                                if query.count >= 2 {
-                                    callApi()
-                                }
-                            }
-                    }
-                    
+        VStack {
+            Form {
+                Section("Dates") {
+                    DatePicker("Start Date", selection: $startedAtDate)
+                        .padding(.horizontal, 10)
                 }
-                .padding(.bottom, -50)
-                List {
-                    ForEach(volumes) { volume in
-                        Text(volume.volumeInfo.title!)
-                            .onTapGesture {
-                                selectedVolume = volume.volumeInfo
-                                titleAsString = selectedVolume.title!
-                                selectionMade = true
-                            }
+                Section("Book") {
+                    TextField("Book Choice", text: $titleAsString)
+                        .disabled(true)
+                }
+                Section("Search") {
+                    Button("Search for a Book") {
+                        showSearchSheet.toggle()
+                    }
+                    .sheet(isPresented: $showSearchSheet, onDismiss: {
+                        titleAsString = selectedVolume.title ?? ""
+                    }){
+                        SearchView(selectedVolume: $selectedVolume)
                     }
                 }
-                .listStyle(.grouped)
                 
+                Button("Start reading!") {
+                    createNewCycle()
+                }.disabled(titleAsString == "")
             }
-            .navigationBarHidden(true)
+            .padding(.bottom)
+            
+            
+        }
+        .alert(isPresented: $showingAlert) {
+            presentAlert()
+        }
+        .navigationBarTitle("Add a book")
+    }
+    
+    private func presentAlert() -> Alert {
+        Alert(
+            title: Text("The book was added. Do you want to start reading now?"),
+            primaryButton: .default(Text("Yes")) {
+                let readingActivity = ReadingActivity(context: moc)
+                readingActivity.startedAt = Date()
+                readingActivity.readingCycle = readingCycle
+                dataController.save()
+                navigateBack()
+            },
+            secondaryButton: .default(Text("No")) {
+                navigateBack()
+            }
+        )
     }
     
     private func createNewCycle() {
-        let readingCycle = ReadingCycle(context: moc)
+        readingCycle = ReadingCycle(context: moc)
         readingCycle.startedAt = startedAtDate
         readingCycle.active = true
         readingCycle.id = UUID()
-        
-        let bookAlreadySaved = !dataController.getAllSavedBooks().map({$0.isbn})
-            .filter({selectedVolume.industryIdentifiers!.map({$0.identifier}).contains($0)}).isEmpty
-        if (bookAlreadySaved) {
-            let book = dataController.getBookByISBN(selectedVolume.industryIdentifiers![0].identifier!)
+        let isbn = selectedVolume.industryIdentifiers![0].identifier! // for now always use the first available isbn
+        if let book = dataController.getBookByISBN(isbn) {
+            // already existing
+            readingCycle.book = book
         } else {
+            // add new book
             let book = Book(context: moc)
             for author in selectedVolume.authors! {
-                
+                let names = author.split(separator: " ")
+                if let aut = dataController.searchForPotentialAuthorMatch(firstName: String(names.first ?? ""), lastName: String(names.last ?? "")) {
+                    book.addToAuthors(aut)
+                } else {
+                    let aut = Author(context: moc)
+                    aut.id = UUID()
+                    aut.firstName = names.dropLast().joined(separator: " ")
+                    aut.lastName = String(names.last ?? "")
+                    book.addToAuthors(aut)
+                }
             }
+            book.isbn = isbn
+            book.title = selectedVolume.title!
+            book.numOfPages = Int16(selectedVolume.pageCount!)
+            let genreString = selectedVolume.mainCategory ?? selectedVolume.categories?.first ?? ""
+            if let genre = dataController.searchForGenreByString(genreString) {
+                book.genre = genre
+            } else {
+                if !genreString.isEmpty {
+                    let genre = Genre(context: moc)
+                    genre.name = genreString
+                    book.genre = genre
+                }
+            }
+            readingCycle.book = book
         }
-        
+        dataController.save()
+        showingAlert = true
+    }
+    
+    private func navigateBack() {
+        dismiss()
+    }
+    
+}
+
+struct SearchView: View {
+    
+    @State var searchQuery: String = ""
+    @State var volumes: [Volume] = []
+    @Binding var selectedVolume: VolumeInfo
+    @State var apiController: GoogleBooksAPIController = GoogleBooksAPIController()
+    @Environment(\.dismiss) var dismiss
+    
+    var body: some View {
+        VStack {
+            HStack {
+                Image(systemName: "magnifyingglass")
+                TextField("Search for a book...", text: $searchQuery)
+                    .onChange(of: searchQuery) { query in
+                        if query.count >= 2 {
+                            callApi()
+                        }
+                    }
+            }
+            .textFieldStyle(RoundedBorderTextFieldStyle())
             
-        
+            
+            List {
+                ForEach(volumes) { volume in
+                    VolumeInfoView(volumeInfo: volume.volumeInfo) {
+                        selectedVolume = volume.volumeInfo
+                        dismiss()
+                    }
+                }
+            }
+            .listStyle(.grouped)
+            
+        }.padding()
     }
     
     private func callApi() {
@@ -96,7 +168,6 @@ struct NewReadingCycleView: View {
                 print(error.localizedDescription)
             }
         }
-        
     }
     
     private func performQualityFilter(_ values: [Volume]) -> [Volume] {
@@ -106,7 +177,6 @@ struct NewReadingCycleView: View {
             .filter({$0.volumeInfo.categories != nil})
             .filter({$0.volumeInfo.industryIdentifiers != nil && $0.volumeInfo.industryIdentifiers!.count > 0})
     }
-    
 }
 
 struct VolumeInfoView: View {
@@ -136,7 +206,7 @@ struct VolumeInfoView: View {
             }
             VStack(alignment: .leading) {
                 Text(volumeInfo.title ?? "").fontWeight(.bold)
-                Text(String("Seitenzahl: \(volumeInfo.pageCount ?? 0)"))
+                Text(String("Page Count: \(volumeInfo.pageCount ?? 0)"))
             }
         }
         .onTapGesture(perform: onTap)

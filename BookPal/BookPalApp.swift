@@ -18,6 +18,9 @@ struct BookPalApp: App {
         WindowGroup {
             ContentView()
                 .environment(\.managedObjectContext, dataController.container.viewContext)
+                .onAppear {
+                    print("Documents Directory: ", FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).last ?? "Not Found!")
+                }
         }
         .onChange(of: scenePhase) { _ in
             dataController.save()

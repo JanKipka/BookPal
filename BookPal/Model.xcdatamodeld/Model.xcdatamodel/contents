@@ -37,7 +37,7 @@
         <attribute name="id" optional="YES" attributeType="UUID" usesScalarValueType="NO"/>
         <attribute name="notes" optional="YES" attributeType="String"/>
         <attribute name="startedAt" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
-        <relationship name="readingCycle" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="ReadingCycle" inverseName="readingActivity" inverseEntity="ReadingCycle"/>
+        <relationship name="readingCycle" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="ReadingCycle" inverseName="readingActivities" inverseEntity="ReadingCycle"/>
     </entity>
     <entity name="ReadingCycle" representedClassName="ReadingCycle" syncable="YES" codeGenerationType="class">
         <attribute name="active" optional="YES" attributeType="Boolean" usesScalarValueType="YES"/>
@@ -47,7 +47,7 @@
         <attribute name="remainingTime" optional="YES" attributeType="Integer 32" defaultValueString="0" usesScalarValueType="YES"/>
         <attribute name="startedAt" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
         <relationship name="book" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Book" inverseName="readingCycles" inverseEntity="Book"/>
-        <relationship name="readingActivity" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="ReadingActivity" inverseName="readingCycle" inverseEntity="ReadingActivity"/>
+        <relationship name="readingActivities" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="ReadingActivity" inverseName="readingCycle" inverseEntity="ReadingActivity"/>
     </entity>
     <entity name="User" representedClassName="User" syncable="YES" codeGenerationType="class">
         <attribute name="firstName" optional="YES" attributeType="String"/>
