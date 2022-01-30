@@ -15,6 +15,8 @@ class DataController: ObservableObject {
     
     let modelName = "Model"
     
+    let context: NSManagedObjectContext
+    
     static var preview: DataController = {
         let controller = DataController(inMemory: true)
         return controller
@@ -22,7 +24,7 @@ class DataController: ObservableObject {
     
     init(inMemory: Bool = false) {
         container = NSPersistentContainer(name: modelName)
-        
+        context = container.viewContext
         if inMemory {
             container.persistentStoreDescriptions.first?.url = URL(fileURLWithPath: "/dev/null")
         }
@@ -58,5 +60,96 @@ class DataController: ObservableObject {
             print(error.localizedDescription)
         }
         
+    }
+}
+
+extension DataController {
+    
+    func getAllSavedBooks() -> [Book] {
+        // Create a fetch request for a specific Entity type
+        let fetchRequest: NSFetchRequest<Book> = Book.fetchRequest()
+        
+        // Fetch all objects of one Entity type
+        do {
+            return try context.fetch(fetchRequest)
+        } catch let error {
+            print(error.localizedDescription)
+            return []
+        }
+    }
+    
+    func getBookByISBN(_ isbn: String) -> Book? {
+        let fetchRequest: NSFetchRequest<Book> = Book.fetchRequest()
+        fetchRequest.predicate = NSPredicate(
+            format: "isbn = %@", isbn
+        )
+        do {
+            return try context.fetch(fetchRequest).first
+        } catch let error {
+            print(error.localizedDescription)
+            return nil
+        }
+        
+    }
+    
+}
+
+extension DataController {
+    
+    func searchForPotentialAuthorMatch(firstName: String, lastName: String) -> Author? {
+        let fetchRequest: NSFetchRequest<Author> = Author.fetchRequest();
+        let firstNamePredicate = NSPredicate(format: "firstName BEGINSWITH %@", firstName)
+        let lastNamePredicate = NSPredicate(format: "lastName BEGINSWITH %@", lastName)
+        fetchRequest.predicate = NSCompoundPredicate(
+            andPredicateWithSubpredicates: [
+                firstNamePredicate,
+                lastNamePredicate
+            ]
+        )
+        do {
+            return try context.fetch(fetchRequest).first
+        } catch let error {
+            print(error.localizedDescription)
+            return nil
+        }
+    }
+    
+}
+
+extension DataController {
+    
+    func searchForGenreByString(_ s: String) -> Genre? {
+        let fetchRequest: NSFetchRequest<Genre> = Genre.fetchRequest()
+        fetchRequest.predicate = NSPredicate(
+            format: "name = %@", s
+        )
+        do {
+            return try context.fetch(fetchRequest).first
+        } catch let error {
+            print(error.localizedDescription)
+            return nil
+        }
+    }
+    
+}
+
+extension DataController {
+    
+    func getActiveReadingActivitiesForCycle(_ cycle: ReadingCycle) -> [ReadingActivity] {
+        let fetchRequest: NSFetchRequest<ReadingActivity> = ReadingActivity.fetchRequest()
+        let idPred = NSPredicate(format: "ANY readingCycle = %@", cycle)
+        let endDateNotSetPred = NSPredicate(format: "ANY finishedAt = nil")
+        fetchRequest.predicate = NSCompoundPredicate(
+            andPredicateWithSubpredicates: [
+                idPred,
+                endDateNotSetPred
+            ]
+        )
+        do {
+            return try context.fetch(fetchRequest)
+        } catch let error {
+            print(error.localizedDescription)
+            return []
+        }
     }
 }

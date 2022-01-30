@@ -19,6 +19,9 @@
 		241B36F427A33F0D002C233A /* TimeFunctionsTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 241B36F327A33F0D002C233A /* TimeFunctionsTest.swift */; };
 		243598A727A4923E00764CD3 /* Model.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 243598A527A4923E00764CD3 /* Model.xcdatamodeld */; };
 		243598A927A493CD00764CD3 /* DataController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 243598A827A493CD00764CD3 /* DataController.swift */; };
+		24DD566727A55C11006949DB /* BooksAPIController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24DD566627A55C11006949DB /* BooksAPIController.swift */; };
+		24DD566D27A57B79006949DB /* ReadingCycleView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24DD566C27A57B79006949DB /* ReadingCycleView.swift */; };
+		24DD567127A6CA14006949DB /* ViewComponents.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24DD567027A6CA14006949DB /* ViewComponents.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -54,6 +57,12 @@
 		241B36F327A33F0D002C233A /* TimeFunctionsTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimeFunctionsTest.swift; sourceTree = "<group>"; };
 		243598A627A4923E00764CD3 /* Model.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = Model.xcdatamodel; sourceTree = "<group>"; };
 		243598A827A493CD00764CD3 /* DataController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataController.swift; sourceTree = "<group>"; };
+		24DD566627A55C11006949DB /* BooksAPIController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BooksAPIController.swift; sourceTree = "<group>"; };
+		24DD566927A55D13006949DB /* env_template.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = env_template.xcconfig; sourceTree = "<group>"; };
+		24DD566A27A55D55006949DB /* env.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = env.xcconfig; sourceTree = "<group>"; };
+		24DD566B27A55EA0006949DB /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
+		24DD566C27A57B79006949DB /* ReadingCycleView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReadingCycleView.swift; sourceTree = "<group>"; };
+		24DD567027A6CA14006949DB /* ViewComponents.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewComponents.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -104,14 +113,20 @@
 		241B36C427A335A5002C233A /* BookPal */ = {
 			isa = PBXGroup;
 			children = (
+				24DD566B27A55EA0006949DB /* Info.plist */,
 				241B36C527A335A5002C233A /* BookPalApp.swift */,
 				241B36C727A335A5002C233A /* ContentView.swift */,
+				24DD567027A6CA14006949DB /* ViewComponents.swift */,
 				241B36C927A335A6002C233A /* Assets.xcassets */,
 				241B36CB27A335A6002C233A /* Preview Content */,
 				241B36EF27A338EA002C233A /* TimeFunctions.swift */,
 				241B36F127A33BF3002C233A /* Helpers.swift */,
 				243598A527A4923E00764CD3 /* Model.xcdatamodeld */,
 				243598A827A493CD00764CD3 /* DataController.swift */,
+				24DD566627A55C11006949DB /* BooksAPIController.swift */,
+				24DD566927A55D13006949DB /* env_template.xcconfig */,
+				24DD566A27A55D55006949DB /* env.xcconfig */,
+				24DD566C27A57B79006949DB /* ReadingCycleView.swift */,
 			);
 			path = BookPal;
 			sourceTree = "<group>";
@@ -274,9 +289,12 @@
 			files = (
 				241B36C827A335A5002C233A /* ContentView.swift in Sources */,
 				243598A927A493CD00764CD3 /* DataController.swift in Sources */,
+				24DD567127A6CA14006949DB /* ViewComponents.swift in Sources */,
 				241B36C627A335A5002C233A /* BookPalApp.swift in Sources */,
+				24DD566727A55C11006949DB /* BooksAPIController.swift in Sources */,
 				243598A727A4923E00764CD3 /* Model.xcdatamodeld in Sources */,
 				241B36F027A338EA002C233A /* TimeFunctions.swift in Sources */,
+				24DD566D27A57B79006949DB /* ReadingCycleView.swift in Sources */,
 				241B36F227A33BF3002C233A /* Helpers.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -433,6 +451,7 @@
 		};
 		241B36E727A335A6002C233A /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 24DD566A27A55D55006949DB /* env.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
@@ -441,6 +460,7 @@
 				DEVELOPMENT_ASSET_PATHS = "\"BookPal/Preview Content\"";
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = BookPal/Info.plist;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -469,6 +489,7 @@
 				DEVELOPMENT_ASSET_PATHS = "\"BookPal/Preview Content\"";
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = BookPal/Info.plist;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
