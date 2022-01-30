@@ -8,7 +8,7 @@
 import Foundation
 
 extension Date {
-    func asTimeUnit(displaySeconds: Bool) -> TimeUnit {
+    var asTimeUnit: TimeUnit {
         let date = self
         let calendar = Calendar.current
         let year = calendar.component(.year, from: date)
@@ -16,16 +16,14 @@ extension Date {
         let dayOfMonth = calendar.component(.day, from: date)
         let hour = calendar.component(.hour, from: date)
         let minutes = calendar.component(.minute, from: date)
-        var seconds: Int?
-        if displaySeconds {
-            seconds = calendar.component(.second, from: date)
-        }
+        var seconds: Int = calendar.component(.second, from: date)
+        seconds = calendar.component(.second, from: date)
         return TimeUnit(year: year, month: month, dayOfMonth: dayOfMonth, hours: hour, minutes: minutes, seconds: seconds)
     }
 }
 
 extension TimeUnit {
-    public var asDateString: String {
+    private var dateBaseString: String {
         var part = ""
         if let month = month, let dayOfMonth = dayOfMonth {
             part = "\(String(dayOfMonth)).\(String(month))."
@@ -37,25 +35,37 @@ extension TimeUnit {
         
         let concat = minutes < 10 ? "0\(minutes)" : String(minutes)
         part = "\(part) \(hours):\(concat)"
+        return part
+    }
+    public var asDateStringShort: String {
+        "\(dateBaseString) Uhr"
+    }
+    public var asDateStringLong: String {
+        var part = dateBaseString
         
         if let seconds = seconds {
             let concat = seconds < 10 ? "0\(seconds)" : String(seconds)
             part = "\(part):\(concat)"
-        } else {
-            part = "\(part) Uhr"
         }
         
         return part
     }
-    public var asHoursAndMinutesString: String {
+    public var asHoursMinutesString: String {
+        print(hours)
+        print(minutes)
         var part = ""
         if hours > 0 {
             part = "\(hours)h "
         }
+        let min = seconds ?? 0 > 30 ? minutes + 1 : minutes
         if minutes > 0||part.isEmpty {
-            part = "\(part)\(minutes)m"
+            part = "\(part)\(min)m"
         }
+        
         return part
+    }
+    public var asHoursMinutesSecondsString: String {
+        return "\(asHoursMinutesString) \(seconds ?? 0)s"
     }
     public var computedMinutes: Int {
         get {

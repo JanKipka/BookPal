@@ -15,6 +15,8 @@ struct ContentView: View {
     
     let dataController = DataController.shared
     
+    @State var id: UUID = UUID()
+    
     let apiController: GoogleBooksAPIController = GoogleBooksAPIController()
     @State var navigateToNewCycleView: Bool = false
     
@@ -71,6 +73,10 @@ struct ContentView: View {
 //        }
         .navigationBarTitle("Your Reading Activity")
         .navigationBarHidden(true)
+        .id(id)
+        .refreshable {
+            id = UUID()
+        }
     }
     
 //    func mapCyclesActivities(cycle: ReadingCycle) {

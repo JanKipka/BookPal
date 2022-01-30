@@ -15,7 +15,7 @@ struct ReadingCycleComponent: View {
     var body: some View {
         VStack(alignment: .leading) {
             Text("Start Date").font(.subheadline)
-            Text(readingCycle.startedAt!.asTimeUnit(displaySeconds: false).asDateString)
+            Text(readingCycle.startedAt!.asTimeUnit.asDateStringShort)
             Text("\(readingCycle.book?.title ?? "")").font(.headline)
         }
         
@@ -29,7 +29,7 @@ struct ReadingActivityComponent: View {
     var body: some View {
         VStack(alignment: .leading) {
             Text("Start Date").font(.subheadline)
-            Text("\(readingActivity.startedAt!.asTimeUnit(displaySeconds: false).asDateString) | Time Passed: \(readingActivity.passedTime.asHoursAndMinutesString)")
+            Text("\(readingActivity.startedAt!.asTimeUnit.asDateStringShort) | Time Passed: \(readingActivity.passedTime.asHoursMinutesString)")
             Text("\(readingActivity.readingCycle?.book?.title ?? "")").font(.headline)
         }
         
