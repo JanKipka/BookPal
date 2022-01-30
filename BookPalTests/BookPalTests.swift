@@ -47,6 +47,19 @@ class TestGenre {
     }
 }
 
+public struct Authors {
+    private var namesArray: [String]
+    public var names: String {
+        get {
+            return namesArray.joined(separator: ", ")
+        }
+    }
+    
+    init(_ names: [String]) {
+        self.namesArray = names
+    }
+}
+
 class TestReadingCycle {
     var startetAt: Date
     var finishedAt: Date

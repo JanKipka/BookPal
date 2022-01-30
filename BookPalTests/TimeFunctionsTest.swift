@@ -12,12 +12,17 @@ class TimeFunctionsTest: XCTestCase {
     
     func testTimeUnitAsString() throws {
         let timeUnit = TimeUnit(year: 2021, month: 10, dayOfMonth: 10, hours: 12, minutes: 10, seconds: 30)
-        XCTAssertEqual("10.10.2021 12:10:30", timeUnit.asString)
+        XCTAssertEqual("10.10.2021 12:10:30", timeUnit.asDateString)
     }
     
     func testTimeUnitAsStringWithoutSeconds() throws {
         let timeUnit = TimeUnit(year: 2021, month: 10, dayOfMonth: 10, hours: 12, minutes: 10, seconds: nil)
-        XCTAssertEqual("10.10.2021 12:10 Uhr", timeUnit.asString)
+        XCTAssertEqual("10.10.2021 12:10 Uhr", timeUnit.asDateString)
+    }
+    
+    func testTimeUnitAsStringMinutesUnderTen() throws {
+        let timeUnit = TimeUnit(year: 2021, month: 10, dayOfMonth: 10, hours: 12, minutes: 4, seconds: nil)
+        XCTAssertEqual("10.10.2021 12:04 Uhr", timeUnit.asDateString)
     }
     
     func testGetZeitEinheitFromTimeIntervalHighValue() throws {

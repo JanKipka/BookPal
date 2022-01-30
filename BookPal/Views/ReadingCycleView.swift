@@ -63,8 +63,10 @@ struct NewReadingCycleView: View {
             title: Text("The book was added. Do you want to start reading now?"),
             primaryButton: .default(Text("Yes")) {
                 let readingActivity = ReadingActivity(context: moc)
+                readingActivity.id = UUID()
                 readingActivity.startedAt = Date()
                 readingActivity.readingCycle = readingCycle
+                readingActivity.active = true
                 dataController.save()
                 navigateBack()
             },

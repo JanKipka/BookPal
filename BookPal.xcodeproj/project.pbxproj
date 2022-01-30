@@ -15,13 +15,16 @@
 		241B36E127A335A6002C233A /* BookPalUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 241B36E027A335A6002C233A /* BookPalUITests.swift */; };
 		241B36E327A335A6002C233A /* BookPalUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 241B36E227A335A6002C233A /* BookPalUITestsLaunchTests.swift */; };
 		241B36F027A338EA002C233A /* TimeFunctions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 241B36EF27A338EA002C233A /* TimeFunctions.swift */; };
-		241B36F227A33BF3002C233A /* Helpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 241B36F127A33BF3002C233A /* Helpers.swift */; };
 		241B36F427A33F0D002C233A /* TimeFunctionsTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 241B36F327A33F0D002C233A /* TimeFunctionsTest.swift */; };
 		243598A727A4923E00764CD3 /* Model.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 243598A527A4923E00764CD3 /* Model.xcdatamodeld */; };
 		243598A927A493CD00764CD3 /* DataController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 243598A827A493CD00764CD3 /* DataController.swift */; };
 		24DD566727A55C11006949DB /* BooksAPIController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24DD566627A55C11006949DB /* BooksAPIController.swift */; };
 		24DD566D27A57B79006949DB /* ReadingCycleView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24DD566C27A57B79006949DB /* ReadingCycleView.swift */; };
-		24DD567127A6CA14006949DB /* ViewComponents.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24DD567027A6CA14006949DB /* ViewComponents.swift */; };
+		24DD567127A6CA14006949DB /* SharedViewComponents.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24DD567027A6CA14006949DB /* SharedViewComponents.swift */; };
+		24DD567727A748E4006949DB /* DateExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24DD567627A748E4006949DB /* DateExtensions.swift */; };
+		24DD567A27A7491E006949DB /* TimeModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24DD567927A7491E006949DB /* TimeModels.swift */; };
+		24DD567D27A74A61006949DB /* Errors.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24DD567C27A74A61006949DB /* Errors.swift */; };
+		24DD567F27A74A77006949DB /* ModelExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24DD567E27A74A77006949DB /* ModelExtensions.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -53,7 +56,6 @@
 		241B36E027A335A6002C233A /* BookPalUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BookPalUITests.swift; sourceTree = "<group>"; };
 		241B36E227A335A6002C233A /* BookPalUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BookPalUITestsLaunchTests.swift; sourceTree = "<group>"; };
 		241B36EF27A338EA002C233A /* TimeFunctions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimeFunctions.swift; sourceTree = "<group>"; };
-		241B36F127A33BF3002C233A /* Helpers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Helpers.swift; sourceTree = "<group>"; };
 		241B36F327A33F0D002C233A /* TimeFunctionsTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimeFunctionsTest.swift; sourceTree = "<group>"; };
 		243598A627A4923E00764CD3 /* Model.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = Model.xcdatamodel; sourceTree = "<group>"; };
 		243598A827A493CD00764CD3 /* DataController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataController.swift; sourceTree = "<group>"; };
@@ -62,7 +64,11 @@
 		24DD566A27A55D55006949DB /* env.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = env.xcconfig; sourceTree = "<group>"; };
 		24DD566B27A55EA0006949DB /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		24DD566C27A57B79006949DB /* ReadingCycleView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReadingCycleView.swift; sourceTree = "<group>"; };
-		24DD567027A6CA14006949DB /* ViewComponents.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewComponents.swift; sourceTree = "<group>"; };
+		24DD567027A6CA14006949DB /* SharedViewComponents.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SharedViewComponents.swift; sourceTree = "<group>"; };
+		24DD567627A748E4006949DB /* DateExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DateExtensions.swift; sourceTree = "<group>"; };
+		24DD567927A7491E006949DB /* TimeModels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimeModels.swift; sourceTree = "<group>"; };
+		24DD567C27A74A61006949DB /* Errors.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Errors.swift; sourceTree = "<group>"; };
+		24DD567E27A74A77006949DB /* ModelExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModelExtensions.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -113,20 +119,20 @@
 		241B36C427A335A5002C233A /* BookPal */ = {
 			isa = PBXGroup;
 			children = (
+				24DD567B27A74A55006949DB /* Errors */,
+				24DD567827A74910006949DB /* Models */,
+				24DD567527A748CB006949DB /* Extensions */,
 				24DD566B27A55EA0006949DB /* Info.plist */,
 				241B36C527A335A5002C233A /* BookPalApp.swift */,
 				241B36C727A335A5002C233A /* ContentView.swift */,
-				24DD567027A6CA14006949DB /* ViewComponents.swift */,
+				24DD567327A74864006949DB /* Views */,
 				241B36C927A335A6002C233A /* Assets.xcassets */,
 				241B36CB27A335A6002C233A /* Preview Content */,
-				241B36EF27A338EA002C233A /* TimeFunctions.swift */,
-				241B36F127A33BF3002C233A /* Helpers.swift */,
+				24DD567427A7488F006949DB /* Utils */,
 				243598A527A4923E00764CD3 /* Model.xcdatamodeld */,
-				243598A827A493CD00764CD3 /* DataController.swift */,
-				24DD566627A55C11006949DB /* BooksAPIController.swift */,
+				24DD567227A74841006949DB /* Controllers */,
 				24DD566927A55D13006949DB /* env_template.xcconfig */,
 				24DD566A27A55D55006949DB /* env.xcconfig */,
-				24DD566C27A57B79006949DB /* ReadingCycleView.swift */,
 			);
 			path = BookPal;
 			sourceTree = "<group>";
@@ -155,6 +161,57 @@
 				241B36E227A335A6002C233A /* BookPalUITestsLaunchTests.swift */,
 			);
 			path = BookPalUITests;
+			sourceTree = "<group>";
+		};
+		24DD567227A74841006949DB /* Controllers */ = {
+			isa = PBXGroup;
+			children = (
+				243598A827A493CD00764CD3 /* DataController.swift */,
+				24DD566627A55C11006949DB /* BooksAPIController.swift */,
+			);
+			path = Controllers;
+			sourceTree = "<group>";
+		};
+		24DD567327A74864006949DB /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				24DD567027A6CA14006949DB /* SharedViewComponents.swift */,
+				24DD566C27A57B79006949DB /* ReadingCycleView.swift */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
+		24DD567427A7488F006949DB /* Utils */ = {
+			isa = PBXGroup;
+			children = (
+				241B36EF27A338EA002C233A /* TimeFunctions.swift */,
+			);
+			path = Utils;
+			sourceTree = "<group>";
+		};
+		24DD567527A748CB006949DB /* Extensions */ = {
+			isa = PBXGroup;
+			children = (
+				24DD567627A748E4006949DB /* DateExtensions.swift */,
+				24DD567E27A74A77006949DB /* ModelExtensions.swift */,
+			);
+			path = Extensions;
+			sourceTree = "<group>";
+		};
+		24DD567827A74910006949DB /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				24DD567927A7491E006949DB /* TimeModels.swift */,
+			);
+			path = Models;
+			sourceTree = "<group>";
+		};
+		24DD567B27A74A55006949DB /* Errors */ = {
+			isa = PBXGroup;
+			children = (
+				24DD567C27A74A61006949DB /* Errors.swift */,
+			);
+			path = Errors;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -288,14 +345,17 @@
 			buildActionMask = 2147483647;
 			files = (
 				241B36C827A335A5002C233A /* ContentView.swift in Sources */,
+				24DD567727A748E4006949DB /* DateExtensions.swift in Sources */,
 				243598A927A493CD00764CD3 /* DataController.swift in Sources */,
-				24DD567127A6CA14006949DB /* ViewComponents.swift in Sources */,
+				24DD567127A6CA14006949DB /* SharedViewComponents.swift in Sources */,
+				24DD567D27A74A61006949DB /* Errors.swift in Sources */,
 				241B36C627A335A5002C233A /* BookPalApp.swift in Sources */,
 				24DD566727A55C11006949DB /* BooksAPIController.swift in Sources */,
+				24DD567A27A7491E006949DB /* TimeModels.swift in Sources */,
+				24DD567F27A74A77006949DB /* ModelExtensions.swift in Sources */,
 				243598A727A4923E00764CD3 /* Model.xcdatamodeld in Sources */,
 				241B36F027A338EA002C233A /* TimeFunctions.swift in Sources */,
 				24DD566D27A57B79006949DB /* ReadingCycleView.swift in Sources */,
-				241B36F227A33BF3002C233A /* Helpers.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
