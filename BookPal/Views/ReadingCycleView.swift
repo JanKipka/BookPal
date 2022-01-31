@@ -22,40 +22,49 @@ struct NewReadingCycleView: View {
     
     let dataController = DataController.shared
     
+    init(){
+        UITableView.appearance().backgroundColor = .clear
+    }
+    
     var body: some View {
-        VStack {
-            Form {
-                Section("Dates") {
-                    DatePicker("Start Date", selection: $startedAtDate)
-                        .padding(.horizontal, 10)
-                }
-                Section("Book") {
-                    TextField("Book Choice", text: $titleAsString)
-                        .disabled(true)
-                }
-                Section("Search") {
-                    Button("Search for a Book") {
-                        showSearchSheet.toggle()
+        ZStack {
+            Colors.mint
+                .ignoresSafeArea()
+            VStack {
+                Form {
+                    Section("Dates") {
+                        DatePicker("Start Date", selection: $startedAtDate)
+                            .padding(.horizontal, 10)
                     }
-                    .sheet(isPresented: $showSearchSheet, onDismiss: {
-                        titleAsString = selectedVolume.title ?? ""
-                    }){
-                        SearchView(selectedVolume: $selectedVolume)
+                    Section("Book") {
+                        TextField("Book Choice", text: $titleAsString)
+                            .disabled(true)
                     }
+                    Section("Search") {
+                        Button("Search for a Book") {
+                            showSearchSheet.toggle()
+                        }
+                        .sheet(isPresented: $showSearchSheet, onDismiss: {
+                            titleAsString = selectedVolume.title ?? ""
+                        }){
+                            SearchView(selectedVolume: $selectedVolume)
+                        }
+                    }
+                    
+                    Button("Start reading!") {
+                        createNewCycle()
+                    }.disabled(titleAsString == "")
                 }
+                .background(.clear)
+                .padding(.bottom)
                 
-                Button("Start reading!") {
-                    createNewCycle()
-                }.disabled(titleAsString == "")
+                
             }
-            .padding(.bottom)
+            .alert(isPresented: $showingAlert) {
+                presentAlert()
+            }
             
-            
-        }
-        .alert(isPresented: $showingAlert) {
-            presentAlert()
-        }
-        .navigationBarTitle("Add a book")
+        }.navigationBarTitle("Add a book")
     }
     
     private func presentAlert() -> Alert {
@@ -112,6 +121,14 @@ struct NewReadingCycleView: View {
                     genre.name = genreString
                     book.genre = genre
                 }
+            }
+            if let links = selectedVolume.imageLinks {
+                let covers = CoverLinks(context: moc)
+                covers.thumbnail = links.thumbnail
+                covers.small = links.small
+                covers.medium = links.medium
+                covers.large = links.large
+                book.coverLinks = covers
             }
             readingCycle.book = book
         }

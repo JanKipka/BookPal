@@ -6,11 +6,17 @@
 //
 
 import SwiftUI
+import Foundation
+import CoreData
 
 struct ContentView: View {
     
-    @FetchRequest(sortDescriptors: [], predicate: NSPredicate(format: "active = true")) var cycles: FetchedResults<ReadingCycle>
-    @FetchRequest(sortDescriptors: [], predicate: NSPredicate(format: "active = true")) var activities: FetchedResults<ReadingActivity>
+    @FetchRequest(sortDescriptors: [
+        NSSortDescriptor(key: #keyPath(ReadingCycle.startedAt), ascending: true)
+    ], predicate: NSPredicate(format: "active = true")) var cycles: FetchedResults<ReadingCycle>
+    @FetchRequest(sortDescriptors: [
+        NSSortDescriptor(key: #keyPath(ReadingActivity.startedAt), ascending: true)
+    ], predicate: NSPredicate(format: "active = true")) var activities: FetchedResults<ReadingActivity>
     @Environment(\.managedObjectContext) var moc
     
     let dataController = DataController.shared
@@ -19,76 +25,89 @@ struct ContentView: View {
     
     let apiController: GoogleBooksAPIController = GoogleBooksAPIController()
     @State var navigateToNewCycleView: Bool = false
+    @State var activityStartedAlert: Bool = false
+    @State var hasActiveActivityAlert: Bool = false
     
     var body: some View {
         NavigationView {
-            VStack {
-                ZStack {
-                    VStack {
-                        Text("Active reading activities").font(.headline)
-                        List {
+            ZStack {
+                LinearGradient(gradient: Gradient(colors: [Colors.darkerBlue, Colors.lighterBlue]), startPoint: .top, endPoint: .bottom)
+                    .ignoresSafeArea()
+                VStack {
+                    
+                    List {
+                        Section("Active reading activities") {
                             ForEach(activities) { ac in
-                                ReadingActivityComponent(readingActivity: ac)
+                                NavigationLink(destination: ReadingActivityDetailView(readingActivity: ac)) {
+                                    ReadingActivityComponent(readingActivity: ac)
+                                }
                             }
                         }
-                    }
-                }
-                .background(.regularMaterial)
-                .frame(height: 350)
-                ZStack {
-                    VStack {
-                        Text("Books you're reading").font(.headline)
-                        List {
+                        Section("Books you're reading") {
                             ForEach(cycles) { cycle in
-                                ReadingCycleComponent(readingCycle: cycle)
+                                NavigationLink(destination: ReadingCycleDetailView(readingCycle: cycle)) {
+                                    ReadingCycleComponent(readingCycle: cycle)
+                                }
+                                .swipeActions(edge: .leading){
+                                    Button {
+                                        let set = cycle.readingActivities as! Set<ReadingActivity>
+                                        let hasActiveActivities = Array(set).filter({$0.active}).count > 0
+                                        if hasActiveActivities {
+                                            hasActiveActivityAlert.toggle()
+                                            return
+                                        }
+                                        let activity = ReadingActivity(context: moc)
+                                        activity.active = true
+                                        activity.startedAt = Date()
+                                        activity.id = UUID()
+                                        activity.readingCycle = cycle
+                                        dataController.save()
+                                        activityStartedAlert.toggle()
+                                    } label: {
+                                        Label("Read Now", systemImage: "book.fill")
+                                    }
+                                    .tint(.blue)
+                                }
                             }
                         }
                     }
+                    Spacer()
+                    Spacer()
+                    HStack {
+                        NavigationLink(destination: NewReadingCycleView()) {
+                            Text("Start a new Book")
+                                .fontWeight(.semibold)
+                        }
+                        .frame(maxWidth: .infinity)
+                        .padding(.vertical, 20)
+                        .background(.blue)
+                        .foregroundColor(.white)
+                        .clipShape(RoundedRectangle(cornerRadius: 10))
+                    }
+                    .padding()
+                    
+                    Spacer()
+                    
+                    Button("Delete All") {
+                        dataController.deleteAll(entityName: "Genre")
+                        dataController.deleteAll(entityName: "Book")
+                        dataController.deleteAll(entityName: "Author")
+                        dataController.deleteAll(entityName: "ReadingCycle")
+                        dataController.deleteAll(entityName: "ReadingActivity")
+                        dataController.deleteAll(entityName: "CoverLinks")
+                    }
+                    
                 }
-                .background(.regularMaterial)
-                .frame(height: 350)
-                
-                NavigationLink(destination: NewReadingCycleView()) {
-                    Text("Start a new book")
+                .alert(isPresented: $activityStartedAlert) {
+                    Alert(title: Text("Reading activity started!"))
                 }
-                
-                
-                Button("Delete All") {
-                    dataController.deleteAll(entityName: "Genre")
-                    dataController.deleteAll(entityName: "Book")
-                    dataController.deleteAll(entityName: "Author")
-                    dataController.deleteAll(entityName: "ReadingCycle")
-                    dataController.deleteAll(entityName: "ReadingActivity")
+                .alert(isPresented: $hasActiveActivityAlert) {
+                    Alert(title: Text("Active acitivity ongoing"), message: Text("There's already an active reading acitivity for this book."))
                 }
-                Spacer()
             }
+            
         }
-//        .task {
-//            activeCycles = filterCycles()
-//            for cycle in activeCycles {
-//                mapCyclesActivities(cycle: cycle)
-//            }
-//            activeActivities = filterActivities()
-//            hasActiveCycles = !activeCycles.isEmpty
-//        }
-        .navigationBarTitle("Your Reading Activity")
-        .navigationBarHidden(true)
-        .id(id)
-        .refreshable {
-            id = UUID()
-        }
-    }
-    
-//    func mapCyclesActivities(cycle: ReadingCycle) {
-//        let activities = dataController.getActiveReadingActivitiesForCycle(cycle)
-//        cyclesActivities[cycle] = []
-//        for ac in activities {
-//            cyclesActivities[cycle]?.append(ac)
-//        }
-//    }
-    
-    func getActiveActivitesForCycle(_ cycle: ReadingCycle) -> [ReadingActivity] {
-        dataController.getActiveReadingActivitiesForCycle(cycle)
+        .navigationBarTitleDisplayMode(.inline)
     }
     
     func filterActivities() -> [ReadingActivity] {

@@ -25,6 +25,10 @@
 		24DD567A27A7491E006949DB /* TimeModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24DD567927A7491E006949DB /* TimeModels.swift */; };
 		24DD567D27A74A61006949DB /* Errors.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24DD567C27A74A61006949DB /* Errors.swift */; };
 		24DD567F27A74A77006949DB /* ModelExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24DD567E27A74A77006949DB /* ModelExtensions.swift */; };
+		24DD568127A7D8BC006949DB /* ReadingActivityDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24DD568027A7D8BC006949DB /* ReadingActivityDetailView.swift */; };
+		24DD568327A7E011006949DB /* BookModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24DD568227A7E011006949DB /* BookModels.swift */; };
+		24DD568527A81743006949DB /* ReadingCycleDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24DD568427A81743006949DB /* ReadingCycleDetailView.swift */; };
+		24DD568727A83266006949DB /* Colors.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24DD568627A83266006949DB /* Colors.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -69,6 +73,10 @@
 		24DD567927A7491E006949DB /* TimeModels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimeModels.swift; sourceTree = "<group>"; };
 		24DD567C27A74A61006949DB /* Errors.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Errors.swift; sourceTree = "<group>"; };
 		24DD567E27A74A77006949DB /* ModelExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModelExtensions.swift; sourceTree = "<group>"; };
+		24DD568027A7D8BC006949DB /* ReadingActivityDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReadingActivityDetailView.swift; sourceTree = "<group>"; };
+		24DD568227A7E011006949DB /* BookModels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BookModels.swift; sourceTree = "<group>"; };
+		24DD568427A81743006949DB /* ReadingCycleDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReadingCycleDetailView.swift; sourceTree = "<group>"; };
+		24DD568627A83266006949DB /* Colors.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Colors.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -177,6 +185,9 @@
 			children = (
 				24DD567027A6CA14006949DB /* SharedViewComponents.swift */,
 				24DD566C27A57B79006949DB /* ReadingCycleView.swift */,
+				24DD568027A7D8BC006949DB /* ReadingActivityDetailView.swift */,
+				24DD568427A81743006949DB /* ReadingCycleDetailView.swift */,
+				24DD568627A83266006949DB /* Colors.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -202,6 +213,7 @@
 			isa = PBXGroup;
 			children = (
 				24DD567927A7491E006949DB /* TimeModels.swift */,
+				24DD568227A7E011006949DB /* BookModels.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -348,11 +360,15 @@
 				24DD567727A748E4006949DB /* DateExtensions.swift in Sources */,
 				243598A927A493CD00764CD3 /* DataController.swift in Sources */,
 				24DD567127A6CA14006949DB /* SharedViewComponents.swift in Sources */,
+				24DD568527A81743006949DB /* ReadingCycleDetailView.swift in Sources */,
 				24DD567D27A74A61006949DB /* Errors.swift in Sources */,
 				241B36C627A335A5002C233A /* BookPalApp.swift in Sources */,
 				24DD566727A55C11006949DB /* BooksAPIController.swift in Sources */,
 				24DD567A27A7491E006949DB /* TimeModels.swift in Sources */,
+				24DD568727A83266006949DB /* Colors.swift in Sources */,
 				24DD567F27A74A77006949DB /* ModelExtensions.swift in Sources */,
+				24DD568127A7D8BC006949DB /* ReadingActivityDetailView.swift in Sources */,
+				24DD568327A7E011006949DB /* BookModels.swift in Sources */,
 				243598A727A4923E00764CD3 /* Model.xcdatamodeld in Sources */,
 				241B36F027A338EA002C233A /* TimeFunctions.swift in Sources */,
 				24DD566D27A57B79006949DB /* ReadingCycleView.swift in Sources */,

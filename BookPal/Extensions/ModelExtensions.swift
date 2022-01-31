@@ -9,10 +9,21 @@ import Foundation
 
 extension ReadingActivity {
     
-    var passedTime: TimeUnit {
+    var passedTimeUntilNow: TimeUnit {
         get {
             let interval = Date().timeIntervalSince(startedAt ?? Date())
             return getTimeUnitFromTimeInterval(interval)
+        }
+    }
+    
+    var timeSpentReading: TimeUnit {
+        get {
+            if let end = finishedAt {
+                let interval = end.timeIntervalSince(startedAt!)
+                return getTimeUnitFromTimeInterval(interval)
+            }
+            
+            return passedTimeUntilNow
         }
     }
     

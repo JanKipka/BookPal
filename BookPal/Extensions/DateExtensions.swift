@@ -26,7 +26,9 @@ extension TimeUnit {
     private var dateBaseString: String {
         var part = ""
         if let month = month, let dayOfMonth = dayOfMonth {
-            part = "\(String(dayOfMonth)).\(String(month))."
+            let day = dayOfMonth < 10 ? "0\(dayOfMonth)" : String(dayOfMonth)
+            let mon = month < 10 ? "0\(month)" : String(month)
+            part = "\(day).\(mon)."
         }
         
         if let year = year {
@@ -51,8 +53,6 @@ extension TimeUnit {
         return part
     }
     public var asHoursMinutesString: String {
-        print(hours)
-        print(minutes)
         var part = ""
         if hours > 0 {
             part = "\(hours)h "
