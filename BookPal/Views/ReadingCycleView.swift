@@ -75,6 +75,7 @@ struct NewReadingCycleView: View {
                 readingActivity.id = UUID()
                 readingActivity.startedAt = Date()
                 readingActivity.readingCycle = readingCycle
+                readingActivity.startedActivityOnPage = 0
                 readingActivity.active = true
                 dataController.save()
                 navigateBack()

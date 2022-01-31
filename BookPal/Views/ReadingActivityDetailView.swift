@@ -15,22 +15,22 @@ struct ReadingActivityDetailView: View {
     var timePassed: String {
         readingActivity.passedTimeUntilNow.asHoursMinutesString
     }
+    var timeSpentReading: String {
+        readingActivity.timeSpentReading.asHoursMinutesString
+    }
     @State var pagesRead: String = ""
     @State var showMessage: Bool = false
+    //@State var notes: String = ""
+    var viewMode: Bool
     
     @Environment(\.managedObjectContext) var moc
     @Environment(\.dismiss) var dismiss
     
     let dataController = DataController.shared
     
-    init() {
-        self.readingActivity = ReadingActivity()
-        self.startedAt = ""
-        UITableView.appearance().backgroundColor = .clear
-    }
-    
-    init(readingActivity: ReadingActivity){
+    init(readingActivity: ReadingActivity, viewMode: Bool = false){
         self.readingActivity = readingActivity
+        self.viewMode = viewMode
         self.startedAt = readingActivity.startedAt?.asTimeUnit.asDateStringShort ?? Date().formatted()
         UITableView.appearance().backgroundColor = .clear
     }
@@ -47,42 +47,78 @@ struct ReadingActivityDetailView: View {
                         Text(startedAt)
                     }
                     Section("Time spent reading") {
-                        Text(timePassed)
+                        Text(viewMode ? timeSpentReading : timePassed)
                     }
                     Section("Started on page") {
-                        Text("\(readingActivity.readingCycle?.currentPage ?? 0)")
+                        Text("\(readingActivity.startedActivityOnPage)")
                     }
-                    Section("Pages read") {
-                        TextField("What page are you on?", text: $pagesRead)
+                    Section("Finished on page") {
+                        if viewMode {
+                            Text("\(readingActivity.finishedActivityOnPage)")
+                        } else {
+                            TextField("What page are you on?", text: $pagesRead)
+                        }
                     }
+//                    Section("Notes") {
+//                        TextEditor(text: $notes)
+//                        //Text("\(readingActivity.notes!)")
+//                    }
                 }
-                Button("Finish reading") {
-                    if pagesRead.isEmpty {
-                        showMessage = true
-                        return
+                if !viewMode {
+                    Button("Finish reading") {
+                        buttonAction()
                     }
-                    let onPage = Int16(pagesRead)!
-                    readingActivity.finishedActivityOnPage = onPage
-                    let onPageBefore = readingActivity.readingCycle?.currentPage ?? 0
-                    readingActivity.pagesRead = onPage - onPageBefore
-                    readingActivity.readingCycle?.currentPage = onPage
-                    readingActivity.finishedAt = Date()
-                    readingActivity.active = false
-                    dataController.save()
-                    dismiss()
+                    .alert(isPresented: $showMessage) {
+                        Alert(title: Text("Please enter the page you are currently on."))
+                    }
+                    .disabled(pagesRead.isEmpty)
+                    .frame(maxWidth: 250, maxHeight: 7)
+                    .padding(.vertical, 20)
+                    .background(.blue)
+                    .foregroundColor(.white)
+                    .clipShape(RoundedRectangle(cornerRadius: 5))
                 }
-                .alert(isPresented: $showMessage) {
-                    Alert(title: Text("Please enter the page you are currently on."))
-                }
-                .disabled(pagesRead.isEmpty)
-                .frame(maxWidth: 250, maxHeight: 7)
-                .padding(.vertical, 20)
-                .background(.blue)
-                .foregroundColor(.white)
-                .clipShape(RoundedRectangle(cornerRadius: 5))
+                
                 Spacer()
             }
             
         }.navigationBarTitle("Reading activity")
+            .onDisappear {
+//                readingActivity.notes = notes
+//                dataController.save()
+            }
+    }
+    
+    func buttonAction(){
+        print("In action")
+        if viewMode {
+            dismiss()
+        } else {
+            finishReadingActivity()
+        }
+    }
+    
+    func saveReadingActivity() {
+        //readingActivity.notes = notes
+        dataController.save()
+        dismiss()
+    }
+    
+    func finishReadingActivity() {
+        if pagesRead.isEmpty {
+            showMessage = true
+            return
+        }
+        let onPage = Int16(pagesRead)!
+        readingActivity.finishedActivityOnPage = onPage
+        let onPageBefore = readingActivity.readingCycle?.currentPage ?? 0
+        //readingActivity.startedActivityOnPage = onPageBefore
+        readingActivity.pagesRead = onPage - onPageBefore
+        readingActivity.readingCycle?.currentPage = onPage
+        readingActivity.finishedAt = Date()
+        readingActivity.active = false
+        //readingActivity.notes = notes
+        dataController.save()
+        dismiss()
     }
 }

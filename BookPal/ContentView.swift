@@ -25,8 +25,10 @@ struct ContentView: View {
     
     let apiController: GoogleBooksAPIController = GoogleBooksAPIController()
     @State var navigateToNewCycleView: Bool = false
+    @State var navigateToActivityView: Bool = false
     @State var activityStartedAlert: Bool = false
     @State var hasActiveActivityAlert: Bool = false
+    @State var selectedActivity: ReadingActivity?
     
     var body: some View {
         NavigationView {
@@ -34,7 +36,9 @@ struct ContentView: View {
                 LinearGradient(gradient: Gradient(colors: [Colors.darkerBlue, Colors.lighterBlue]), startPoint: .top, endPoint: .bottom)
                     .ignoresSafeArea()
                 VStack {
-                    
+                    NavigationLink(destination: NewReadingCycleView(), isActive: $navigateToNewCycleView) {
+                        EmptyView()
+                    }
                     List {
                         Section("Active reading activities") {
                             ForEach(activities) { ac in
@@ -60,6 +64,7 @@ struct ContentView: View {
                                         activity.startedAt = Date()
                                         activity.id = UUID()
                                         activity.readingCycle = cycle
+                                        activity.startedActivityOnPage = cycle.currentPage
                                         dataController.save()
                                         activityStartedAlert.toggle()
                                     } label: {
@@ -72,29 +77,7 @@ struct ContentView: View {
                     }
                     Spacer()
                     Spacer()
-                    HStack {
-                        NavigationLink(destination: NewReadingCycleView()) {
-                            Text("Start a new Book")
-                                .fontWeight(.semibold)
-                        }
-                        .frame(maxWidth: .infinity)
-                        .padding(.vertical, 20)
-                        .background(.blue)
-                        .foregroundColor(.white)
-                        .clipShape(RoundedRectangle(cornerRadius: 10))
-                    }
-                    .padding()
-                    
                     Spacer()
-                    
-                    Button("Delete All") {
-                        dataController.deleteAll(entityName: "Genre")
-                        dataController.deleteAll(entityName: "Book")
-                        dataController.deleteAll(entityName: "Author")
-                        dataController.deleteAll(entityName: "ReadingCycle")
-                        dataController.deleteAll(entityName: "ReadingActivity")
-                        dataController.deleteAll(entityName: "CoverLinks")
-                    }
                     
                 }
                 .alert(isPresented: $activityStartedAlert) {
@@ -104,9 +87,30 @@ struct ContentView: View {
                     Alert(title: Text("Active activity ongoing"), message: Text("There's already an active reading acitivity."))
                 }
             }
+            .toolbar {
+                ToolbarItem(placement: .navigationBarTrailing) {
+                    Menu {
+                        Button("Add a new book") {
+                            navigateToNewCycleView = true
+                        }
+                        Button("Dev: Delete all") {
+                            dataController.deleteAll(entityName: "Genre")
+                            dataController.deleteAll(entityName: "Book")
+                            dataController.deleteAll(entityName: "Author")
+                            dataController.deleteAll(entityName: "ReadingCycle")
+                            dataController.deleteAll(entityName: "ReadingActivity")
+                            dataController.deleteAll(entityName: "CoverLinks")
+                        }
+                    } label: {
+                        Label("Add new book", systemImage: "plus")
+                    }
+                }
+            }
             
         }
-        .navigationBarTitleDisplayMode(.inline)
+        //.navigationViewStyle(StackNavigationViewStyle())
+        //.navigationBarTitleDisplayMode(.inline)
+        
     }
     
     func filterActivities() -> [ReadingActivity] {

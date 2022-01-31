@@ -87,3 +87,32 @@ struct BookComponent: View {
     }
     
 }
+
+struct ReadingActivityListComponent: View {
+    
+    var ac: ReadingActivity
+    
+    var body: some View {
+        VStack(spacing: 10) {
+            HStack {
+                Text("\(ac.timeSpentReading.asHoursMinutesString)")
+                Spacer()
+                Text("\(getPagesString(readingActivitiy:ac))")
+            }
+            HStack {
+                Text(ac.startedAt?.asTimeUnit.asDateStringShort ?? "")
+                    .font(.caption)
+                Spacer()
+                Text(ac.finishedAt?.asTimeUnit.asDateStringShort ?? "")
+                    .font(.caption)
+            }
+        }
+        .listRowBackground(ac.active ? Colors.lighterOrange : .white)
+        .padding(.vertical)
+    }
+    
+    func getPagesString(readingActivitiy: ReadingActivity) -> String {
+        return readingActivitiy.active ? "Active" : "\(readingActivitiy.pagesRead) pages"
+    }
+    
+}

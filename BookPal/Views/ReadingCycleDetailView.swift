@@ -12,6 +12,8 @@ struct ReadingCycleDetailView: View {
     
     @ObservedObject var readingCycle: ReadingCycle
     var activities: [ReadingActivity]
+    @State var notes: String
+    let dataController = DataController.shared
     
     init(readingCycle: ReadingCycle) {
         self.readingCycle = readingCycle
@@ -23,6 +25,7 @@ struct ReadingCycleDetailView: View {
             
             return false
         }
+        self.notes = readingCycle.notes ?? ""
         UITableView.appearance().backgroundColor = .clear
     }
     
@@ -38,36 +41,32 @@ struct ReadingCycleDetailView: View {
                     Section("Start Date") {
                         Text(readingCycle.startedAt?.asTimeUnit.asDateStringShort ?? "")
                     }
-                    Section("Current Page") {
-                        Text("\(readingCycle.currentPage)")
+                    Section("Pages read so far") {
+                        Text("\(readingCycle.currentPage) of \(readingCycle.book!.numOfPages)")
                     }
-                    Section("Total Pages") {
-                        Text("\(readingCycle.book!.numOfPages)")
+                    Section("Notes") {
+                        TextEditor(text: $notes)
                     }
                     Section("Activities") {
                         ForEach(activities) { ac in
-                            VStack(spacing: 10) {
-                                HStack {
-                                    Text("\(ac.timeSpentReading.asHoursMinutesString)")
-                                    Spacer()
-                                    Text("\(getPagesString(readingActivitiy:ac))")
-                                }
-                                HStack {
-                                    Text(ac.startedAt?.asTimeUnit.asDateStringShort ?? "")
-                                        .font(.caption)
-                                    Spacer()
-                                    Text(ac.finishedAt?.asTimeUnit.asDateStringShort ?? "")
-                                        .font(.caption)
-                                }
+                            NavigationLink(destination: ReadingActivityDetailView(readingActivity: ac, viewMode: true)) {
+                                ReadingActivityListComponent(ac: ac)
                             }
-                            .listRowBackground(ac.active ? Colors.lighterOrange : .white)
-                            .padding(.vertical)
+                            .disabled(ac.active)
                         }
                     }
                 }
             }
         }.navigationBarTitle("Reading cycle")
+            .onDisappear {
+                if notes == readingCycle.notes {
+                    return
+                }
+                readingCycle.notes = notes
+                dataController.save()
+            }
     }
+
     
     func getPagesString(readingActivitiy: ReadingActivity) -> String {
         return readingActivitiy.active ? "Active" : "\(readingActivitiy.pagesRead) pages"
