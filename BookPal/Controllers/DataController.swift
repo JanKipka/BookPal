@@ -135,13 +135,27 @@ extension DataController {
 
 extension DataController {
     
-    func getActiveReadingActivitiesForCycle(_ cycle: ReadingCycle) -> [ReadingActivity] {
+    func getActiveReadingActivities() -> [ReadingActivity] {
         let fetchRequest: NSFetchRequest<ReadingActivity> = ReadingActivity.fetchRequest()
-        let idPred = NSPredicate(format: "ANY readingCycle = %@", cycle)
         let endDateNotSetPred = NSPredicate(format: "ANY finishedAt = nil")
         fetchRequest.predicate = NSCompoundPredicate(
             andPredicateWithSubpredicates: [
-                idPred,
+                endDateNotSetPred
+            ]
+        )
+        do {
+            return try context.fetch(fetchRequest)
+        } catch let error {
+            print(error.localizedDescription)
+            return []
+        }
+    }
+    
+    func getActiveReadingCycles() -> [ReadingCycle] {
+        let fetchRequest: NSFetchRequest<ReadingCycle> = ReadingCycle.fetchRequest()
+        let endDateNotSetPred = NSPredicate(format: "active = true")
+        fetchRequest.predicate = NSCompoundPredicate(
+            andPredicateWithSubpredicates: [
                 endDateNotSetPred
             ]
         )
