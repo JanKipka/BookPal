@@ -50,8 +50,7 @@ struct ContentView: View {
                                 }
                                 .swipeActions(edge: .leading){
                                     Button {
-                                        let set = cycle.readingActivities as! Set<ReadingActivity>
-                                        let hasActiveActivities = Array(set).filter({$0.active}).count > 0
+                                        let hasActiveActivities = !activities.isEmpty
                                         if hasActiveActivities {
                                             hasActiveActivityAlert.toggle()
                                             return
@@ -102,7 +101,7 @@ struct ContentView: View {
                     Alert(title: Text("Reading activity started!"))
                 }
                 .alert(isPresented: $hasActiveActivityAlert) {
-                    Alert(title: Text("Active acitivity ongoing"), message: Text("There's already an active reading acitivity for this book."))
+                    Alert(title: Text("Active activity ongoing"), message: Text("There's already an active reading acitivity."))
                 }
             }
             
