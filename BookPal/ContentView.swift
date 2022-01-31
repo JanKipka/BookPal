@@ -129,7 +129,7 @@ struct ContentView_Previews: PreviewProvider {
         
         let dataController = DataController.preview
         
-        ContentView()
+        MainView()
             .environment(\.managedObjectContext, dataController.container.viewContext)
     }
 }

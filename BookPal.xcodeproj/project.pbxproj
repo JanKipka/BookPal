@@ -29,6 +29,9 @@
 		24DD568327A7E011006949DB /* BookModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24DD568227A7E011006949DB /* BookModels.swift */; };
 		24DD568527A81743006949DB /* ReadingCycleDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24DD568427A81743006949DB /* ReadingCycleDetailView.swift */; };
 		24DD568727A83266006949DB /* Colors.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24DD568627A83266006949DB /* Colors.swift */; };
+		24DD568927A874A5006949DB /* MainView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24DD568827A874A5006949DB /* MainView.swift */; };
+		24DD568B27A874E1006949DB /* LibraryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24DD568A27A874E1006949DB /* LibraryView.swift */; };
+		24DD568D27A875D3006949DB /* StatisticView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24DD568C27A875D3006949DB /* StatisticView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -77,6 +80,9 @@
 		24DD568227A7E011006949DB /* BookModels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BookModels.swift; sourceTree = "<group>"; };
 		24DD568427A81743006949DB /* ReadingCycleDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReadingCycleDetailView.swift; sourceTree = "<group>"; };
 		24DD568627A83266006949DB /* Colors.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Colors.swift; sourceTree = "<group>"; };
+		24DD568827A874A5006949DB /* MainView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainView.swift; sourceTree = "<group>"; };
+		24DD568A27A874E1006949DB /* LibraryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LibraryView.swift; sourceTree = "<group>"; };
+		24DD568C27A875D3006949DB /* StatisticView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatisticView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -188,6 +194,9 @@
 				24DD568027A7D8BC006949DB /* ReadingActivityDetailView.swift */,
 				24DD568427A81743006949DB /* ReadingCycleDetailView.swift */,
 				24DD568627A83266006949DB /* Colors.swift */,
+				24DD568827A874A5006949DB /* MainView.swift */,
+				24DD568A27A874E1006949DB /* LibraryView.swift */,
+				24DD568C27A875D3006949DB /* StatisticView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -360,6 +369,7 @@
 				24DD567727A748E4006949DB /* DateExtensions.swift in Sources */,
 				243598A927A493CD00764CD3 /* DataController.swift in Sources */,
 				24DD567127A6CA14006949DB /* SharedViewComponents.swift in Sources */,
+				24DD568B27A874E1006949DB /* LibraryView.swift in Sources */,
 				24DD568527A81743006949DB /* ReadingCycleDetailView.swift in Sources */,
 				24DD567D27A74A61006949DB /* Errors.swift in Sources */,
 				241B36C627A335A5002C233A /* BookPalApp.swift in Sources */,
@@ -367,6 +377,8 @@
 				24DD567A27A7491E006949DB /* TimeModels.swift in Sources */,
 				24DD568727A83266006949DB /* Colors.swift in Sources */,
 				24DD567F27A74A77006949DB /* ModelExtensions.swift in Sources */,
+				24DD568927A874A5006949DB /* MainView.swift in Sources */,
+				24DD568D27A875D3006949DB /* StatisticView.swift in Sources */,
 				24DD568127A7D8BC006949DB /* ReadingActivityDetailView.swift in Sources */,
 				24DD568327A7E011006949DB /* BookModels.swift in Sources */,
 				243598A727A4923E00764CD3 /* Model.xcdatamodeld in Sources */,
