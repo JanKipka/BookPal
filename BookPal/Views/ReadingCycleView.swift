@@ -63,6 +63,9 @@ struct NewReadingCycleView: View {
             .alert(isPresented: $showingAlert) {
                 presentAlert()
             }
+            .onAppear {
+                self.startedAtDate = Date()
+            }
             
         }.navigationBarTitle("Add a book")
     }

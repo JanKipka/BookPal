@@ -11,7 +11,12 @@ import SwiftUI
 struct StatisticView: View {
     
     var body: some View {
-        Text("Stats view")
+        NavigationView {
+            ZStack {
+                LinearGradient(gradient: Gradient(colors: [Colors.darkerBlue, Colors.lighterBlue]), startPoint: .top, endPoint: .bottom)
+                    .ignoresSafeArea()
+            }.navigationTitle("Statistics")
+        }
         // TODO
     }
     
