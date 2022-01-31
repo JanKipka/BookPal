@@ -82,7 +82,7 @@ struct ReadingActivityDetailView: View {
                 Spacer()
             }
             
-        }.navigationBarTitle("Reading activity")
+        }.navigationTitle("Reading activity")
             .onDisappear {
 //                readingActivity.notes = notes
 //                dataController.save()

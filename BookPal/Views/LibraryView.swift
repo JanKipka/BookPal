@@ -11,7 +11,13 @@ import SwiftUI
 struct LibraryView: View {
     
     var body: some View {
-        Text("Library")
+        NavigationView {
+            ZStack {
+                LinearGradient(gradient: Gradient(colors: [Colors.darkerBlue, Colors.lighterBlue]), startPoint: .top, endPoint: .bottom)
+                    .ignoresSafeArea()
+            }.navigationTitle("Library")
+        }
+        
         // TODO
         // Template: Apple Podcast App -> Library Tab
         // At the top, a menu with Genre, Authors, All

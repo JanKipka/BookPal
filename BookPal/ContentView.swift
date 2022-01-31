@@ -106,10 +106,9 @@ struct ContentView: View {
                     }
                 }
             }
+            .navigationTitle("Read now")
             
         }
-        //.navigationViewStyle(StackNavigationViewStyle())
-        //.navigationBarTitleDisplayMode(.inline)
         
     }
     

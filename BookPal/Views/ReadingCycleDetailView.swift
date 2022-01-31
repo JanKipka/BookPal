@@ -57,7 +57,7 @@ struct ReadingCycleDetailView: View {
                     }
                 }
             }
-        }.navigationBarTitle("Reading cycle")
+        }.navigationTitle("Reading cycle")
             .onDisappear {
                 if notes == readingCycle.notes {
                     return
