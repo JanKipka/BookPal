@@ -10,7 +10,7 @@ import SwiftUI
 
 struct ReadingCycleDetailView: View {
     
-    @ObservedObject var readingCycle: ReadingCycle
+    var readingCycle: ReadingCycle
     var activities: [ReadingActivity]
     @State var notes: String
     @State var avgPagesPerMinute = ""
@@ -42,8 +42,16 @@ struct ReadingCycleDetailView: View {
                     Section("Start Date") {
                         Text(readingCycle.startedAt?.asLocalizedStringHoursMinutes ?? "")
                     }
-                    Section("Pages read so far") {
+                    if !readingCycle.active {
+                        Section("End Date") {
+                            Text(readingCycle.finishedAt?.asLocalizedStringHoursMinutes ?? "")
+                        }
+                    }
+                    Section(readingCycle.active ? "Pages read so far" : "Pages read") {
                         Text("\(readingCycle.currentPage) of \(readingCycle.book!.numOfPages)")
+                    }
+                    Section("Time spent reading") {
+                        Text("\(readingCycle.totalTimeSpentReading?.asHoursMinutesString ?? "0m")")
                     }
                     Section("Average pages per minute") {
                         Text(avgPagesPerMinute)

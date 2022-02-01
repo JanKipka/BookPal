@@ -12,7 +12,7 @@ extension ReadingActivity {
     var passedTimeUntilNow: TimeUnit {
         get {
             let interval = Date().timeIntervalSince(startedAt ?? Date())
-            return getTimeUnitFromTimeInterval(interval)
+            return getTimeUnitFromTimeInterval(interval)!
         }
     }
     
@@ -20,7 +20,7 @@ extension ReadingActivity {
         get {
             if let end = finishedAt {
                 let interval = end.timeIntervalSince(startedAt!)
-                return getTimeUnitFromTimeInterval(interval)
+                return getTimeUnitFromTimeInterval(interval)!
             }
             
             return passedTimeUntilNow
@@ -49,6 +49,17 @@ extension ReadingCycle {
             avg += ac.pagesPerMinute
         }
         return avg / Double(acArray.count)
+    }
+    
+    var totalTimeSpentReading: TimeUnit? {
+        let acArray = Array(self.readingActivities as! Set<ReadingActivity>)
+        var sum: TimeInterval = TimeInterval()
+        for ac in acArray {
+            if !ac.active {
+                sum += (ac.finishedAt?.timeIntervalSince(ac.startedAt!))!
+            }
+        }
+        return getTimeUnitFromTimeInterval(sum)
     }
     
 }

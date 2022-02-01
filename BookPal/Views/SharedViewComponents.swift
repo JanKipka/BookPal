@@ -26,7 +26,9 @@ struct ReadingCycleComponent: View {
                 VStack(alignment: .leading, spacing: 5) {
                     HStack {
                         Text("\(readingCycle.startedAt!.asLocalizedStringHoursMinutes)")
-                        Text("\(readingCycle.remainingTime?.asHoursMinutesString ?? "")")
+                        if readingCycle.active {
+                            Text("\(readingCycle.remainingTime?.asHoursMinutesString ?? "")")
+                        }
                     }
                     Text("\(readingCycle.book?.title ?? "")").font(.headline)
                 }

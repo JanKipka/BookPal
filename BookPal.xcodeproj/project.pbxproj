@@ -19,7 +19,7 @@
 		243598A727A4923E00764CD3 /* Model.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 243598A527A4923E00764CD3 /* Model.xcdatamodeld */; };
 		243598A927A493CD00764CD3 /* DataController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 243598A827A493CD00764CD3 /* DataController.swift */; };
 		24DD566727A55C11006949DB /* BooksAPIController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24DD566627A55C11006949DB /* BooksAPIController.swift */; };
-		24DD566D27A57B79006949DB /* ReadingCycleView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24DD566C27A57B79006949DB /* ReadingCycleView.swift */; };
+		24DD566D27A57B79006949DB /* NewReadingCycleView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24DD566C27A57B79006949DB /* NewReadingCycleView.swift */; };
 		24DD567127A6CA14006949DB /* SharedViewComponents.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24DD567027A6CA14006949DB /* SharedViewComponents.swift */; };
 		24DD567727A748E4006949DB /* DateExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24DD567627A748E4006949DB /* DateExtensions.swift */; };
 		24DD567A27A7491E006949DB /* TimeModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24DD567927A7491E006949DB /* TimeModels.swift */; };
@@ -71,7 +71,7 @@
 		24DD566927A55D13006949DB /* env_template.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = env_template.xcconfig; sourceTree = "<group>"; };
 		24DD566A27A55D55006949DB /* env.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = env.xcconfig; sourceTree = "<group>"; };
 		24DD566B27A55EA0006949DB /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
-		24DD566C27A57B79006949DB /* ReadingCycleView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReadingCycleView.swift; sourceTree = "<group>"; };
+		24DD566C27A57B79006949DB /* NewReadingCycleView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewReadingCycleView.swift; sourceTree = "<group>"; };
 		24DD567027A6CA14006949DB /* SharedViewComponents.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SharedViewComponents.swift; sourceTree = "<group>"; };
 		24DD567627A748E4006949DB /* DateExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DateExtensions.swift; sourceTree = "<group>"; };
 		24DD567927A7491E006949DB /* TimeModels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimeModels.swift; sourceTree = "<group>"; };
@@ -192,7 +192,7 @@
 			isa = PBXGroup;
 			children = (
 				24DD567027A6CA14006949DB /* SharedViewComponents.swift */,
-				24DD566C27A57B79006949DB /* ReadingCycleView.swift */,
+				24DD566C27A57B79006949DB /* NewReadingCycleView.swift */,
 				24DD568027A7D8BC006949DB /* ReadingActivityDetailView.swift */,
 				24DD568427A81743006949DB /* ReadingCycleDetailView.swift */,
 				24DD568627A83266006949DB /* Colors.swift */,
@@ -387,7 +387,7 @@
 				24DD568327A7E011006949DB /* BookModels.swift in Sources */,
 				243598A727A4923E00764CD3 /* Model.xcdatamodeld in Sources */,
 				241B36F027A338EA002C233A /* TimeFunctions.swift in Sources */,
-				24DD566D27A57B79006949DB /* ReadingCycleView.swift in Sources */,
+				24DD566D27A57B79006949DB /* NewReadingCycleView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

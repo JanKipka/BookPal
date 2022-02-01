@@ -136,6 +136,7 @@ struct NewReadingCycleView: View {
             }
             readingCycle.book = book
         }
+        readingCycle.maxPages = readingCycle.book!.numOfPages
         dataController.save()
         showingAlert = true
     }
@@ -155,30 +156,33 @@ struct SearchView: View {
     @Environment(\.dismiss) var dismiss
     
     var body: some View {
-        VStack {
-            HStack {
-                Image(systemName: "magnifyingglass")
-                TextField("Search for a book...", text: $searchQuery)
-                    .onChange(of: searchQuery) { query in
-                        if query.count >= 2 {
-                            callApi()
+        ZStack {
+            Colors.lighterOrange.ignoresSafeArea()
+            VStack {
+                Form {
+                    Section {
+                        TextField("Search for a book...", text: $searchQuery)
+                            .onChange(of: searchQuery) { query in
+                                if query.count >= 2 {
+                                    callApi()
+                                }
+                            }
+                    }
+                    Section {
+                        ForEach(volumes) { volume in
+                            VolumeInfoView(volumeInfo: volume.volumeInfo) {
+                                selectedVolume = volume.volumeInfo
+                                dismiss()
+                            }
                         }
                     }
-            }
-            .textFieldStyle(RoundedBorderTextFieldStyle())
-            
-            
-            List {
-                ForEach(volumes) { volume in
-                    VolumeInfoView(volumeInfo: volume.volumeInfo) {
-                        selectedVolume = volume.volumeInfo
-                        dismiss()
-                    }
+                    
                 }
+                .listStyle(.grouped)
+                
             }
-            .listStyle(.grouped)
-            
-        }.padding()
+        }
+        
     }
     
     private func callApi() {

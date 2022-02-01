@@ -21,6 +21,7 @@ struct ReadingActivityDetailView: View {
     }
     @State var pagesRead: String = ""
     @State var showMessage: Bool = false
+    @State var message: String = ""
     @State var notes: String = ""
     @State var pagesPerMinute: String = ""
     
@@ -28,6 +29,13 @@ struct ReadingActivityDetailView: View {
     @Environment(\.dismiss) var dismiss
     
     let dataController = DataController.shared
+    
+    fileprivate func refreshDateRelatedValues(_ d: Date) {
+        let interval = d.timeIntervalSince(readingActivity.startedAt!)
+        self.timeSpentReadingString = getTimeUnitFromTimeInterval(interval)!.asHoursMinutesString
+        readingActivity.pagesPerMinute = calculatePagesPerMinuteFromInterval(interval, pagesRead: readingActivity.pagesRead)
+        self.pagesPerMinute = readingActivity.pagesPerMinute.asDecimalString
+    }
     
     var body: some View {
         ZStack {
@@ -44,10 +52,7 @@ struct ReadingActivityDetailView: View {
                         Section("End Date") {
                             DatePicker("End Date", selection: $endDate)
                                 .onChange(of: endDate) { d in
-                                    let interval = d.timeIntervalSince(readingActivity.startedAt!)
-                                    self.timeSpentReadingString = getTimeUnitFromTimeInterval(interval).asHoursMinutesString
-                                    readingActivity.pagesPerMinute = calculatePagesPerMinuteFromInterval(interval, pagesRead: readingActivity.pagesRead)
-                                    self.pagesPerMinute = readingActivity.pagesPerMinute.asDecimalString
+                                    refreshDateRelatedValues(d)
                                 }
                         }
                     }
@@ -91,9 +96,12 @@ struct ReadingActivityDetailView: View {
                 }
             }
             .navigationBarBackButtonHidden(!readingActivity.active)
+            .alert(isPresented: $showMessage) {
+                Alert(title: Text(message))
+            }
     }
     
-    func buttonAction(){
+    fileprivate func buttonAction(){
         if !readingActivity.active {
             readingActivity.notes = notes
             readingActivity.finishedAt = endDate.zeroSeconds
@@ -104,12 +112,7 @@ struct ReadingActivityDetailView: View {
         }
     }
     
-    func finishReadingActivity() {
-        if pagesRead.isEmpty {
-            showMessage = true
-            return
-        }
-        let onPage = Int16(pagesRead)!
+    fileprivate func fillReadingActivity(currentlyOnPage onPage: Int16) {
         readingActivity.finishedActivityOnPage = onPage
         let onPageBefore = readingActivity.readingCycle?.currentPage ?? 0
         readingActivity.pagesRead = onPage - onPageBefore
@@ -119,6 +122,28 @@ struct ReadingActivityDetailView: View {
         readingActivity.pagesPerMinute = calculatePagesPerMinuteFromInterval(timePassedInterval!, pagesRead: readingActivity.pagesRead)
         readingActivity.active = false
         readingActivity.notes = notes
+    }
+    
+    fileprivate func finishReadingActivity() {
+        if pagesRead.isEmpty {
+            showMessage = true
+            message = "Please enter the page you're on."
+            return
+        }
+        let onPage = Int16(pagesRead)!
+        let maxPages = readingActivity.readingCycle!.maxPages
+        if onPage > maxPages {
+            showMessage = true
+            message = "The page you're on can't be greater than the total page number (\(maxPages))."
+            return
+        }
+        fillReadingActivity(currentlyOnPage: onPage)
+        if onPage == maxPages {
+            // book done
+            let cycle = readingActivity.readingCycle!
+            cycle.active = false
+            cycle.finishedAt = readingActivity.finishedAt
+        }
         dataController.save()
         dismiss()
     }

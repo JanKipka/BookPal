@@ -7,7 +7,10 @@
 
 import Foundation
 
-public func getTimeUnitFromTimeInterval(_ timeInterval: TimeInterval) -> TimeUnit {
+public func getTimeUnitFromTimeInterval(_ timeInterval: TimeInterval) -> TimeUnit? {
+    if timeInterval == 0 {
+        return nil
+    }
     var minutenDouble = timeInterval / 60
     var minuten = floor(minutenDouble)
     let minutenFracture = minutenDouble - minuten
