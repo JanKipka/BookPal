@@ -39,7 +39,7 @@ struct ReadingCycleDetailView: View {
                     BookComponent(book: readingCycle.book!)
                         .padding(.vertical)
                     Section("Start Date") {
-                        Text(readingCycle.startedAt?.asTimeUnit.asDateStringShort ?? "")
+                        Text(readingCycle.startedAt?.asLocalizedStringHoursMinutes ?? "")
                     }
                     Section("Pages read so far") {
                         Text("\(readingCycle.currentPage) of \(readingCycle.book!.numOfPages)")
@@ -49,10 +49,9 @@ struct ReadingCycleDetailView: View {
                     }
                     Section("Activities") {
                         ForEach(activities) { ac in
-                            NavigationLink(destination: ReadingActivityDetailView(readingActivity: ac, viewMode: true)) {
+                            NavigationLink(destination: ReadingActivityDetailView(readingActivity: ac)) {
                                 ReadingActivityListComponent(ac: ac)
                             }
-                            .disabled(ac.active)
                         }
                     }
                 }
