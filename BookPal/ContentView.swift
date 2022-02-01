@@ -30,10 +30,26 @@ struct ContentView: View {
     @State var hasActiveActivityAlert: Bool = false
     @State var selectedActivity: ReadingActivity?
     
+    fileprivate func startReadingCycle(_ cycle: ReadingCycle) {
+        let hasActiveActivities = !activities.isEmpty
+        if hasActiveActivities {
+            hasActiveActivityAlert.toggle()
+            return
+        }
+        let activity = ReadingActivity(context: moc)
+        activity.active = true
+        activity.startedAt = Date().zeroSeconds
+        activity.id = UUID()
+        activity.readingCycle = cycle
+        activity.startedActivityOnPage = cycle.currentPage
+        dataController.save()
+        activityStartedAlert.toggle()
+    }
+    
     var body: some View {
         NavigationView {
             ZStack {
-                LinearGradient(gradient: Gradient(colors: [Colors.darkerBlue, Colors.lighterBlue]), startPoint: .top, endPoint: .bottom)
+                Colors.linearGradient(topColor: Colors.darkerBlue, bottomColor: Colors.lighterBlue)
                     .ignoresSafeArea()
                 VStack {
                     NavigationLink(destination: NewReadingCycleView(), isActive: $navigateToNewCycleView) {
@@ -53,24 +69,17 @@ struct ContentView: View {
                                     ReadingCycleComponent(readingCycle: cycle)
                                 }
                                 .swipeActions(edge: .leading){
-                                    Button {
-                                        let hasActiveActivities = !activities.isEmpty
-                                        if hasActiveActivities {
-                                            hasActiveActivityAlert.toggle()
-                                            return
+                                    if cycle.active {
+                                        Button {
+                                            startReadingCycle(cycle)
+                                        } label: {
+                                            Label("Read Now", systemImage: "book.fill")
                                         }
-                                        let activity = ReadingActivity(context: moc)
-                                        activity.active = true
-                                        activity.startedAt = Date()
-                                        activity.id = UUID()
-                                        activity.readingCycle = cycle
-                                        activity.startedActivityOnPage = cycle.currentPage
-                                        dataController.save()
-                                        activityStartedAlert.toggle()
-                                    } label: {
-                                        Label("Read Now", systemImage: "book.fill")
+                                        .tint(.blue)
+                                    } else {
+                                        EmptyView()
                                     }
-                                    .tint(.blue)
+                                    
                                 }
                             }
                         }

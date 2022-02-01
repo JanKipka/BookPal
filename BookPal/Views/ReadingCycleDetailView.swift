@@ -10,9 +10,10 @@ import SwiftUI
 
 struct ReadingCycleDetailView: View {
     
-    @ObservedObject var readingCycle: ReadingCycle
+    var readingCycle: ReadingCycle
     var activities: [ReadingActivity]
     @State var notes: String
+    @State var avgPagesPerMinute = ""
     let dataController = DataController.shared
     
     init(readingCycle: ReadingCycle) {
@@ -31,7 +32,7 @@ struct ReadingCycleDetailView: View {
     
     var body: some View {
         ZStack {
-            Colors.orange
+            Colors.linearGradient(topColor: Colors.orange, bottomColor: Colors.lighterOrange)
                 .ignoresSafeArea()
             VStack {
                 
@@ -39,31 +40,44 @@ struct ReadingCycleDetailView: View {
                     BookComponent(book: readingCycle.book!)
                         .padding(.vertical)
                     Section("Start Date") {
-                        Text(readingCycle.startedAt?.asTimeUnit.asDateStringShort ?? "")
+                        Text(readingCycle.startedAt?.asLocalizedStringHoursMinutes ?? "")
                     }
-                    Section("Pages read so far") {
+                    if !readingCycle.active {
+                        Section("End Date") {
+                            Text(readingCycle.finishedAt?.asLocalizedStringHoursMinutes ?? "")
+                        }
+                    }
+                    Section(readingCycle.active ? "Pages read so far" : "Pages read") {
                         Text("\(readingCycle.currentPage) of \(readingCycle.book!.numOfPages)")
+                    }
+                    Section("Time spent reading") {
+                        Text("\(readingCycle.totalTimeSpentReading?.asHoursMinutesString ?? "0m")")
+                    }
+                    Section("Average pages per minute") {
+                        Text(avgPagesPerMinute)
                     }
                     Section("Notes") {
                         TextEditor(text: $notes)
                     }
                     Section("Activities") {
                         ForEach(activities) { ac in
-                            NavigationLink(destination: ReadingActivityDetailView(readingActivity: ac, viewMode: true)) {
+                            NavigationLink(destination: ReadingActivityDetailView(readingActivity: ac)) {
                                 ReadingActivityListComponent(ac: ac)
                             }
-                            .disabled(ac.active)
                         }
                     }
                 }
             }
-        }.navigationTitle("Reading cycle")
+        }.navigationTitle("You're reading...")
             .onDisappear {
                 if notes == readingCycle.notes {
                     return
                 }
                 readingCycle.notes = notes
                 dataController.save()
+            }
+            .onAppear {
+                self.avgPagesPerMinute = readingCycle.avgPagesPerMinute.asDecimalString
             }
     }
 

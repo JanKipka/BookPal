@@ -69,7 +69,7 @@ class TestReadingCycle {
     var remainingTime: TimeUnit {
         get {
             let remainingTime = Int(round(Double(self.calculateTotalPagesLeft()) / self.calculateAveragePagesPerMinute()))
-            return getTimeUnitFromTimeInterval(TimeInterval(remainingTime * 60))
+            return getTimeUnitFromTimeInterval(TimeInterval(remainingTime * 60))!
         }
     }
     
@@ -91,7 +91,7 @@ class TestReadingCycle {
             for activity in readingActivities {
                 totalTime = totalTime + activity.timeInterval
             }
-            return getTimeUnitFromTimeInterval(totalTime)
+            return getTimeUnitFromTimeInterval(totalTime)!
         }
     }
     

@@ -24,7 +24,12 @@ struct ReadingCycleComponent: View {
             HStack {
                 ImageComponent(thumbnail: readingCycle.book?.coverLinks?.thumbnail ?? "")
                 VStack(alignment: .leading, spacing: 5) {
-                    Text("\(readingCycle.startedAt!.asTimeUnit.asDateStringShort)")
+                    HStack {
+                        Text("\(readingCycle.startedAt!.asLocalizedStringHoursMinutes)")
+                        if readingCycle.active {
+                            Text("\(readingCycle.remainingTime?.asHoursMinutesString ?? "")")
+                        }
+                    }
                     Text("\(readingCycle.book?.title ?? "")").font(.headline)
                 }
             }
@@ -90,7 +95,7 @@ struct BookComponent: View {
 
 struct ReadingActivityListComponent: View {
     
-    var ac: ReadingActivity
+    @ObservedObject var ac: ReadingActivity
     
     var body: some View {
         VStack(spacing: 10) {
@@ -100,10 +105,10 @@ struct ReadingActivityListComponent: View {
                 Text("\(getPagesString(readingActivitiy:ac))")
             }
             HStack {
-                Text(ac.startedAt?.asTimeUnit.asDateStringShort ?? "")
+                Text(ac.startedAt?.asLocalizedStringHoursMinutes ?? "")
                     .font(.caption)
                 Spacer()
-                Text(ac.finishedAt?.asTimeUnit.asDateStringShort ?? "")
+                Text(ac.finishedAt?.asLocalizedStringHoursMinutes ?? "")
                     .font(.caption)
             }
         }

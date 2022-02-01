@@ -40,14 +40,19 @@ class TimeFunctionsTest: XCTestCase {
         XCTAssertEqual("10.10.2021 12:04 Uhr", timeUnit.asDateStringShort)
     }
     
+    func testGetZeitEinheitEmptyInterval() throws {
+        let zeitEinheit = getTimeUnitFromTimeInterval(TimeInterval())
+        XCTAssertNil(zeitEinheit)
+    }
+    
     func testGetZeitEinheitFromTimeIntervalHighValue() throws {
         let interval = TimeInterval(4830)
         
         let zeitEinheit = getTimeUnitFromTimeInterval(interval)
         
-        XCTAssertTrue(zeitEinheit.hours == 1)
-        XCTAssertTrue(zeitEinheit.minutes == 20)
-        XCTAssertTrue(zeitEinheit.seconds == 30)
+        XCTAssertTrue(zeitEinheit!.hours == 1)
+        XCTAssertTrue(zeitEinheit!.minutes == 20)
+        XCTAssertTrue(zeitEinheit!.seconds == 30)
     }
     
     func testGetZeitEinheitFromTimeIntervalValueBelowAnHour() throws {
@@ -55,9 +60,9 @@ class TimeFunctionsTest: XCTestCase {
         
         let zeitEinheit = getTimeUnitFromTimeInterval(interval)
         
-        XCTAssertTrue(zeitEinheit.hours == 0)
-        XCTAssertTrue(zeitEinheit.minutes == 47)
-        XCTAssertTrue(zeitEinheit.seconds == 44)
+        XCTAssertTrue(zeitEinheit!.hours == 0)
+        XCTAssertTrue(zeitEinheit!.minutes == 47)
+        XCTAssertTrue(zeitEinheit!.seconds == 44)
     }
     
     func testGetZeitEinheitFromTimeIntervalBelowTenMinutes() throws {
@@ -65,9 +70,9 @@ class TimeFunctionsTest: XCTestCase {
         
         let zeitEinheit = getTimeUnitFromTimeInterval(interval)
         
-        XCTAssertTrue(zeitEinheit.hours == 0)
-        XCTAssertTrue(zeitEinheit.minutes == 9)
-        XCTAssertTrue(zeitEinheit.seconds == 42)
+        XCTAssertTrue(zeitEinheit!.hours == 0)
+        XCTAssertTrue(zeitEinheit!.minutes == 9)
+        XCTAssertTrue(zeitEinheit!.seconds == 42)
     }
     
     func testGetZeitEinheitFromTimeIntervalBelowOneMinute() throws {
@@ -75,9 +80,9 @@ class TimeFunctionsTest: XCTestCase {
         
         let zeitEinheit = getTimeUnitFromTimeInterval(interval)
         
-        XCTAssertTrue(zeitEinheit.hours == 0)
-        XCTAssertTrue(zeitEinheit.minutes == 0)
-        XCTAssertTrue(zeitEinheit.seconds == 58)
+        XCTAssertTrue(zeitEinheit!.hours == 0)
+        XCTAssertTrue(zeitEinheit!.minutes == 0)
+        XCTAssertTrue(zeitEinheit!.seconds == 58)
     }
 
 }

@@ -19,8 +19,14 @@ struct Colors {
 
     static let mint = Color(red: 129 / 255, green: 252 / 255, blue: 228 / 255)
     
+    static let lighterMint = Color(red: 194 / 255, green: 255 / 255, blue: 241 / 255)
+    
     static func getRGB(red: Int, green: Int, blue: Int) -> Color {
         return Color(red: Double(red / 255), green: Double(green / 255), blue: Double(blue / 255))
+    }
+    
+    static func linearGradient(topColor: Color, bottomColor: Color) -> LinearGradient {
+        LinearGradient(gradient: Gradient(colors: [topColor, bottomColor]), startPoint: .top, endPoint: .bottom)
     }
 }
 

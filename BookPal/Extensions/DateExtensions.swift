@@ -22,6 +22,26 @@ extension Date {
     }
 }
 
+extension Date {
+    var asLocalizedStringHoursMinutes: String {
+        Date.FormatStyle().locale(Locale.current).day(FormatStyle.Symbol.Day.twoDigits).month(FormatStyle.Symbol.Month.twoDigits).year().hour().minute().format(self)
+    }
+    
+    var asLocalizedStringHoursMinutesSeconds: String {
+        Date.FormatStyle().locale(Locale.current).day(FormatStyle.Symbol.Day.twoDigits).month(FormatStyle.Symbol.Month.twoDigits).year().hour().minute().second().format(self)
+    }
+}
+
+extension Date {
+
+    var zeroSeconds: Date? {
+        let calendar = Calendar.current
+        let dateComponents = calendar.dateComponents([.year, .month, .day, .hour, .minute], from: self)
+        return calendar.date(from: dateComponents)
+    }
+
+}
+
 extension TimeUnit {
     private var dateBaseString: String {
         var part = ""
