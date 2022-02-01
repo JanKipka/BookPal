@@ -13,6 +13,7 @@ struct ReadingCycleDetailView: View {
     @ObservedObject var readingCycle: ReadingCycle
     var activities: [ReadingActivity]
     @State var notes: String
+    @State var avgPagesPerMinute = ""
     let dataController = DataController.shared
     
     init(readingCycle: ReadingCycle) {
@@ -31,7 +32,7 @@ struct ReadingCycleDetailView: View {
     
     var body: some View {
         ZStack {
-            Colors.orange
+            Colors.linearGradient(topColor: Colors.orange, bottomColor: Colors.lighterOrange)
                 .ignoresSafeArea()
             VStack {
                 
@@ -43,6 +44,9 @@ struct ReadingCycleDetailView: View {
                     }
                     Section("Pages read so far") {
                         Text("\(readingCycle.currentPage) of \(readingCycle.book!.numOfPages)")
+                    }
+                    Section("Average pages per minute") {
+                        Text(avgPagesPerMinute)
                     }
                     Section("Notes") {
                         TextEditor(text: $notes)
@@ -56,13 +60,16 @@ struct ReadingCycleDetailView: View {
                     }
                 }
             }
-        }.navigationTitle("Reading cycle")
+        }.navigationTitle("You're reading...")
             .onDisappear {
                 if notes == readingCycle.notes {
                     return
                 }
                 readingCycle.notes = notes
                 dataController.save()
+            }
+            .onAppear {
+                self.avgPagesPerMinute = readingCycle.avgPagesPerMinute.asDecimalString
             }
     }
 

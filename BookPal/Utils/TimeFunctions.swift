@@ -27,3 +27,24 @@ public func getTimeUnitFromTimeInterval(_ timeInterval: TimeInterval) -> TimeUni
 public func getMinutesFromTimeInterval(_ interval: TimeInterval) -> Double {
     return interval / 60
 }
+
+public func calculateRemainingTimeForCycle(_ readingCycle: ReadingCycle) -> TimeUnit? {
+    let pagesLeft = readingCycle.book!.numOfPages - readingCycle.currentPage
+    let avgPages = readingCycle.avgPagesPerMinute
+    if avgPages > 0.0 {
+        let roundedTimeLeft = round(Double(pagesLeft) / avgPages)
+        let asIntasSeconds = Int(roundedTimeLeft) * 60
+        return getTimeUnitFromTimeInterval(TimeInterval(asIntasSeconds))
+    }
+    
+    return nil
+}
+
+public func calculateAvgPagesPerMinuteForCycle(_ readingCycle: ReadingCycle) -> Double {
+    let acArray = Array(readingCycle.readingActivities as! Set<ReadingActivity>)
+    var avg = 0.0
+    for ac in acArray {
+        avg += ac.pagesPerMinute
+    }
+    return avg
+}

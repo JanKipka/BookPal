@@ -22,6 +22,7 @@ struct ReadingActivityDetailView: View {
     @State var pagesRead: String = ""
     @State var showMessage: Bool = false
     @State var notes: String = ""
+    @State var pagesPerMinute: String = ""
     
     @Environment(\.managedObjectContext) var moc
     @Environment(\.dismiss) var dismiss
@@ -30,7 +31,7 @@ struct ReadingActivityDetailView: View {
     
     var body: some View {
         ZStack {
-            Colors.mint
+            Colors.linearGradient(topColor: Colors.mint, bottomColor: Colors.lighterMint)
                 .ignoresSafeArea()
             VStack {
                 Form {
@@ -45,6 +46,8 @@ struct ReadingActivityDetailView: View {
                                 .onChange(of: endDate) { d in
                                     let interval = d.timeIntervalSince(readingActivity.startedAt!)
                                     self.timeSpentReadingString = getTimeUnitFromTimeInterval(interval).asHoursMinutesString
+                                    readingActivity.pagesPerMinute = calculatePagesPerMinuteFromInterval(interval, pagesRead: readingActivity.pagesRead)
+                                    self.pagesPerMinute = readingActivity.pagesPerMinute.asDecimalString
                                 }
                         }
                     }
@@ -61,34 +64,15 @@ struct ReadingActivityDetailView: View {
                             TextField("What page are you on?", text: $pagesRead)
                         }
                     }
+                    if !readingActivity.active {
+                        Section("Pages per minute") {
+                            Text(pagesPerMinute)
+                        }
+                    }
                     Section("Notes") {
                         TextEditor(text: $notes)
                     }
                 }
-                if readingActivity.active {
-                    Button("Finish reading") {
-                        buttonAction()
-                    }
-                    .alert(isPresented: $showMessage) {
-                        Alert(title: Text("Please enter the page you are currently on."))
-                    }
-                    .disabled(pagesRead.isEmpty)
-                    .frame(maxWidth: 250, maxHeight: 7)
-                    .padding(.vertical, 20)
-                    .background(.blue)
-                    .foregroundColor(.white)
-                    .clipShape(RoundedRectangle(cornerRadius: 5))
-                } else {
-                    Button("Save") {
-                        buttonAction()
-                    }
-                    .frame(maxWidth: 250, maxHeight: 7)
-                    .padding(.vertical, 20)
-                    .background(.blue)
-                    .foregroundColor(.white)
-                    .clipShape(RoundedRectangle(cornerRadius: 5))
-                }
-                
                 Spacer()
             }
             
@@ -97,13 +81,22 @@ struct ReadingActivityDetailView: View {
                 self.endDate = readingActivity.finishedAt ?? Date()
                 self.notes = readingActivity.notes ?? ""
                 self.timeSpentReadingString = !readingActivity.active ? timeSpentReading : timePassed
+                self.pagesPerMinute = readingActivity.pagesPerMinute.asDecimalString
             }
+            .toolbar {
+                ToolbarItem {
+                    Button(readingActivity.active ? "Finish reading" : "Done") {
+                        buttonAction()
+                    }
+                }
+            }
+            .navigationBarBackButtonHidden(!readingActivity.active)
     }
     
     func buttonAction(){
         if !readingActivity.active {
             readingActivity.notes = notes
-            readingActivity.finishedAt = endDate
+            readingActivity.finishedAt = endDate.zeroSeconds
             dataController.save()
             dismiss()
         } else {
@@ -119,10 +112,11 @@ struct ReadingActivityDetailView: View {
         let onPage = Int16(pagesRead)!
         readingActivity.finishedActivityOnPage = onPage
         let onPageBefore = readingActivity.readingCycle?.currentPage ?? 0
-        //readingActivity.startedActivityOnPage = onPageBefore
         readingActivity.pagesRead = onPage - onPageBefore
         readingActivity.readingCycle?.currentPage = onPage
-        readingActivity.finishedAt = Date()
+        readingActivity.finishedAt = Date().zeroSeconds
+        let timePassedInterval = readingActivity.finishedAt?.timeIntervalSince(readingActivity.startedAt!)
+        readingActivity.pagesPerMinute = calculatePagesPerMinuteFromInterval(timePassedInterval!, pagesRead: readingActivity.pagesRead)
         readingActivity.active = false
         readingActivity.notes = notes
         dataController.save()

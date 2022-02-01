@@ -28,7 +28,7 @@ struct NewReadingCycleView: View {
     
     var body: some View {
         ZStack {
-            Colors.mint
+            Colors.linearGradient(topColor: Colors.mint, bottomColor: Colors.lighterMint)
                 .ignoresSafeArea()
             VStack {
                 Form {
@@ -76,7 +76,7 @@ struct NewReadingCycleView: View {
             primaryButton: .default(Text("Yes")) {
                 let readingActivity = ReadingActivity(context: moc)
                 readingActivity.id = UUID()
-                readingActivity.startedAt = Date()
+                readingActivity.startedAt = Date().zeroSeconds
                 readingActivity.readingCycle = readingCycle
                 readingActivity.startedActivityOnPage = 0
                 readingActivity.active = true

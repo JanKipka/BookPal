@@ -33,7 +33,7 @@ struct ContentView: View {
     var body: some View {
         NavigationView {
             ZStack {
-                LinearGradient(gradient: Gradient(colors: [Colors.darkerBlue, Colors.lighterBlue]), startPoint: .top, endPoint: .bottom)
+                Colors.linearGradient(topColor: Colors.darkerBlue, bottomColor: Colors.lighterBlue)
                     .ignoresSafeArea()
                 VStack {
                     NavigationLink(destination: NewReadingCycleView(), isActive: $navigateToNewCycleView) {
@@ -61,7 +61,7 @@ struct ContentView: View {
                                         }
                                         let activity = ReadingActivity(context: moc)
                                         activity.active = true
-                                        activity.startedAt = Date()
+                                        activity.startedAt = Date().zeroSeconds
                                         activity.id = UUID()
                                         activity.readingCycle = cycle
                                         activity.startedActivityOnPage = cycle.currentPage

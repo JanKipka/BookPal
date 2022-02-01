@@ -24,7 +24,10 @@ struct ReadingCycleComponent: View {
             HStack {
                 ImageComponent(thumbnail: readingCycle.book?.coverLinks?.thumbnail ?? "")
                 VStack(alignment: .leading, spacing: 5) {
-                    Text("\(readingCycle.startedAt!.asLocalizedStringHoursMinutes)")
+                    HStack {
+                        Text("\(readingCycle.startedAt!.asLocalizedStringHoursMinutes)")
+                        Text("\(readingCycle.remainingTime?.asHoursMinutesString ?? "")")
+                    }
                     Text("\(readingCycle.book?.title ?? "")").font(.headline)
                 }
             }

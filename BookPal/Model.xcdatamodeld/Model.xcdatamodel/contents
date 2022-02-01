@@ -46,6 +46,7 @@
         <attribute name="finishedAt" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
         <attribute name="id" optional="YES" attributeType="UUID" usesScalarValueType="NO"/>
         <attribute name="notes" optional="YES" attributeType="String"/>
+        <attribute name="pagesPerMinute" optional="YES" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES"/>
         <attribute name="pagesRead" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES"/>
         <attribute name="startedActivityOnPage" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES"/>
         <attribute name="startedAt" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
@@ -57,7 +58,6 @@
         <attribute name="finishedAt" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
         <attribute name="id" optional="YES" attributeType="UUID" usesScalarValueType="NO"/>
         <attribute name="notes" optional="YES" attributeType="String"/>
-        <attribute name="remainingTime" optional="YES" attributeType="Integer 32" defaultValueString="0" usesScalarValueType="YES"/>
         <attribute name="startedAt" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
         <relationship name="book" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Book" inverseName="readingCycles" inverseEntity="Book"/>
         <relationship name="readingActivities" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="ReadingActivity" inverseName="readingCycle" inverseEntity="ReadingActivity"/>
@@ -66,8 +66,8 @@
         <element name="Author" positionX="-18" positionY="108" width="128" height="89"/>
         <element name="Book" positionX="-36" positionY="27" width="128" height="164"/>
         <element name="Genre" positionX="-54" positionY="-9" width="128" height="74"/>
-        <element name="ReadingActivity" positionX="0" positionY="99" width="128" height="164"/>
-        <element name="ReadingCycle" positionX="-18" positionY="81" width="128" height="164"/>
+        <element name="ReadingActivity" positionX="0" positionY="99" width="128" height="179"/>
+        <element name="ReadingCycle" positionX="-18" positionY="81" width="128" height="149"/>
         <element name="CoverLinks" positionX="-27" positionY="108" width="128" height="119"/>
     </elements>
 </model>
