@@ -22,15 +22,23 @@ struct ReadingCycleComponent: View {
     var body: some View {
         VStack(spacing: 10) {
             HStack {
-                ImageComponent(thumbnail: readingCycle.book?.coverLinks?.thumbnail ?? "")
+                ImageComponent(thumbnail: readingCycle.book?.coverLinks?.thumbnail ?? "", width: 70, height: 75)
                 VStack(alignment: .leading, spacing: 5) {
-                    HStack {
-                        Text("\(readingCycle.startedAt!.asLocalizedStringHoursMinutes)")
-                        if readingCycle.active {
-                            Text("\(readingCycle.remainingTime?.asHoursMinutesString ?? "")")
+                        TimelineView(.everyMinute) { context in
+                            Text("Started \(context.date.timeIntervalSince(readingCycle.startedAt!).asDaysHoursMinutesString ?? "0m") ago")
+                                .font(.callout)
                         }
-                    }
                     Text("\(readingCycle.book?.title ?? "")").font(.headline)
+                    if readingCycle.active {
+                        HStack {
+                            Text("p. \(readingCycle.currentPage) of \(readingCycle.book!.numOfPages)")
+                            Spacer()
+                            Text(readingCycle.hasActiveActivities ? "Reading" : "Done in \(readingCycle.remainingTime?.asHoursMinutesString ?? "??m")")
+                                .foregroundColor(.blue)
+                                .fontWeight(.semibold)
+                        }
+                        .font(.callout)
+                    }
                 }
             }
         }
@@ -38,33 +46,37 @@ struct ReadingCycleComponent: View {
 }
 
 struct ImageComponent: View {
-    @State var thumbnail: String
+    var thumbnail: String
+    var width: CGFloat = 60
+    var height: CGFloat = 60
+    
     var body: some View {
         AsyncImage(url: URL(string: thumbnail)){ image in
             image.resizable()
         } placeholder: {
             Image("placeholder")
                 .resizable()
-                .frame(width: 60, height: 60, alignment: .center)
+                .frame(width: width, height: height, alignment: .center)
         }
         .aspectRatio(contentMode: .fit)
-        .frame(width: 60, height: 60, alignment: .center)
+        .frame(width: width, height: height, alignment: .center)
     }
 }
 
 struct ReadingActivityComponent: View {
     
     @ObservedObject var readingActivity: ReadingActivity
-    var refreshDate: Date
     
     var body: some View {
         VStack (spacing: 10){
             HStack {
                 ImageComponent(thumbnail: readingActivity.readingCycle?.book?.coverLinks?.thumbnail ?? "")
                 VStack(alignment: .leading, spacing: 5) {
-                    Text("\(readingActivity.passedTimeFromDateSinceStart(refreshDate).asHoursMinutesString)")
-                        .fontWeight(.semibold)
-                        .foregroundColor(.blue)
+                    TimelineView(.everyMinute) { context in
+                        Text("\(readingActivity.passedTimeFromDateSinceStart(context.date)?.asHoursMinutesString ?? "0m")")
+                            .fontWeight(.semibold)
+                            .foregroundColor(.blue)
+                    }
                     Text("\(readingActivity.readingCycle?.book?.title ?? "")").font(.headline)
                 }
             }
@@ -101,7 +113,10 @@ struct ReadingActivityListComponent: View {
     var body: some View {
         VStack(spacing: 10) {
             HStack {
-                Text("\(ac.timeSpentReading.asHoursMinutesString)")
+                TimelineView(.periodic(from: ac.startedAt!, by: ac.active ? 30 : 0)) { context in
+                    Text("\(ac.active ? ac.passedTimeFromDateSinceStart(context.date)?.asHoursMinutesString ?? "0m" : ac.timeSpentReading.asHoursMinutesString)")
+                }
+                
                 Spacer()
                 Text("\(getPagesString(readingActivitiy:ac))")
             }
