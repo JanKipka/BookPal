@@ -16,6 +16,11 @@ extension ReadingActivity {
         }
     }
     
+    func passedTimeFromDateSinceStart(_ date: Date) -> TimeUnit {
+        let interval = date.timeIntervalSince(startedAt ?? Date())
+        return getTimeUnitFromTimeInterval(interval)!
+    }
+    
     var timeSpentReading: TimeUnit {
         get {
             if let end = finishedAt {

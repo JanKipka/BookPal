@@ -13,8 +13,9 @@ struct ReadingActivityDetailView: View {
     @ObservedObject var readingActivity: ReadingActivity
     @State var endDate: Date = Date()
     @State var timeSpentReadingString: String = ""
+    var refreshDate: Date?
     var timePassed: String {
-        readingActivity.passedTimeUntilNow.asHoursMinutesString
+        readingActivity.passedTimeFromDateSinceStart(refreshDate ?? .now).asHoursMinutesString
     }
     var timeSpentReading: String {
         readingActivity.timeSpentReading.asHoursMinutesString
@@ -24,6 +25,7 @@ struct ReadingActivityDetailView: View {
     @State var message: String = ""
     @State var notes: String = ""
     @State var pagesPerMinute: String = ""
+    
     
     @Environment(\.managedObjectContext) var moc
     @Environment(\.dismiss) var dismiss

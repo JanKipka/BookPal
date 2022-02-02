@@ -55,13 +55,14 @@ struct ImageComponent: View {
 struct ReadingActivityComponent: View {
     
     @ObservedObject var readingActivity: ReadingActivity
+    var refreshDate: Date
     
     var body: some View {
         VStack (spacing: 10){
             HStack {
                 ImageComponent(thumbnail: readingActivity.readingCycle?.book?.coverLinks?.thumbnail ?? "")
                 VStack(alignment: .leading, spacing: 5) {
-                    Text("\(readingActivity.passedTimeUntilNow.asHoursMinutesString)")
+                    Text("\(readingActivity.passedTimeFromDateSinceStart(refreshDate).asHoursMinutesString)")
                         .fontWeight(.semibold)
                         .foregroundColor(.blue)
                     Text("\(readingActivity.readingCycle?.book?.title ?? "")").font(.headline)

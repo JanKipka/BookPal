@@ -47,78 +47,79 @@ struct ContentView: View {
     }
     
     var body: some View {
-        NavigationView {
-            ZStack {
-                Colors.linearGradient(topColor: Colors.darkerBlue, bottomColor: Colors.lighterBlue)
-                    .ignoresSafeArea()
-                VStack {
-                    NavigationLink(destination: NewReadingCycleView(), isActive: $navigateToNewCycleView) {
-                        EmptyView()
-                    }
-                    List {
-                        Section("Active reading activities") {
-                            ForEach(activities) { ac in
-                                NavigationLink(destination: ReadingActivityDetailView(readingActivity: ac)) {
-                                    ReadingActivityComponent(readingActivity: ac)
-                                }
-                            }
+        TimelineView(.periodic(from: .now, by: 30)) { context in
+            NavigationView {
+                ZStack {
+                    Colors.linearGradient(topColor: Colors.darkerBlue, bottomColor: Colors.lighterBlue)
+                        .ignoresSafeArea()
+                    VStack {
+                        NavigationLink(destination: NewReadingCycleView(), isActive: $navigateToNewCycleView) {
+                            EmptyView()
                         }
-                        Section("Books you're reading") {
-                            ForEach(cycles) { cycle in
-                                NavigationLink(destination: ReadingCycleDetailView(readingCycle: cycle)) {
-                                    ReadingCycleComponent(readingCycle: cycle)
-                                }
-                                .swipeActions(edge: .leading){
-                                    if cycle.active {
-                                        Button {
-                                            startReadingCycle(cycle)
-                                        } label: {
-                                            Label("Read Now", systemImage: "book.fill")
-                                        }
-                                        .tint(.blue)
-                                    } else {
-                                        EmptyView()
+                        List {
+                            Section("Active reading activities") {
+                                ForEach(activities) { ac in
+                                    NavigationLink(destination: ReadingActivityDetailView(readingActivity: ac, refreshDate: context.date)) {
+                                        ReadingActivityComponent(readingActivity: ac, refreshDate: context.date)
                                     }
-                                    
+                                }
+                            }
+                            Section("Books you're reading") {
+                                ForEach(cycles) { cycle in
+                                    NavigationLink(destination: ReadingCycleDetailView(readingCycle: cycle)) {
+                                        ReadingCycleComponent(readingCycle: cycle)
+                                    }
+                                    .swipeActions(edge: .leading){
+                                        if cycle.active {
+                                            Button {
+                                                startReadingCycle(cycle)
+                                            } label: {
+                                                Label("Read Now", systemImage: "book.fill")
+                                            }
+                                            .tint(.blue)
+                                        } else {
+                                            EmptyView()
+                                        }
+                                        
+                                    }
                                 }
                             }
                         }
+                        Spacer()
+                        Spacer()
+                        Spacer()
+                        
                     }
-                    Spacer()
-                    Spacer()
-                    Spacer()
-                    
-                }
-                .alert(isPresented: $activityStartedAlert) {
-                    Alert(title: Text("Reading activity started!"))
-                }
-                .alert(isPresented: $hasActiveActivityAlert) {
-                    Alert(title: Text("Active activity ongoing"), message: Text("There's already an active reading acitivity."))
-                }
-            }
-            .toolbar {
-                ToolbarItem(placement: .navigationBarTrailing) {
-                    Menu {
-                        Button("Add a new book") {
-                            navigateToNewCycleView = true
-                        }
-                        Button("Dev: Delete all") {
-                            dataController.deleteAll(entityName: "Genre")
-                            dataController.deleteAll(entityName: "Book")
-                            dataController.deleteAll(entityName: "Author")
-                            dataController.deleteAll(entityName: "ReadingCycle")
-                            dataController.deleteAll(entityName: "ReadingActivity")
-                            dataController.deleteAll(entityName: "CoverLinks")
-                        }
-                    } label: {
-                        Label("Add new book", systemImage: "plus")
+                    .alert(isPresented: $activityStartedAlert) {
+                        Alert(title: Text("Reading activity started!"))
+                    }
+                    .alert(isPresented: $hasActiveActivityAlert) {
+                        Alert(title: Text("Active activity ongoing"), message: Text("There's already an active reading acitivity."))
                     }
                 }
+                .toolbar {
+                    ToolbarItem(placement: .navigationBarTrailing) {
+                        Menu {
+                            Button("Add a new book") {
+                                navigateToNewCycleView = true
+                            }
+                            Button("Dev: Delete all") {
+                                dataController.deleteAll(entityName: "Genre")
+                                dataController.deleteAll(entityName: "Book")
+                                dataController.deleteAll(entityName: "Author")
+                                dataController.deleteAll(entityName: "ReadingCycle")
+                                dataController.deleteAll(entityName: "ReadingActivity")
+                                dataController.deleteAll(entityName: "CoverLinks")
+                            }
+                        } label: {
+                            Label("Add new book", systemImage: "plus")
+                        }
+                    }
+                }
+                .navigationTitle("Read now")
+                
             }
-            .navigationTitle("Read now")
-            
         }
-        
     }
     
     func filterActivities() -> [ReadingActivity] {
