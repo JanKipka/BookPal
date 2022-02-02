@@ -56,6 +56,7 @@
         <attribute name="active" optional="YES" attributeType="Boolean" usesScalarValueType="YES"/>
         <attribute name="currentPage" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES"/>
         <attribute name="finishedAt" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
+        <attribute name="finishedStatusValue" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES"/>
         <attribute name="id" optional="YES" attributeType="UUID" usesScalarValueType="NO"/>
         <attribute name="maxPages" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES"/>
         <attribute name="notes" optional="YES" attributeType="String"/>
@@ -66,9 +67,9 @@
     <elements>
         <element name="Author" positionX="-18" positionY="108" width="128" height="89"/>
         <element name="Book" positionX="-36" positionY="27" width="128" height="164"/>
+        <element name="CoverLinks" positionX="-27" positionY="108" width="128" height="119"/>
         <element name="Genre" positionX="-54" positionY="-9" width="128" height="74"/>
         <element name="ReadingActivity" positionX="0" positionY="99" width="128" height="179"/>
-        <element name="ReadingCycle" positionX="-18" positionY="81" width="128" height="164"/>
-        <element name="CoverLinks" positionX="-27" positionY="108" width="128" height="119"/>
+        <element name="ReadingCycle" positionX="-18" positionY="81" width="128" height="179"/>
     </elements>
 </model>

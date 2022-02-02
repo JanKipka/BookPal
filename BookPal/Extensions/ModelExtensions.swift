@@ -78,9 +78,23 @@ extension ReadingCycle: DynamicDateComponent {
         return getTimeUnitFromTimeInterval(sum)
     }
     
+    var getActiveActivities: [ReadingActivity] {
+        return Array(self.readingActivities as! Set<ReadingActivity>)
+    }
+    
     var hasActiveActivities: Bool {
-        let acArray = Array(self.readingActivities as! Set<ReadingActivity>)
+        let acArray = getActiveActivities
         return !acArray.filter({$0.active}).isEmpty
+    }
+    
+    var finishedStatus: FinishedStatus {
+        get {
+            return FinishedStatus(rawValue: self.finishedStatusValue)!
+        }
+        
+        set {
+            self.finishedStatusValue = newValue.rawValue
+        }
     }
     
 }

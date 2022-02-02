@@ -45,6 +45,7 @@ extension ReadingController {
         if onPage == maxPages {
             // book done
             let cycle = readingActivity.readingCycle!
+            cycle.finishedStatus = .read
             cycle.active = false
             cycle.finishedAt = readingActivity.finishedAt
         }
@@ -63,5 +64,16 @@ extension ReadingController {
         readingCycle.maxPages = readingCycle.book!.numOfPages
         dataController.save()
         return readingCycle
+    }
+    
+    func stopReading(cycle: ReadingCycle) {
+        cycle.finishedStatus = .stopped
+        let finishedDate = Date().zeroSeconds
+        for ac in cycle.getActiveActivities {
+            finishReadingActivity(readingActivity: ac, onPage: cycle.currentPage, notes: ac.notes ?? "")
+        }
+        cycle.active = false
+        cycle.finishedAt = finishedDate
+        dataController.save()
     }
 }
