@@ -7,13 +7,22 @@
 
 import Foundation
 
-extension ReadingActivity {
+protocol DynamicDateComponent {
+    func passedTimeFromDateSinceStart(_ date: Date) -> TimeUnit?
+}
+
+extension ReadingActivity: DynamicDateComponent {
     
     var passedTimeUntilNow: TimeUnit {
         get {
             let interval = Date().timeIntervalSince(startedAt ?? Date())
             return getTimeUnitFromTimeInterval(interval)!
         }
+    }
+    
+    func passedTimeFromDateSinceStart(_ date: Date) -> TimeUnit? {
+        let interval = date.timeIntervalSince(startedAt ?? Date())
+        return getTimeUnitFromTimeInterval(interval)
     }
     
     var timeSpentReading: TimeUnit {
@@ -28,7 +37,13 @@ extension ReadingActivity {
     }
 }
 
-extension ReadingCycle {
+extension ReadingCycle: DynamicDateComponent {
+    
+    func passedTimeFromDateSinceStart(_ date: Date) -> TimeUnit? {
+        let interval = date.timeIntervalSince(startedAt ?? Date())
+        return getTimeUnitFromTimeInterval(interval)
+    }
+    
     
     var remainingTime: TimeUnit? {
         let pagesLeft = self.book!.numOfPages - self.currentPage
@@ -45,10 +60,11 @@ extension ReadingCycle {
     var avgPagesPerMinute: Double {
         let acArray = Array(self.readingActivities as! Set<ReadingActivity>)
         var avg = 0.0
-        for ac in acArray {
+        let inactiveAcs = acArray.filter({!$0.active})
+        for ac in inactiveAcs {
             avg += ac.pagesPerMinute
         }
-        return avg / Double(acArray.count)
+        return avg / Double(inactiveAcs.count)
     }
     
     var totalTimeSpentReading: TimeUnit? {
@@ -60,6 +76,11 @@ extension ReadingCycle {
             }
         }
         return getTimeUnitFromTimeInterval(sum)
+    }
+    
+    var hasActiveActivities: Bool {
+        let acArray = Array(self.readingActivities as! Set<ReadingActivity>)
+        return !acArray.filter({$0.active}).isEmpty
     }
     
 }

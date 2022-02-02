@@ -33,6 +33,8 @@
 		24DD568B27A874E1006949DB /* LibraryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24DD568A27A874E1006949DB /* LibraryView.swift */; };
 		24DD568D27A875D3006949DB /* StatisticView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24DD568C27A875D3006949DB /* StatisticView.swift */; };
 		24DD568F27A97F30006949DB /* BookFunctions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24DD568E27A97F30006949DB /* BookFunctions.swift */; };
+		24E7245927AA8D3400492F63 /* BooksController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24E7245827AA8D3400492F63 /* BooksController.swift */; };
+		24E7245B27AA924000492F63 /* ReadingController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24E7245A27AA924000492F63 /* ReadingController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -85,6 +87,8 @@
 		24DD568A27A874E1006949DB /* LibraryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LibraryView.swift; sourceTree = "<group>"; };
 		24DD568C27A875D3006949DB /* StatisticView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatisticView.swift; sourceTree = "<group>"; };
 		24DD568E27A97F30006949DB /* BookFunctions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BookFunctions.swift; sourceTree = "<group>"; };
+		24E7245827AA8D3400492F63 /* BooksController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BooksController.swift; sourceTree = "<group>"; };
+		24E7245A27AA924000492F63 /* ReadingController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReadingController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -184,6 +188,8 @@
 			children = (
 				243598A827A493CD00764CD3 /* DataController.swift */,
 				24DD566627A55C11006949DB /* BooksAPIController.swift */,
+				24E7245827AA8D3400492F63 /* BooksController.swift */,
+				24E7245A27AA924000492F63 /* ReadingController.swift */,
 			);
 			path = Controllers;
 			sourceTree = "<group>";
@@ -378,8 +384,10 @@
 				24DD567D27A74A61006949DB /* Errors.swift in Sources */,
 				241B36C627A335A5002C233A /* BookPalApp.swift in Sources */,
 				24DD566727A55C11006949DB /* BooksAPIController.swift in Sources */,
+				24E7245B27AA924000492F63 /* ReadingController.swift in Sources */,
 				24DD567A27A7491E006949DB /* TimeModels.swift in Sources */,
 				24DD568727A83266006949DB /* Colors.swift in Sources */,
+				24E7245927AA8D3400492F63 /* BooksController.swift in Sources */,
 				24DD567F27A74A77006949DB /* ModelExtensions.swift in Sources */,
 				24DD568927A874A5006949DB /* MainView.swift in Sources */,
 				24DD568D27A875D3006949DB /* StatisticView.swift in Sources */,

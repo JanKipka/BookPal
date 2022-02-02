@@ -69,15 +69,17 @@ struct ReadingCycleDetailView: View {
                 }
             }
         }.navigationTitle("You're reading...")
-            .onDisappear {
-                if notes == readingCycle.notes {
-                    return
-                }
-                readingCycle.notes = notes
-                dataController.save()
-            }
             .onAppear {
                 self.avgPagesPerMinute = readingCycle.avgPagesPerMinute.asDecimalString
+            }
+            .toolbar {
+                ToolbarItem {
+                    Button("Save") {
+                        readingCycle.notes = notes.trimmingCharacters(in: .whitespaces)
+                        dataController.save()
+                    }
+                    .disabled(notes == readingCycle.notes || (readingCycle.notes == nil && notes.isEmpty))
+                }
             }
     }
 

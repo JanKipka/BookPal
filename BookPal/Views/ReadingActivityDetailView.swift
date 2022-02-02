@@ -13,8 +13,9 @@ struct ReadingActivityDetailView: View {
     @ObservedObject var readingActivity: ReadingActivity
     @State var endDate: Date = Date()
     @State var timeSpentReadingString: String = ""
+    var refreshDate: Date?
     var timePassed: String {
-        readingActivity.passedTimeUntilNow.asHoursMinutesString
+        readingActivity.passedTimeFromDateSinceStart(refreshDate ?? .now)?.asHoursMinutesString ?? "0m"
     }
     var timeSpentReading: String {
         readingActivity.timeSpentReading.asHoursMinutesString
@@ -25,10 +26,10 @@ struct ReadingActivityDetailView: View {
     @State var notes: String = ""
     @State var pagesPerMinute: String = ""
     
-    @Environment(\.managedObjectContext) var moc
     @Environment(\.dismiss) var dismiss
     
     let dataController = DataController.shared
+    let readingController = ReadingController()
     
     fileprivate func refreshDateRelatedValues(_ d: Date) {
         let interval = d.timeIntervalSince(readingActivity.startedAt!)
@@ -57,7 +58,14 @@ struct ReadingActivityDetailView: View {
                         }
                     }
                     Section("Time spent reading") {
-                        Text(timeSpentReadingString)
+                        if readingActivity.active {
+                            TimelineView(.everyMinute) { context in
+                                Text("\(getTimeUnitFromTimeInterval(context.date.timeIntervalSince(readingActivity.startedAt!))!.asHoursMinutesString)")
+                            }
+                        } else {
+                            Text(timeSpentReadingString)
+                        }
+                        
                     }
                     Section("Started on page") {
                         Text("\(readingActivity.startedActivityOnPage)")
@@ -112,18 +120,6 @@ struct ReadingActivityDetailView: View {
         }
     }
     
-    fileprivate func fillReadingActivity(currentlyOnPage onPage: Int16) {
-        readingActivity.finishedActivityOnPage = onPage
-        let onPageBefore = readingActivity.readingCycle?.currentPage ?? 0
-        readingActivity.pagesRead = onPage - onPageBefore
-        readingActivity.readingCycle?.currentPage = onPage
-        readingActivity.finishedAt = Date().zeroSeconds
-        let timePassedInterval = readingActivity.finishedAt?.timeIntervalSince(readingActivity.startedAt!)
-        readingActivity.pagesPerMinute = calculatePagesPerMinuteFromInterval(timePassedInterval!, pagesRead: readingActivity.pagesRead)
-        readingActivity.active = false
-        readingActivity.notes = notes
-    }
-    
     fileprivate func finishReadingActivity() {
         if pagesRead.isEmpty {
             showMessage = true
@@ -137,14 +133,7 @@ struct ReadingActivityDetailView: View {
             message = "The page you're on can't be greater than the total page number (\(maxPages))."
             return
         }
-        fillReadingActivity(currentlyOnPage: onPage)
-        if onPage == maxPages {
-            // book done
-            let cycle = readingActivity.readingCycle!
-            cycle.active = false
-            cycle.finishedAt = readingActivity.finishedAt
-        }
-        dataController.save()
+        readingController.finishReadingActivity(readingActivity: readingActivity, onPage: onPage, notes: notes)
         dismiss()
     }
 }

@@ -17,10 +17,10 @@ struct NewReadingCycleView: View {
     @State var readingCycle = ReadingCycle()
     @State var showSearchSheet = false
     
-    @Environment(\.managedObjectContext) var moc
     @Environment(\.dismiss) var dismiss
     
-    let dataController = DataController.shared
+    let booksController = BooksController()
+    let readingController = ReadingController()
     
     init(){
         UITableView.appearance().backgroundColor = .clear
@@ -74,13 +74,7 @@ struct NewReadingCycleView: View {
         Alert(
             title: Text("The book was added. Do you want to start reading now?"),
             primaryButton: .default(Text("Yes")) {
-                let readingActivity = ReadingActivity(context: moc)
-                readingActivity.id = UUID()
-                readingActivity.startedAt = Date().zeroSeconds
-                readingActivity.readingCycle = readingCycle
-                readingActivity.startedActivityOnPage = 0
-                readingActivity.active = true
-                dataController.save()
+                let _ = readingController.createNewActivity(readingCycle: readingCycle)
                 navigateBack()
             },
             secondaryButton: .default(Text("No")) {
@@ -90,54 +84,13 @@ struct NewReadingCycleView: View {
     }
     
     private func createNewCycle() {
-        readingCycle = ReadingCycle(context: moc)
-        readingCycle.startedAt = startedAtDate
-        readingCycle.active = true
-        readingCycle.id = UUID()
+        
         let isbn = selectedVolume.industryIdentifiers![0].identifier! // for now always use the first available isbn
-        if let book = dataController.getBookByISBN(isbn) {
-            // already existing
-            readingCycle.book = book
-        } else {
-            // add new book
-            let book = Book(context: moc)
-            for author in selectedVolume.authors! {
-                let names = author.split(separator: " ")
-                if let aut = dataController.searchForPotentialAuthorMatch(firstName: String(names.first ?? ""), lastName: String(names.last ?? "")) {
-                    book.addToAuthors(aut)
-                } else {
-                    let aut = Author(context: moc)
-                    aut.id = UUID()
-                    aut.firstName = names.dropLast().joined(separator: " ")
-                    aut.lastName = String(names.last ?? "")
-                    book.addToAuthors(aut)
-                }
-            }
-            book.isbn = isbn
-            book.title = selectedVolume.title!
-            book.numOfPages = Int16(selectedVolume.pageCount!)
-            let genreString = selectedVolume.mainCategory ?? selectedVolume.categories?.first ?? ""
-            if let genre = dataController.searchForGenreByString(genreString) {
-                book.genre = genre
-            } else {
-                if !genreString.isEmpty {
-                    let genre = Genre(context: moc)
-                    genre.name = genreString
-                    book.genre = genre
-                }
-            }
-            if let links = selectedVolume.imageLinks {
-                let covers = CoverLinks(context: moc)
-                covers.thumbnail = links.thumbnail
-                covers.small = links.small
-                covers.medium = links.medium
-                covers.large = links.large
-                book.coverLinks = covers
-            }
-            readingCycle.book = book
+        var book = booksController.getBookByISBN(isbn)
+        if book == nil {
+            book = booksController.createNewBookFromVolume(selectedVolume)
         }
-        readingCycle.maxPages = readingCycle.book!.numOfPages
-        dataController.save()
+        readingCycle = readingController.createNewReadingCycle(book: book!, startedOn: startedAtDate)
         showingAlert = true
     }
     

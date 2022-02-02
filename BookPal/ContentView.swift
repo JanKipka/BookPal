@@ -20,6 +20,7 @@ struct ContentView: View {
     @Environment(\.managedObjectContext) var moc
     
     let dataController = DataController.shared
+    let readingController = ReadingController()
     
     @State var id: UUID = UUID()
     
@@ -30,19 +31,13 @@ struct ContentView: View {
     @State var hasActiveActivityAlert: Bool = false
     @State var selectedActivity: ReadingActivity?
     
-    fileprivate func startReadingCycle(_ cycle: ReadingCycle) {
+    fileprivate func startReadingActivityForCycle(_ cycle: ReadingCycle) {
         let hasActiveActivities = !activities.isEmpty
         if hasActiveActivities {
             hasActiveActivityAlert.toggle()
             return
         }
-        let activity = ReadingActivity(context: moc)
-        activity.active = true
-        activity.startedAt = Date().zeroSeconds
-        activity.id = UUID()
-        activity.readingCycle = cycle
-        activity.startedActivityOnPage = cycle.currentPage
-        dataController.save()
+        let _ = readingController.createNewActivity(readingCycle: cycle, onPage: cycle.currentPage)
         activityStartedAlert.toggle()
     }
     
@@ -56,6 +51,7 @@ struct ContentView: View {
                         EmptyView()
                     }
                     List {
+                        
                         Section("Active reading activities") {
                             ForEach(activities) { ac in
                                 NavigationLink(destination: ReadingActivityDetailView(readingActivity: ac)) {
@@ -63,6 +59,7 @@ struct ContentView: View {
                                 }
                             }
                         }
+                        
                         Section("Books you're reading") {
                             ForEach(cycles) { cycle in
                                 NavigationLink(destination: ReadingCycleDetailView(readingCycle: cycle)) {
@@ -71,7 +68,7 @@ struct ContentView: View {
                                 .swipeActions(edge: .leading){
                                     if cycle.active {
                                         Button {
-                                            startReadingCycle(cycle)
+                                            startReadingActivityForCycle(cycle)
                                         } label: {
                                             Label("Read Now", systemImage: "book.fill")
                                         }
@@ -118,7 +115,6 @@ struct ContentView: View {
             .navigationTitle("Read now")
             
         }
-        
     }
     
     func filterActivities() -> [ReadingActivity] {
