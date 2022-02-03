@@ -188,6 +188,37 @@
 			path = BookPalUITests;
 			sourceTree = "<group>";
 		};
+		24341F7427ABB9CF00DB7F58 /* ReadNow */ = {
+			isa = PBXGroup;
+			children = (
+				241B36C727A335A5002C233A /* ReadNowView.swift */,
+				24DD567027A6CA14006949DB /* SharedViewComponents.swift */,
+				24DD566C27A57B79006949DB /* NewReadingCycleView.swift */,
+				24DD568027A7D8BC006949DB /* ReadingActivityDetailView.swift */,
+				24DD568427A81743006949DB /* ReadingCycleDetailView.swift */,
+			);
+			path = ReadNow;
+			sourceTree = "<group>";
+		};
+		24341F7527ABB9DF00DB7F58 /* Library */ = {
+			isa = PBXGroup;
+			children = (
+				24DD568A27A874E1006949DB /* LibraryView.swift */,
+				24E7245C27AB40C700492F63 /* AllBooksView.swift */,
+				24E7245E27AB492600492F63 /* AuthorView.swift */,
+				24E7246027AB4CE700492F63 /* GenreView.swift */,
+			);
+			path = Library;
+			sourceTree = "<group>";
+		};
+		24341F7627ABB9E900DB7F58 /* Statistics */ = {
+			isa = PBXGroup;
+			children = (
+				24DD568C27A875D3006949DB /* StatisticView.swift */,
+			);
+			path = Statistics;
+			sourceTree = "<group>";
+		};
 		24DD567227A74841006949DB /* Controllers */ = {
 			isa = PBXGroup;
 			children = (
@@ -202,18 +233,11 @@
 		24DD567327A74864006949DB /* Views */ = {
 			isa = PBXGroup;
 			children = (
-				241B36C727A335A5002C233A /* ReadNowView.swift */,
-				24DD567027A6CA14006949DB /* SharedViewComponents.swift */,
-				24DD566C27A57B79006949DB /* NewReadingCycleView.swift */,
-				24DD568027A7D8BC006949DB /* ReadingActivityDetailView.swift */,
-				24DD568427A81743006949DB /* ReadingCycleDetailView.swift */,
+				24341F7427ABB9CF00DB7F58 /* ReadNow */,
 				24DD568627A83266006949DB /* Colors.swift */,
 				24DD568827A874A5006949DB /* MainView.swift */,
-				24DD568A27A874E1006949DB /* LibraryView.swift */,
-				24DD568C27A875D3006949DB /* StatisticView.swift */,
-				24E7245C27AB40C700492F63 /* AllBooksView.swift */,
-				24E7245E27AB492600492F63 /* AuthorView.swift */,
-				24E7246027AB4CE700492F63 /* GenreView.swift */,
+				24341F7527ABB9DF00DB7F58 /* Library */,
+				24341F7627ABB9E900DB7F58 /* Statistics */,
 			);
 			path = Views;
 			sourceTree = "<group>";
