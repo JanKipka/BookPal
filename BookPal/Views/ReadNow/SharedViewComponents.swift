@@ -25,15 +25,15 @@ struct ReadingCycleComponent: View {
                 ImageComponent(thumbnail: readingCycle.book?.coverLinks?.thumbnail ?? "", width: 70, height: 75)
                 VStack(alignment: .leading, spacing: 5) {
                         TimelineView(.everyMinute) { context in
-                            Text("Started \(context.date.timeIntervalSince(readingCycle.startedAt!).asDaysHoursMinutesString ?? "0m") ago")
+                            Text(LocalizedStringKey("started-date \(context.date.timeIntervalSince(readingCycle.startedAt!).asDaysHoursMinutesString ?? "0m")"))
                                 .font(.callout)
                         }
                     Text("\(readingCycle.book?.title ?? "")").font(.headline)
                     if readingCycle.active {
                         HStack {
-                            Text("p. \(readingCycle.currentPage) of \(readingCycle.book!.numOfPages)")
+                            Text("on-page-of \(Int(readingCycle.currentPage)) \(Int(readingCycle.book!.numOfPages))")
                             Spacer()
-                            Text(readingCycle.hasActiveActivities ? "Reading" : "Done in \(readingCycle.remainingTime?.asHoursMinutesString ?? "??m")")
+                            Text(readingCycle.hasActiveActivities ? "Reading" : readingCycle.readingActivities?.count == 0 ? "" : LocalizedStringKey("done-in \(readingCycle.remainingTime?.asHoursMinutesString ?? "??m")"))
                                 .foregroundColor(.blue)
                                 .fontWeight(.semibold)
                         }
@@ -58,10 +58,13 @@ struct ImageComponent: View {
                 .resizable()
                 .frame(width: width, height: height, alignment: .center)
         }
+        .cornerRadius(5)
         .aspectRatio(contentMode: .fit)
         .frame(width: width, height: height, alignment: .center)
     }
 }
+
+
 
 struct ReadingActivityComponent: View {
     
@@ -88,17 +91,23 @@ struct BookComponent: View {
     
     @State var book: Book
     @State var authors: Authors
+    var font: Font?
     
     init(book: Book) {
+        self.init(book: book, font: .headline)
+    }
+    
+    init(book: Book, font: Font) {
         self.book = book
         self.authors = Authors(book.authors!)
+        self.font = font
     }
     
     var body: some View {
         HStack {
             ImageComponent(thumbnail: book.coverLinks?.thumbnail ?? "")
             VStack(alignment: .leading, spacing: 5) {
-                Text("\(book.title ?? "")").font(.headline)
+                Text("\(book.title ?? "")").font(font)
                 Text("\(authors.names)")
             }
         }
@@ -118,7 +127,7 @@ struct ReadingActivityListComponent: View {
                 }
                 
                 Spacer()
-                Text("\(getPagesString(readingActivitiy:ac))")
+                Text(getPagesString(readingActivitiy:ac))
             }
             HStack {
                 Text(ac.startedAt?.asLocalizedStringHoursMinutes ?? "")
@@ -132,8 +141,35 @@ struct ReadingActivityListComponent: View {
         .padding(.vertical)
     }
     
-    func getPagesString(readingActivitiy: ReadingActivity) -> String {
-        return readingActivitiy.active ? "Active" : "\(readingActivitiy.pagesRead) pages"
+    func getPagesString(readingActivitiy: ReadingActivity) -> LocalizedStringKey {
+        return readingActivitiy.active ? LocalizedStringKey("active") : LocalizedStringKey("\(Int(readingActivitiy.pagesRead)) pages")
     }
     
+}
+
+// PREVIEWS
+
+struct ImageComponentPreviews: PreviewProvider {
+    static var previews: some View {
+        ImageComponent(thumbnail: "https://assets.thalia.media/img/artikel/537d8abe0db2fc7bccb7a989a135a06553028624-00-00.jpeg", width: 100, height: 180)
+    }
+    
+}
+
+struct ReadingActivityListComponentPreviews: PreviewProvider {
+    
+    static var previews: some View {
+        let ac = PreviewController().createActiveRunningReadingActivity()
+        return ReadingActivityListComponent(ac: ac)
+    }
+}
+
+struct BookComponentPreviews: PreviewProvider {
+    static var previews: some View {
+        let book = PreviewController().createNewBookForPreview()
+        return List {
+            BookComponent(book: book)
+        }
+        .listStyle(.grouped)
+    }
 }

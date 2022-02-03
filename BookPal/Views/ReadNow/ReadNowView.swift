@@ -9,7 +9,7 @@ import SwiftUI
 import Foundation
 import CoreData
 
-struct ContentView: View {
+struct ReadNowView: View {
     
     @FetchRequest(sortDescriptors: [
         NSSortDescriptor(key: #keyPath(ReadingCycle.startedAt), ascending: true)
@@ -29,7 +29,9 @@ struct ContentView: View {
     @State var navigateToActivityView: Bool = false
     @State var activityStartedAlert: Bool = false
     @State var hasActiveActivityAlert: Bool = false
+    @State var showCancelWarning: Bool = false
     @State var selectedActivity: ReadingActivity?
+    @State var selectedCycleToStop: ReadingCycle?
     
     fileprivate func startReadingActivityForCycle(_ cycle: ReadingCycle) {
         let hasActiveActivities = !activities.isEmpty
@@ -39,6 +41,10 @@ struct ContentView: View {
         }
         let _ = readingController.createNewActivity(readingCycle: cycle, onPage: cycle.currentPage)
         activityStartedAlert.toggle()
+    }
+    
+    fileprivate func putBookAway(_ cycle: ReadingCycle) {
+        readingController.stopReading(cycle: cycle)
     }
     
     var body: some View {
@@ -51,8 +57,7 @@ struct ContentView: View {
                         EmptyView()
                     }
                     List {
-                        
-                        Section("Active reading activities") {
+                        Section(LocalizedStringKey("active-activities")) {
                             ForEach(activities) { ac in
                                 NavigationLink(destination: ReadingActivityDetailView(readingActivity: ac)) {
                                     ReadingActivityComponent(readingActivity: ac)
@@ -60,8 +65,8 @@ struct ContentView: View {
                             }
                         }
                         
-                        Section("Books you're reading") {
-                            ForEach(cycles) { cycle in
+                        Section(LocalizedStringKey("books-reading")) {
+                            ForEach(cycles.sorted(by: {$0.lastUpdated > $1.lastUpdated})) { cycle in
                                 NavigationLink(destination: ReadingCycleDetailView(readingCycle: cycle)) {
                                     ReadingCycleComponent(readingCycle: cycle)
                                 }
@@ -70,9 +75,16 @@ struct ContentView: View {
                                         Button {
                                             startReadingActivityForCycle(cycle)
                                         } label: {
-                                            Label("Read Now", systemImage: "book.fill")
+                                            Label("read-now", systemImage: "book.fill")
                                         }
                                         .tint(.blue)
+                                        Button {
+                                            showCancelWarning = true
+                                            selectedCycleToStop = cycle
+                                        } label: {
+                                            Label("Put Away", systemImage: "stop.circle.fill")
+                                        }
+                                        .tint(.red)
                                     } else {
                                         EmptyView()
                                     }
@@ -90,7 +102,13 @@ struct ContentView: View {
                     Alert(title: Text("Reading activity started!"))
                 }
                 .alert(isPresented: $hasActiveActivityAlert) {
-                    Alert(title: Text("Active activity ongoing"), message: Text("There's already an active reading acitivity."))
+                    Alert(title: Text("Active activity ongoing"), message: Text("already-active"))
+                }
+                .alert("Are you sure you want to put this book away?", isPresented: $showCancelWarning) {
+                    Button("Yes") {
+                        putBookAway(selectedCycleToStop!)
+                    }
+                    Button("No", role: .cancel) {}
                 }
             }
             .toolbar {
@@ -112,7 +130,7 @@ struct ContentView: View {
                     }
                 }
             }
-            .navigationTitle("Read now")
+            .navigationTitle("read-now")
             
         }
     }
@@ -128,12 +146,12 @@ struct ContentView: View {
 
 
 
-struct ContentView_Previews: PreviewProvider {
-    static var previews: some View {
-        
-        let dataController = DataController.preview
-        
-        MainView()
-            .environment(\.managedObjectContext, dataController.container.viewContext)
-    }
-}
+//struct ContentView_Previews: PreviewProvider {
+//    static var previews: some View {
+//
+//        let dataController = DataController.preview
+//
+//        MainView()
+//            .environment(\.managedObjectContext, dataController.container.viewContext)
+//    }
+//}

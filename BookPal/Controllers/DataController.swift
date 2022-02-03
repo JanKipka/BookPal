@@ -54,8 +54,8 @@ class DataController: ObservableObject {
         let fetchRequest: NSFetchRequest<NSFetchRequestResult> = NSFetchRequest(entityName: name)
         let deleteRequest = NSBatchDeleteRequest(fetchRequest: fetchRequest)
         do {
-            save()
             try container.viewContext.execute(deleteRequest)
+            save()
         } catch let error {
             print(error.localizedDescription)
         }

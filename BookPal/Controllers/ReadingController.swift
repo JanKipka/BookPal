@@ -16,6 +16,10 @@ struct ReadingController {
     
     let booksController = BooksController()
     
+    func save() {
+        dataController.save()
+    }
+    
 }
 
 extension ReadingController {
@@ -45,8 +49,9 @@ extension ReadingController {
         if onPage == maxPages {
             // book done
             let cycle = readingActivity.readingCycle!
+            cycle.finishedStatus = .read
             cycle.active = false
-            cycle.finishedAt = readingActivity.finishedAt
+            cycle.completedOn = readingActivity.finishedAt
         }
         dataController.save()
     }
@@ -63,5 +68,16 @@ extension ReadingController {
         readingCycle.maxPages = readingCycle.book!.numOfPages
         dataController.save()
         return readingCycle
+    }
+    
+    func stopReading(cycle: ReadingCycle) {
+        cycle.finishedStatus = .stopped
+        let finishedDate = Date().zeroSeconds
+        for ac in cycle.getActivities {
+            finishReadingActivity(readingActivity: ac, onPage: cycle.currentPage, notes: ac.notes ?? "")
+        }
+        cycle.active = false
+        cycle.completedOn = finishedDate
+        dataController.save()
     }
 }

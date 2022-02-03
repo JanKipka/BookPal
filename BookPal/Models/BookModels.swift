@@ -27,3 +27,8 @@ public struct Authors {
         self.authorSet = authors as! Set<Author>
     }
 }
+
+enum FinishedStatus: Int16 {
+    case read = 0
+    case stopped = 1
+}
