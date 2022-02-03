@@ -58,10 +58,13 @@ struct ImageComponent: View {
                 .resizable()
                 .frame(width: width, height: height, alignment: .center)
         }
+        .cornerRadius(5)
         .aspectRatio(contentMode: .fit)
         .frame(width: width, height: height, alignment: .center)
     }
 }
+
+
 
 struct ReadingActivityComponent: View {
     
@@ -142,4 +145,31 @@ struct ReadingActivityListComponent: View {
         return readingActivitiy.active ? "Active" : "\(readingActivitiy.pagesRead) pages"
     }
     
+}
+
+// PREVIEWS
+
+struct ImageComponentPreviews: PreviewProvider {
+    static var previews: some View {
+        ImageComponent(thumbnail: "https://assets.thalia.media/img/artikel/537d8abe0db2fc7bccb7a989a135a06553028624-00-00.jpeg", width: 100, height: 180)
+    }
+    
+}
+
+struct ReadingActivityListComponentPreviews: PreviewProvider {
+    
+    static var previews: some View {
+        let ac = PreviewController().createActiveRunningReadingActivity()
+        return ReadingActivityListComponent(ac: ac)
+    }
+}
+
+struct BookComponentPreviews: PreviewProvider {
+    static var previews: some View {
+        let book = PreviewController().createNewBookForPreview()
+        return List {
+            BookComponent(book: book)
+        }
+        .listStyle(.grouped)
+    }
 }

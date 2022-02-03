@@ -16,6 +16,8 @@
 		241B36E327A335A6002C233A /* BookPalUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 241B36E227A335A6002C233A /* BookPalUITestsLaunchTests.swift */; };
 		241B36F027A338EA002C233A /* TimeFunctions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 241B36EF27A338EA002C233A /* TimeFunctions.swift */; };
 		241B36F427A33F0D002C233A /* TimeFunctionsTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 241B36F327A33F0D002C233A /* TimeFunctionsTest.swift */; };
+		24341F7827AC11A500DB7F58 /* BookView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24341F7727AC11A500DB7F58 /* BookView.swift */; };
+		24341F7A27AC227700DB7F58 /* PreviewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24341F7927AC227700DB7F58 /* PreviewController.swift */; };
 		243598A727A4923E00764CD3 /* Model.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 243598A527A4923E00764CD3 /* Model.xcdatamodeld */; };
 		243598A927A493CD00764CD3 /* DataController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 243598A827A493CD00764CD3 /* DataController.swift */; };
 		24DD566727A55C11006949DB /* BooksAPIController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24DD566627A55C11006949DB /* BooksAPIController.swift */; };
@@ -70,6 +72,8 @@
 		241B36E227A335A6002C233A /* BookPalUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BookPalUITestsLaunchTests.swift; sourceTree = "<group>"; };
 		241B36EF27A338EA002C233A /* TimeFunctions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimeFunctions.swift; sourceTree = "<group>"; };
 		241B36F327A33F0D002C233A /* TimeFunctionsTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimeFunctionsTest.swift; sourceTree = "<group>"; };
+		24341F7727AC11A500DB7F58 /* BookView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BookView.swift; sourceTree = "<group>"; };
+		24341F7927AC227700DB7F58 /* PreviewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PreviewController.swift; sourceTree = "<group>"; };
 		243598A627A4923E00764CD3 /* Model.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = Model.xcdatamodel; sourceTree = "<group>"; };
 		243598A827A493CD00764CD3 /* DataController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataController.swift; sourceTree = "<group>"; };
 		24DD566627A55C11006949DB /* BooksAPIController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BooksAPIController.swift; sourceTree = "<group>"; };
@@ -207,6 +211,7 @@
 				24E7245C27AB40C700492F63 /* AllBooksView.swift */,
 				24E7245E27AB492600492F63 /* AuthorView.swift */,
 				24E7246027AB4CE700492F63 /* GenreView.swift */,
+				24341F7727AC11A500DB7F58 /* BookView.swift */,
 			);
 			path = Library;
 			sourceTree = "<group>";
@@ -226,6 +231,7 @@
 				24DD566627A55C11006949DB /* BooksAPIController.swift */,
 				24E7245827AA8D3400492F63 /* BooksController.swift */,
 				24E7245A27AA924000492F63 /* ReadingController.swift */,
+				24341F7927AC227700DB7F58 /* PreviewController.swift */,
 			);
 			path = Controllers;
 			sourceTree = "<group>";
@@ -410,11 +416,13 @@
 				241B36C827A335A5002C233A /* ReadNowView.swift in Sources */,
 				24DD567727A748E4006949DB /* DateExtensions.swift in Sources */,
 				24DD568F27A97F30006949DB /* BookFunctions.swift in Sources */,
+				24341F7827AC11A500DB7F58 /* BookView.swift in Sources */,
 				243598A927A493CD00764CD3 /* DataController.swift in Sources */,
 				24E7246127AB4CE700492F63 /* GenreView.swift in Sources */,
 				24DD567127A6CA14006949DB /* SharedViewComponents.swift in Sources */,
 				24DD568B27A874E1006949DB /* LibraryView.swift in Sources */,
 				24DD568527A81743006949DB /* ReadingCycleDetailView.swift in Sources */,
+				24341F7A27AC227700DB7F58 /* PreviewController.swift in Sources */,
 				24DD567D27A74A61006949DB /* Errors.swift in Sources */,
 				241B36C627A335A5002C233A /* BookPalApp.swift in Sources */,
 				24E7245F27AB492600492F63 /* AuthorView.swift in Sources */,

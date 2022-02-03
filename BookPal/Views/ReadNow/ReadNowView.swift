@@ -146,12 +146,12 @@ struct ReadNowView: View {
 
 
 
-struct ContentView_Previews: PreviewProvider {
-    static var previews: some View {
-        
-        let dataController = DataController.preview
-        
-        MainView()
-            .environment(\.managedObjectContext, dataController.container.viewContext)
-    }
-}
+//struct ContentView_Previews: PreviewProvider {
+//    static var previews: some View {
+//
+//        let dataController = DataController.preview
+//
+//        MainView()
+//            .environment(\.managedObjectContext, dataController.container.viewContext)
+//    }
+//}

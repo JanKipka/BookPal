@@ -13,6 +13,7 @@ struct AllBooksView: View {
     @State var searchQuery = ""
     
     @State var allBooks: [Book] = []
+    var fetchBooks: Bool = true
     @State var booksToDisplay: [Book] = []
     var navigationTitle: String
     
@@ -42,7 +43,7 @@ struct AllBooksView: View {
                 }
             }
             .onAppear {
-                if allBooks.isEmpty {
+                if allBooks.isEmpty && fetchBooks {
                     allBooks = BooksController().getAllSavedBooks()
                 }
                 booksToDisplay = allBooks

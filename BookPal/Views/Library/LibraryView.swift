@@ -32,6 +32,14 @@ struct LibraryView: View {
                         LibrarySectionComponent(title: "Genres", systemImage: "list.bullet")
                     }
                     .listRowBackground(Color.clear)
+                    NavigationLink(destination: AllBooksView(allBooks: books.filter({$0.finishedStatus == .read}).map({$0.book!}), fetchBooks: false, navigationTitle: "Books You've Read")) {
+                        LibrarySectionComponent(title: "Read", systemImage: "book")
+                    }
+                    .listRowBackground(Color.clear)
+                    NavigationLink(destination: AllBooksView(allBooks: books.filter({$0.finishedStatus == .stopped}).map({$0.book!}), fetchBooks: false, navigationTitle: "Books You've Put Away")) {
+                        LibrarySectionComponent(title: "Put Away", systemImage: "tray")
+                    }
+                    .listRowBackground(Color.clear)
                     Section("Recently read") {
                         ForEach(books.sorted(by: {$0.lastUpdated > $1.lastUpdated})) { cycle in
                             BookTile(book: cycle.book!)
@@ -53,19 +61,21 @@ struct LibraryView: View {
 struct BookTile: View {
     var book: Book
     var body: some View {
-        ZStack {
-            HStack {
-                ImageComponent(thumbnail: book.coverLinks?.thumbnail ?? "", width: 60, height: 90)
-                VStack(alignment: .leading, spacing: 5) {
-                    Spacer()
-                    Text(book.title!).font(.system(size: 20))
-                        .fontWeight(.semibold)
-                    Text(Authors(book.authors!).names)
-                    Spacer()
+        NavigationLink(destination: BookView(book: book)) {
+            ZStack {
+                HStack {
+                    ImageComponent(thumbnail: book.coverLinks?.thumbnail ?? "", width: 60, height: 90)
+                    VStack(alignment: .leading, spacing: 5) {
+                        Spacer()
+                        Text(book.title!).font(.system(size: 20))
+                            .fontWeight(.semibold)
+                        Text(Authors(book.authors!).names)
+                        Spacer()
+                    }
                 }
             }
         }
-        .padding(.vertical, 8)
+        
     }
 }
 
@@ -79,5 +89,13 @@ struct LibrarySectionComponent: View {
             Text(title).font(.title)
             Spacer()
         }
+    }
+}
+
+struct LibraryViewPreviews: PreviewProvider {
+    static var previews: some View {
+        let _ = PreviewController().createNewBookForPreview()
+        return LibraryView()
+            .environment(\.managedObjectContext, DataController.preview.context)
     }
 }
