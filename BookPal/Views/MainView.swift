@@ -14,7 +14,7 @@ struct MainView: View {
         TabView {
             ReadNowView()
                 .tabItem {
-                    Label("Read Now", systemImage: "book.fill")
+                    Label("read-now", systemImage: "book.fill")
                 }
 
             LibraryView()

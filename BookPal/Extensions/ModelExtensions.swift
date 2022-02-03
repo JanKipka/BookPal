@@ -142,7 +142,9 @@ extension Book {
     var averageTotalTimeSpentReading: TimeInterval {
         var res = TimeInterval()
         let inactiveCycles = readingCyclesAsArray.filter({!$0.active})
-        
+        if inactiveCycles.isEmpty {
+            return 0.0
+        }
         for cycle in inactiveCycles {
             let interval = cycle.totalTimeSpentReadingInterval
             res += interval

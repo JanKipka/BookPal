@@ -36,12 +36,11 @@ struct NewReadingCycleView: View {
                 .ignoresSafeArea()
             VStack {
                 Form {
-                    Section("Dates") {
+                    Section("") {
                         DatePicker("Start Date", selection: $startedAtDate)
                             .padding(.horizontal, 10)
                     }
                     if !titleAsString.isEmpty {
-                        //Section("Choice") {
                         HStack {
                             ImageComponent(thumbnail: selectedVolume.imageLinks?.thumbnail ?? "")
                             VStack(alignment: .leading, spacing: 5) {
@@ -56,7 +55,7 @@ struct NewReadingCycleView: View {
                 label: {
                     HStack {
                         Image(systemName: "magnifyingglass")
-                        Text("Search")
+                        Text("search")
                         Spacer()
                     }
                 }
@@ -66,7 +65,7 @@ struct NewReadingCycleView: View {
                     SearchView(selectedVolume: $selectedVolume)
                 }
                     Section {
-                        Button("Start reading!") {
+                        Button("Start reading") {
                             createNewCycle()
                         }.disabled(titleAsString == "")
                             .foregroundColor(.white)
@@ -82,7 +81,7 @@ struct NewReadingCycleView: View {
             .alert(isPresented: $showingAlert) {
                 presentAlert()
             }
-            .alert("There already is an active reading activity", isPresented: $showingAlertAlreadyActive) {
+            .alert("already-active", isPresented: $showingAlertAlreadyActive) {
                 Button("OK") {
                     navigateBack()
                 }
@@ -90,13 +89,13 @@ struct NewReadingCycleView: View {
             .onAppear {
                 self.startedAtDate = Date()
             }
-            
-        }.navigationBarTitle("Add a book")
+            .navigationTitle(LocalizedStringKey("Add a book"))
+        }
     }
     
     private func presentAlert() -> Alert {
         Alert(
-            title: Text("The book was added. Do you want to start reading now?"),
+            title: Text("book-added"),
             primaryButton: .default(Text("Yes")) {
                 if !activities.isEmpty {
                     showingAlertAlreadyActive.toggle()
@@ -221,4 +220,13 @@ struct VolumeInfoView: View {
         .onTapGesture(perform: onTap)
     }
     
+}
+
+struct NewReadingCycleViewPreviews: PreviewProvider {
+    static var previews: some View {
+        NavigationView {
+            NewReadingCycleView()
+                .environment(\.locale, .init(identifier: "de"))
+        }
+    }
 }

@@ -30,7 +30,7 @@ struct AllBooksView: View {
                 }
             }
             .listStyle(.grouped)
-        }.navigationTitle(navigationTitle)
+        }.navigationTitle(LocalizedStringKey(navigationTitle))
             .navigationBarTitleDisplayMode(.inline)
             .searchable(text: $searchQuery, placement: .navigationBarDrawer(displayMode: .always))
             .onChange(of: searchQuery) { query in

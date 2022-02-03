@@ -22,7 +22,7 @@ struct ReadingActivityDetailView: View {
     }
     @State var pagesRead: String = ""
     @State var showMessage: Bool = false
-    @State var message: String = ""
+    @State var message: LocalizedStringKey = ""
     @State var notes: String = ""
     @State var pagesPerMinute: String = ""
     
@@ -46,31 +46,31 @@ struct ReadingActivityDetailView: View {
                 Form {
                     BookComponent(book: readingActivity.readingCycle!.book!)
                         .padding()
-                    Section("Start Date") {
+                    Section(LocalizedStringKey("start-date")) {
                         Text(readingActivity.startedAt?.asLocalizedStringHoursMinutes ?? Date().formatted())
                     }
                     if !readingActivity.active {
-                        Section("End Date") {
-                            DatePicker("End Date", selection: $endDate)
+                        Section(LocalizedStringKey("End Date")) {
+                            DatePicker(LocalizedStringKey("End Date"), selection: $endDate)
                                 .onChange(of: endDate) { d in
                                     refreshDateRelatedValues(d)
                                 }
                         }
                     }
-                    Section("Time spent reading") {
+                    Section(LocalizedStringKey("Time spent reading")) {
                         if readingActivity.active {
                             TimelineView(.everyMinute) { context in
-                                Text("\(getTimeUnitFromTimeInterval(context.date.timeIntervalSince(readingActivity.startedAt!))!.asHoursMinutesString)")
+                                Text("\(getTimeUnitFromTimeInterval(context.date.timeIntervalSince(readingActivity.startedAt!))?.asHoursMinutesString ?? "0m")")
                             }
                         } else {
                             Text(timeSpentReadingString)
                         }
                         
                     }
-                    Section("Started on page") {
+                    Section(LocalizedStringKey("Started on page")) {
                         Text("\(readingActivity.startedActivityOnPage)")
                     }
-                    Section("Finished on page") {
+                    Section(LocalizedStringKey("Finished on page")) {
                         if !readingActivity.active {
                             Text("\(readingActivity.finishedActivityOnPage)")
                         } else {
@@ -78,18 +78,18 @@ struct ReadingActivityDetailView: View {
                         }
                     }
                     if !readingActivity.active {
-                        Section("Pages per minute") {
+                        Section(LocalizedStringKey("Pages per minute")) {
                             Text(pagesPerMinute)
                         }
                     }
-                    Section("Notes") {
+                    Section(LocalizedStringKey("Notes")) {
                         TextEditor(text: $notes)
                     }
                 }
                 Spacer()
             }
             
-        }.navigationTitle("Reading activity")
+        }.navigationTitle(LocalizedStringKey("Reading activity"))
             .onAppear {
                 self.endDate = readingActivity.finishedAt ?? Date()
                 self.notes = readingActivity.notes ?? ""
@@ -98,7 +98,7 @@ struct ReadingActivityDetailView: View {
             }
             .toolbar {
                 ToolbarItem {
-                    Button(readingActivity.active ? "Finish reading" : "Done") {
+                    Button(readingActivity.active ? LocalizedStringKey("Finish reading") : LocalizedStringKey("Done")) {
                         buttonAction()
                     }
                 }
@@ -123,14 +123,14 @@ struct ReadingActivityDetailView: View {
     fileprivate func finishReadingActivity() {
         if pagesRead.isEmpty {
             showMessage = true
-            message = "Please enter the page you're on."
+            message = LocalizedStringKey("missing-page")
             return
         }
         let onPage = Int16(pagesRead)!
         let maxPages = readingActivity.readingCycle!.maxPages
         if onPage > maxPages {
             showMessage = true
-            message = "The page you're on can't be greater than the total page number (\(maxPages))."
+            message = LocalizedStringKey("page-greater-than-total \(Int(maxPages))")
             return
         }
         readingController.finishReadingActivity(readingActivity: readingActivity, onPage: onPage, notes: notes)

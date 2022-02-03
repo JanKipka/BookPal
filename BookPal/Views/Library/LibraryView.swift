@@ -12,6 +12,10 @@ struct LibraryView: View {
     
     @FetchRequest(sortDescriptors: [], predicate: NSPredicate(format: "readingActivities.@count > 0")) var books: FetchedResults<ReadingCycle>
     
+    @FetchRequest(sortDescriptors: [], predicate: NSPredicate(format: "finishedStatusValue == 1")) var booksPutAway: FetchedResults<ReadingCycle>
+    
+    @FetchRequest(sortDescriptors: []) var allBooks: FetchedResults<ReadingCycle>
+    
     @State var pairs: [[Book]] = []
     
     var body: some View {
@@ -36,17 +40,17 @@ struct LibraryView: View {
                         LibrarySectionComponent(title: "Read", systemImage: "book")
                     }
                     .listRowBackground(Color.clear)
-                    NavigationLink(destination: AllBooksView(allBooks: books.filter({$0.finishedStatus == .stopped}).map({$0.book!}), fetchBooks: false, navigationTitle: "Books You've Put Away")) {
-                        LibrarySectionComponent(title: "Put Away", systemImage: "tray")
+                    NavigationLink(destination: AllBooksView(allBooks: booksPutAway.map {$0.book!}, fetchBooks: false, navigationTitle: "Books You've Put Away")) {
+                        LibrarySectionComponent(title: "put-away", systemImage: "tray")
                     }
                     .listRowBackground(Color.clear)
-                    Section("Recently read") {
+                    Section(LocalizedStringKey("Recently read")) {
                         ForEach(books.sorted(by: {$0.lastUpdated > $1.lastUpdated})) { cycle in
                             BookTile(book: cycle.book!)
                         }
                     }
-                    Section("Recently added") {
-                        ForEach(books.sorted(by: {$0.startedAt! > $1.startedAt!})) { cycle in
+                    Section(LocalizedStringKey("Recently added")) {
+                        ForEach(allBooks.sorted(by: {$0.startedAt! > $1.startedAt!})) { cycle in
                             BookTile(book: cycle.book!)
                         }
                     }
@@ -86,7 +90,7 @@ struct LibrarySectionComponent: View {
         HStack {
             Image(systemName: systemImage)
                 .frame(width: 40, height: 40)
-            Text(title).font(.title)
+            Text(LocalizedStringKey(title)).font(.title)
             Spacer()
         }
     }
@@ -95,7 +99,12 @@ struct LibrarySectionComponent: View {
 struct LibraryViewPreviews: PreviewProvider {
     static var previews: some View {
         let _ = PreviewController().createNewBookForPreview()
-        return LibraryView()
-            .environment(\.managedObjectContext, DataController.preview.context)
+        return Group {
+            LibraryView()
+                .environment(\.managedObjectContext, DataController.preview.context)
+            LibraryView()
+                .environment(\.managedObjectContext, DataController.preview.context)
+                .environment(\.locale, .init(identifier: "de"))
+        }
     }
 }

@@ -25,15 +25,15 @@ struct ReadingCycleComponent: View {
                 ImageComponent(thumbnail: readingCycle.book?.coverLinks?.thumbnail ?? "", width: 70, height: 75)
                 VStack(alignment: .leading, spacing: 5) {
                         TimelineView(.everyMinute) { context in
-                            Text("Started \(context.date.timeIntervalSince(readingCycle.startedAt!).asDaysHoursMinutesString ?? "0m") ago")
+                            Text(LocalizedStringKey("started-date \(context.date.timeIntervalSince(readingCycle.startedAt!).asDaysHoursMinutesString ?? "0m")"))
                                 .font(.callout)
                         }
                     Text("\(readingCycle.book?.title ?? "")").font(.headline)
                     if readingCycle.active {
                         HStack {
-                            Text("p. \(readingCycle.currentPage) of \(readingCycle.book!.numOfPages)")
+                            Text("on-page-of \(Int(readingCycle.currentPage)) \(Int(readingCycle.book!.numOfPages))")
                             Spacer()
-                            Text(readingCycle.hasActiveActivities ? "Reading" : readingCycle.readingActivities?.count == 0 ? "" : "Done in \(readingCycle.remainingTime?.asHoursMinutesString ?? "??m")")
+                            Text(readingCycle.hasActiveActivities ? "Reading" : readingCycle.readingActivities?.count == 0 ? "" : LocalizedStringKey("done-in \(readingCycle.remainingTime?.asHoursMinutesString ?? "??m")"))
                                 .foregroundColor(.blue)
                                 .fontWeight(.semibold)
                         }
@@ -127,7 +127,7 @@ struct ReadingActivityListComponent: View {
                 }
                 
                 Spacer()
-                Text("\(getPagesString(readingActivitiy:ac))")
+                Text(getPagesString(readingActivitiy:ac))
             }
             HStack {
                 Text(ac.startedAt?.asLocalizedStringHoursMinutes ?? "")
@@ -141,8 +141,8 @@ struct ReadingActivityListComponent: View {
         .padding(.vertical)
     }
     
-    func getPagesString(readingActivitiy: ReadingActivity) -> String {
-        return readingActivitiy.active ? "Active" : "\(readingActivitiy.pagesRead) pages"
+    func getPagesString(readingActivitiy: ReadingActivity) -> LocalizedStringKey {
+        return readingActivitiy.active ? LocalizedStringKey("active") : LocalizedStringKey("\(Int(readingActivitiy.pagesRead)) pages")
     }
     
 }

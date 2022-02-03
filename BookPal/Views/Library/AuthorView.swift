@@ -28,6 +28,7 @@ struct AuthorView: View {
                             .font(.title)
                     }
                     .listRowBackground(Color.clear)
+                    .padding(.vertical, 10)
                 }
             }
             .listStyle(.grouped)

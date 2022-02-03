@@ -23,10 +23,11 @@ struct GenreView: View {
                 .ignoresSafeArea()
             List {
                 ForEach(genresToDisplay) { genre in
-                    NavigationLink(destination: AllBooksView(allBooks: Array(genre.books as! Set<Book>), navigationTitle: "\(genre.name ?? "") Books")) {
-                        Text(genre.name ?? "")
+                    NavigationLink(destination: AllBooksView(allBooks: Array(genre.books as! Set<Book>), navigationTitle: "\(genre.name ?? "")")) {
+                        Text(LocalizedStringKey(genre.name ?? ""))
                             .font(.title)
                     }.listRowBackground(Color.clear)
+                        .padding(.vertical, 10)
                 }
             }
             .listStyle(.grouped)
