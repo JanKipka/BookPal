@@ -47,7 +47,7 @@ extension ReadingController {
             let cycle = readingActivity.readingCycle!
             cycle.finishedStatus = .read
             cycle.active = false
-            cycle.finishedAt = readingActivity.finishedAt
+            cycle.completedOn = readingActivity.finishedAt
         }
         dataController.save()
     }
@@ -73,7 +73,7 @@ extension ReadingController {
             finishReadingActivity(readingActivity: ac, onPage: cycle.currentPage, notes: ac.notes ?? "")
         }
         cycle.active = false
-        cycle.finishedAt = finishedDate
+        cycle.completedOn = finishedDate
         dataController.save()
     }
 }

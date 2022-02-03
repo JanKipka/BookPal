@@ -12,7 +12,7 @@ import SwiftUI
 struct MainView: View {
     var body: some View {
         TabView {
-            ContentView()
+            ReadNowView()
                 .tabItem {
                     Label("Read Now", systemImage: "book.fill")
                 }

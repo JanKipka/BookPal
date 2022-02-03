@@ -33,7 +33,7 @@ struct ReadingCycleComponent: View {
                         HStack {
                             Text("p. \(readingCycle.currentPage) of \(readingCycle.book!.numOfPages)")
                             Spacer()
-                            Text(readingCycle.hasActiveActivities ? "Reading" : "Done in \(readingCycle.remainingTime?.asHoursMinutesString ?? "??m")")
+                            Text(readingCycle.hasActiveActivities ? "Reading" : readingCycle.readingActivities?.count == 0 ? "" : "Done in \(readingCycle.remainingTime?.asHoursMinutesString ?? "??m")")
                                 .foregroundColor(.blue)
                                 .fontWeight(.semibold)
                         }
@@ -88,17 +88,23 @@ struct BookComponent: View {
     
     @State var book: Book
     @State var authors: Authors
+    var font: Font?
     
     init(book: Book) {
+        self.init(book: book, font: .headline)
+    }
+    
+    init(book: Book, font: Font) {
         self.book = book
         self.authors = Authors(book.authors!)
+        self.font = font
     }
     
     var body: some View {
         HStack {
             ImageComponent(thumbnail: book.coverLinks?.thumbnail ?? "")
             VStack(alignment: .leading, spacing: 5) {
-                Text("\(book.title ?? "")").font(.headline)
+                Text("\(book.title ?? "")").font(font)
                 Text("\(authors.names)")
             }
         }

@@ -39,14 +39,18 @@ struct GoogleBooksAPIController: IGoogleBooksAPIController {
         }
         print(url)
         //DispatchQueue.main.asyncAfter(deadline: .now() + 0.8) {
-             URLSession.shared.dataTask(with: url) { data, response, error in
-                let results = try! JSONDecoder().decode(VolumeResult.self, from: data!)
-                
-                DispatchQueue.main.async {
-                    completion(results.items)
+        URLSession.shared.dataTask(with: url) { data, response, error in
+            if let theData = data {
+                if let results = try? JSONDecoder().decode(VolumeResult.self, from: theData) {
+                    DispatchQueue.main.async {
+                        completion(results.items)
+                    }
+                } else {
+                    completion([])
                 }
-            }.resume()
-       // }
+            }
+        }.resume()
+        // }
     }
     
     private func buildURLString(query: String, key: String, startIndex: Int, maxResults: Int) -> String {

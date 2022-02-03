@@ -14,8 +14,13 @@ struct NewReadingCycleView: View {
     @State var startedAtDate: Date = Date()
     @State var titleAsString: String = ""
     @State var showingAlert = false
+    @State var showingAlertAlreadyActive = false
     @State var readingCycle = ReadingCycle()
     @State var showSearchSheet = false
+    
+    @FetchRequest(sortDescriptors: [
+        NSSortDescriptor(key: #keyPath(ReadingCycle.startedAt), ascending: true)
+    ], predicate: NSPredicate(format: "active = true")) var cycles: FetchedResults<ReadingCycle>
     
     @Environment(\.dismiss) var dismiss
     
@@ -63,6 +68,11 @@ struct NewReadingCycleView: View {
             .alert(isPresented: $showingAlert) {
                 presentAlert()
             }
+            .alert("There already is an active reading activity", isPresented: $showingAlertAlreadyActive) {
+                Button("OK") {
+                    navigateBack()
+                }
+            }
             .onAppear {
                 self.startedAtDate = Date()
             }
@@ -74,8 +84,12 @@ struct NewReadingCycleView: View {
         Alert(
             title: Text("The book was added. Do you want to start reading now?"),
             primaryButton: .default(Text("Yes")) {
-                let _ = readingController.createNewActivity(readingCycle: readingCycle)
-                navigateBack()
+                if !cycles.isEmpty {
+                    showingAlertAlreadyActive.toggle()
+                } else {
+                    let _ = readingController.createNewActivity(readingCycle: readingCycle)
+                    navigateBack()
+                }
             },
             secondaryButton: .default(Text("No")) {
                 navigateBack()

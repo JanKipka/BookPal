@@ -1,17 +1,17 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="19574" systemVersion="21C52" minimumToolsVersion="Automatic" sourceLanguage="Swift" userDefinedModelVersionIdentifier="">
     <entity name="Author" representedClassName="Author" syncable="YES" codeGenerationType="class">
-        <attribute name="firstName" optional="YES" attributeType="String"/>
-        <attribute name="id" optional="YES" attributeType="UUID" usesScalarValueType="NO"/>
-        <attribute name="lastName" optional="YES" attributeType="String"/>
+        <attribute name="firstName" attributeType="String"/>
+        <attribute name="id" attributeType="UUID" usesScalarValueType="NO"/>
+        <attribute name="lastName" attributeType="String"/>
         <relationship name="books" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Book" inverseName="authors" inverseEntity="Book"/>
     </entity>
     <entity name="Book" representedClassName="Book" syncable="YES" codeGenerationType="class">
         <attribute name="cover" optional="YES" attributeType="URI"/>
         <attribute name="id" optional="YES" attributeType="UUID" usesScalarValueType="NO"/>
-        <attribute name="isbn" optional="YES" attributeType="String"/>
-        <attribute name="numOfPages" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES"/>
-        <attribute name="title" optional="YES" attributeType="String"/>
+        <attribute name="isbn" attributeType="String"/>
+        <attribute name="numOfPages" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="title" attributeType="String"/>
         <relationship name="authors" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Author" inverseName="books" inverseEntity="Author"/>
         <relationship name="coverLinks" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="CoverLinks" inverseName="book" inverseEntity="CoverLinks"/>
         <relationship name="genre" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Genre" inverseName="books" inverseEntity="Genre"/>
@@ -32,7 +32,7 @@
     </entity>
     <entity name="Genre" representedClassName="Genre" syncable="YES" codeGenerationType="class">
         <attribute name="id" optional="YES" attributeType="UUID" usesScalarValueType="NO"/>
-        <attribute name="name" optional="YES" attributeType="String"/>
+        <attribute name="name" attributeType="String"/>
         <relationship name="books" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Book" inverseName="genre" inverseEntity="Book"/>
         <uniquenessConstraints>
             <uniquenessConstraint>
@@ -44,23 +44,23 @@
         <attribute name="active" optional="YES" attributeType="Boolean" usesScalarValueType="YES"/>
         <attribute name="finishedActivityOnPage" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES"/>
         <attribute name="finishedAt" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
-        <attribute name="id" optional="YES" attributeType="UUID" usesScalarValueType="NO"/>
+        <attribute name="id" attributeType="UUID" usesScalarValueType="NO"/>
         <attribute name="notes" optional="YES" attributeType="String"/>
         <attribute name="pagesPerMinute" optional="YES" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES"/>
         <attribute name="pagesRead" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES"/>
         <attribute name="startedActivityOnPage" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES"/>
-        <attribute name="startedAt" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
+        <attribute name="startedAt" attributeType="Date" usesScalarValueType="NO"/>
         <relationship name="readingCycle" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="ReadingCycle" inverseName="readingActivities" inverseEntity="ReadingCycle"/>
     </entity>
     <entity name="ReadingCycle" representedClassName="ReadingCycle" syncable="YES" codeGenerationType="class">
         <attribute name="active" optional="YES" attributeType="Boolean" usesScalarValueType="YES"/>
+        <attribute name="completedOn" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
         <attribute name="currentPage" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES"/>
-        <attribute name="finishedAt" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
-        <attribute name="finishedStatusValue" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES"/>
-        <attribute name="id" optional="YES" attributeType="UUID" usesScalarValueType="NO"/>
+        <attribute name="finishedStatusValue" optional="YES" attributeType="Integer 16" defaultValueString="2" usesScalarValueType="YES"/>
+        <attribute name="id" attributeType="UUID" usesScalarValueType="NO"/>
         <attribute name="maxPages" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES"/>
         <attribute name="notes" optional="YES" attributeType="String"/>
-        <attribute name="startedAt" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
+        <attribute name="startedAt" attributeType="Date" usesScalarValueType="NO"/>
         <relationship name="book" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Book" inverseName="readingCycles" inverseEntity="Book"/>
         <relationship name="readingActivities" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="ReadingActivity" inverseName="readingCycle" inverseEntity="ReadingActivity"/>
     </entity>

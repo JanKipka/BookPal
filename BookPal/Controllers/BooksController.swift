@@ -27,6 +27,7 @@ struct BooksController {
                 book.addToAuthors(aut)
             }
         }
+        book.id = UUID()
         book.isbn = isbn
         book.title = selectedVolume.title!
         book.numOfPages = Int16(selectedVolume.pageCount!)
@@ -36,6 +37,7 @@ struct BooksController {
         } else {
             if !genreString.isEmpty {
                 let genre = Genre(context: moc)
+                genre.id = UUID()
                 genre.name = genreString
                 book.genre = genre
             }
@@ -53,6 +55,7 @@ struct BooksController {
     
     func getAllSavedBooks() -> [Book] {
         let fetchRequest: NSFetchRequest<Book> = Book.fetchRequest()
+        fetchRequest.sortDescriptors = [NSSortDescriptor(key: "title", ascending: true)]
         
         do {
             return try moc.fetch(fetchRequest)
@@ -98,6 +101,18 @@ extension BooksController {
             return nil
         }
     }
+    
+    func getAllSavedAuthors() -> [Author] {
+        let fetchRequest: NSFetchRequest<Author> = Author.fetchRequest()
+        fetchRequest.sortDescriptors = [NSSortDescriptor(key: "lastName", ascending: true)]
+        
+        do {
+            return try moc.fetch(fetchRequest)
+        } catch let error {
+            print(error.localizedDescription)
+            return []
+        }
+    }
 }
 
 extension BooksController {
@@ -112,6 +127,18 @@ extension BooksController {
         } catch let error {
             print(error.localizedDescription)
             return nil
+        }
+    }
+    
+    func getAllSavedGenres() -> [Genre] {
+        let fetchRequest: NSFetchRequest<Genre> = Genre.fetchRequest()
+        fetchRequest.sortDescriptors = [NSSortDescriptor(key: "name", ascending: true)]
+        
+        do {
+            return try moc.fetch(fetchRequest)
+        } catch let error {
+            print(error.localizedDescription)
+            return []
         }
     }
 }

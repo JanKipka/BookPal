@@ -44,7 +44,7 @@ struct ReadingCycleDetailView: View {
                     }
                     if !readingCycle.active {
                         Section("End Date") {
-                            Text(readingCycle.finishedAt?.asLocalizedStringHoursMinutes ?? "")
+                            Text(readingCycle.completedOn?.asLocalizedStringHoursMinutes ?? "")
                         }
                     }
                     Section(readingCycle.active ? "Pages read so far" : "Pages read") {

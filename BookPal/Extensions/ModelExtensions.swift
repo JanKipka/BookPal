@@ -110,3 +110,11 @@ extension Double {
     }
     
 }
+
+extension Book {
+    
+    func filterAuthors(_ query: String) -> Bool {
+        return Authors(self.authors!).names.contains(query)
+    }
+    
+}
