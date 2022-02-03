@@ -66,7 +66,7 @@ struct ReadNowView: View {
                         }
                         
                         Section("Books you're reading") {
-                            ForEach(cycles) { cycle in
+                            ForEach(cycles.sorted(by: {$0.lastUpdated > $1.lastUpdated})) { cycle in
                                 NavigationLink(destination: ReadingCycleDetailView(readingCycle: cycle)) {
                                     ReadingCycleComponent(readingCycle: cycle)
                                 }

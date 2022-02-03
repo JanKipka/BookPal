@@ -16,6 +16,10 @@ struct ReadingController {
     
     let booksController = BooksController()
     
+    func save() {
+        dataController.save()
+    }
+    
 }
 
 extension ReadingController {
@@ -69,7 +73,7 @@ extension ReadingController {
     func stopReading(cycle: ReadingCycle) {
         cycle.finishedStatus = .stopped
         let finishedDate = Date().zeroSeconds
-        for ac in cycle.getActiveActivities {
+        for ac in cycle.getActivities {
             finishReadingActivity(readingActivity: ac, onPage: cycle.currentPage, notes: ac.notes ?? "")
         }
         cycle.active = false

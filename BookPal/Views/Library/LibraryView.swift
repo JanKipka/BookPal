@@ -10,9 +10,7 @@ import SwiftUI
 
 struct LibraryView: View {
     
-    @FetchRequest(sortDescriptors: [
-        NSSortDescriptor(key: "completedOn", ascending: false)
-    ], predicate: NSPredicate(format: "finishedStatusValue = 0")) var books: FetchedResults<ReadingCycle>
+    @FetchRequest(sortDescriptors: [], predicate: NSPredicate(format: "readingActivities.@count > 0")) var books: FetchedResults<ReadingCycle>
     
     @State var pairs: [[Book]] = []
     
@@ -21,10 +19,8 @@ struct LibraryView: View {
             ZStack {
                 Colors.linearGradient(topColor: Colors.darkerBlue, bottomColor: Colors.lighterBlue)
                     .ignoresSafeArea()
-                //Image("library")
-                    //.ignoresSafeArea()
                 List {
-                    NavigationLink(destination: AllBooksView()) {
+                    NavigationLink(destination: AllBooksView(navigationTitle: "Books")) {
                         LibrarySectionComponent(title: "Books", systemImage: "books.vertical")
                     }
                     .listRowBackground(Color.clear)
@@ -36,28 +32,20 @@ struct LibraryView: View {
                         LibrarySectionComponent(title: "Genres", systemImage: "list.bullet")
                     }
                     .listRowBackground(Color.clear)
-                    Text("Recently read").font(.system(size: 24))
-                        .fontWeight(.semibold)
-                        .padding(.top, 20)
-                        .padding(.bottom, 5)
-                        .listRowBackground(Color.clear)
-                        .listRowSeparator(.visible, edges: .bottom)
-                    ForEach(books) { cycle in
-                        BookTile(book: cycle.book!)
-                            //.listRowBackground(Color.white.opacity(0.3))
-                            .listRowBackground(Color.clear)
-                            .listRowSeparator(.visible, edges: [.top, .bottom])
+                    Section("Recently read") {
+                        ForEach(books.sorted(by: {$0.lastUpdated > $1.lastUpdated})) { cycle in
+                            BookTile(book: cycle.book!)
+                        }
                     }
+                    Section("Recently added") {
+                        ForEach(books.sorted(by: {$0.startedAt! > $1.startedAt!})) { cycle in
+                            BookTile(book: cycle.book!)
+                        }
+                    }
+                    
                 }
-                .listStyle(.grouped)
             }.navigationTitle("Library")
-                //.foregroundColor(.white)
         }
-        
-        // TODO
-        // Template: Apple Podcast App -> Library Tab
-        // At the top, a menu with Genre, Authors, All
-        // Below tiles with recently read books
     }
     
 }

@@ -17,10 +17,9 @@ struct NewReadingCycleView: View {
     @State var showingAlertAlreadyActive = false
     @State var readingCycle = ReadingCycle()
     @State var showSearchSheet = false
+    @State var searchQuery = ""
     
-    @FetchRequest(sortDescriptors: [
-        NSSortDescriptor(key: #keyPath(ReadingCycle.startedAt), ascending: true)
-    ], predicate: NSPredicate(format: "active = true")) var cycles: FetchedResults<ReadingCycle>
+    @FetchRequest(sortDescriptors: [], predicate: NSPredicate(format: "active = true")) var activities: FetchedResults<ReadingActivity>
     
     @Environment(\.dismiss) var dismiss
     
@@ -41,24 +40,39 @@ struct NewReadingCycleView: View {
                         DatePicker("Start Date", selection: $startedAtDate)
                             .padding(.horizontal, 10)
                     }
-                    Section("Book") {
-                        TextField("Book Choice", text: $titleAsString)
-                            .disabled(true)
-                    }
-                    Section("Search") {
-                        Button("Search for a Book") {
-                            showSearchSheet.toggle()
-                        }
-                        .sheet(isPresented: $showSearchSheet, onDismiss: {
-                            titleAsString = selectedVolume.title ?? ""
-                        }){
-                            SearchView(selectedVolume: $selectedVolume)
+                    if !titleAsString.isEmpty {
+                        //Section("Choice") {
+                        HStack {
+                            ImageComponent(thumbnail: selectedVolume.imageLinks?.thumbnail ?? "")
+                            VStack(alignment: .leading, spacing: 5) {
+                                Text(titleAsString).font(.headline)
+                                Text(selectedVolume.authors?.joined(separator: ", ") ?? "")
+                            }
                         }
                     }
-                    
-                    Button("Start reading!") {
-                        createNewCycle()
-                    }.disabled(titleAsString == "")
+                    Button {
+                        showSearchSheet.toggle()
+                    }
+                label: {
+                    HStack {
+                        Image(systemName: "magnifyingglass")
+                        Text("Search")
+                        Spacer()
+                    }
+                }
+                .sheet(isPresented: $showSearchSheet, onDismiss: {
+                    titleAsString = selectedVolume.title ?? ""
+                }){
+                    SearchView(selectedVolume: $selectedVolume)
+                }
+                    Section {
+                        Button("Start reading!") {
+                            createNewCycle()
+                        }.disabled(titleAsString == "")
+                            .foregroundColor(.white)
+                            .background(.blue)
+                            .listRowBackground(Color.blue)
+                    }
                 }
                 .background(.clear)
                 .padding(.bottom)
@@ -84,8 +98,10 @@ struct NewReadingCycleView: View {
         Alert(
             title: Text("The book was added. Do you want to start reading now?"),
             primaryButton: .default(Text("Yes")) {
-                if !cycles.isEmpty {
+                if !activities.isEmpty {
                     showingAlertAlreadyActive.toggle()
+                    readingCycle.active = false
+                    readingController.save()
                 } else {
                     let _ = readingController.createNewActivity(readingCycle: readingCycle)
                     navigateBack()
@@ -123,19 +139,11 @@ struct SearchView: View {
     @Environment(\.dismiss) var dismiss
     
     var body: some View {
-        ZStack {
-            Colors.lighterOrange.ignoresSafeArea()
-            VStack {
-                Form {
-                    Section {
-                        TextField("Search for a book...", text: $searchQuery)
-                            .onChange(of: searchQuery) { query in
-                                if query.count >= 2 {
-                                    callApi()
-                                }
-                            }
-                    }
-                    Section {
+        NavigationView {
+            ZStack {
+                Colors.lighterOrange.ignoresSafeArea()
+                VStack {
+                    List {
                         ForEach(volumes) { volume in
                             VolumeInfoView(volumeInfo: volume.volumeInfo) {
                                 selectedVolume = volume.volumeInfo
@@ -143,12 +151,19 @@ struct SearchView: View {
                             }
                         }
                     }
-                    
+                    .padding(.top, 5)
+                    .listStyle(.grouped)
                 }
-                .listStyle(.grouped)
-                
+            }
+            .navigationTitle("Search")
+        }
+        .searchable(text: $searchQuery, placement: .navigationBarDrawer(displayMode: .always))
+        .onChange(of: searchQuery) { query in
+            if query.count >= 2 {
+                callApi()
             }
         }
+        
         
     }
     

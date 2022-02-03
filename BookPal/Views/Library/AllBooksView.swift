@@ -14,6 +14,7 @@ struct AllBooksView: View {
     
     @State var allBooks: [Book] = []
     @State var booksToDisplay: [Book] = []
+    var navigationTitle: String
     
     
     var body: some View {
@@ -22,11 +23,14 @@ struct AllBooksView: View {
                 .ignoresSafeArea()
             List {
                 ForEach(booksToDisplay, id: \.isbn) { book in
-                    BookComponent(book: book, font: .title)
+                    BookComponent(book: book, font: .system(size: 22))
+                        .padding(.vertical, 3)
+                        .listRowBackground(Color.clear)
                 }
             }
             .listStyle(.grouped)
-        }.navigationTitle("Books")
+        }.navigationTitle(navigationTitle)
+            .navigationBarTitleDisplayMode(.inline)
             .searchable(text: $searchQuery, placement: .navigationBarDrawer(displayMode: .always))
             .onChange(of: searchQuery) { query in
                 if searchQuery.isEmpty {
@@ -45,3 +49,4 @@ struct AllBooksView: View {
             }
     }
 }
+

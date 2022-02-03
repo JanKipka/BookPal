@@ -61,6 +61,9 @@ extension ReadingCycle: DynamicDateComponent {
         let acArray = Array(self.readingActivities as! Set<ReadingActivity>)
         var avg = 0.0
         let inactiveAcs = acArray.filter({!$0.active})
+        if inactiveAcs.isEmpty {
+            return 0.0
+        }
         for ac in inactiveAcs {
             avg += ac.pagesPerMinute
         }
@@ -78,13 +81,24 @@ extension ReadingCycle: DynamicDateComponent {
         return getTimeUnitFromTimeInterval(sum)
     }
     
-    var getActiveActivities: [ReadingActivity] {
+    var getActivities: [ReadingActivity] {
         return Array(self.readingActivities as! Set<ReadingActivity>)
     }
     
     var hasActiveActivities: Bool {
-        let acArray = getActiveActivities
+        let acArray = getActivities
         return !acArray.filter({$0.active}).isEmpty
+    }
+    
+    var lastUpdated: Date {
+        let acArray = getActivities
+        if (acArray.isEmpty) {
+            return .distantPast
+        }
+        if let active = acArray.filter({$0.active}).first {
+            return active.startedAt!
+        }
+        return acArray.sorted(by: {$0.finishedAt ?? Date() > $1.finishedAt ?? Date()}).first?.finishedAt ?? .distantPast
     }
     
     var finishedStatus: FinishedStatus {
