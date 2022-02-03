@@ -57,7 +57,7 @@ struct ReadNowView: View {
                         EmptyView()
                     }
                     List {
-                        Section("Active reading activities") {
+                        Section(LocalizedStringKey("active-activities")) {
                             ForEach(activities) { ac in
                                 NavigationLink(destination: ReadingActivityDetailView(readingActivity: ac)) {
                                     ReadingActivityComponent(readingActivity: ac)
@@ -65,7 +65,7 @@ struct ReadNowView: View {
                             }
                         }
                         
-                        Section("Books you're reading") {
+                        Section(LocalizedStringKey("books-reading")) {
                             ForEach(cycles.sorted(by: {$0.lastUpdated > $1.lastUpdated})) { cycle in
                                 NavigationLink(destination: ReadingCycleDetailView(readingCycle: cycle)) {
                                     ReadingCycleComponent(readingCycle: cycle)
@@ -75,7 +75,7 @@ struct ReadNowView: View {
                                         Button {
                                             startReadingActivityForCycle(cycle)
                                         } label: {
-                                            Label("Read Now", systemImage: "book.fill")
+                                            Label("read-now", systemImage: "book.fill")
                                         }
                                         .tint(.blue)
                                         Button {
@@ -102,7 +102,7 @@ struct ReadNowView: View {
                     Alert(title: Text("Reading activity started!"))
                 }
                 .alert(isPresented: $hasActiveActivityAlert) {
-                    Alert(title: Text("Active activity ongoing"), message: Text("There's already an active reading acitivity."))
+                    Alert(title: Text("Active activity ongoing"), message: Text("already-active"))
                 }
                 .alert("Are you sure you want to put this book away?", isPresented: $showCancelWarning) {
                     Button("Yes") {
@@ -130,7 +130,7 @@ struct ReadNowView: View {
                     }
                 }
             }
-            .navigationTitle("Read now")
+            .navigationTitle("read-now")
             
         }
     }

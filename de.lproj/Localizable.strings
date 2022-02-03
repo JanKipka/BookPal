@@ -1,0 +1,83 @@
+/* 
+  Localization.strings
+  BookPal
+
+  Created by Jan Kipka on 03.02.22.
+  
+*/
+
+// ReadNowView
+"read-now" = "Jetzt lesen";
+"Put Away" = "Weglegen";
+"put-away" = "Weggelegt";
+"Yes" = "Ja";
+"No" = "Nein";
+"Are you sure you want to put this book away?" = "Bist du sicher, dass du das Buch weglegen willst?";
+"Add a new book" = "Buch hinzufügen";
+"Add new book" = "Buch hinzufügen";
+"Add a book" = "Buch hinzufügen";
+"active-activities" = "Aktive Leseaktivitäten";
+"books-reading" = "Bücher, die du liest";
+"Reading activity started!" = "Leseaktivität gestartet!";
+"Active activity ongoing" = "Aktive Leseaktivität";
+"already-active" = "Es gibt bereits eine aktive Leseaktivität.";
+"Reading" = "Am Lesen";
+"started-date %@" = "Hinzugefügt vor %@";
+"done-in %@" = "Fertig in %@";
+"on-page-of %lld %lld" = "S. %lld/%lld";
+"active" = "Aktiv";
+"%lld pages" = "%lld Seiten";
+"Time spent reading" = "Zeit gelesen";
+"Average pages per minute" = "Durchschn. Seiten pro Minute";
+"End Date" = "Beendet am";
+"Pages read so far" = "Seiten bisher gelesen";
+"Pages read" = "Seiten gelesen";
+
+"Search" = "Suche";
+"search" = "Suchen";
+"Start Date" = "Start Datum";
+"start-date" = "Begonnen am";
+"Start reading" = "Beginne zu lesen";
+"book-added" = "Buch hinzugefügt. Möchtest du jetzt gleich anfangen zu lesen?";
+"Activities" = "Aktivitäten";
+"Notes" = "Notizen";
+"You're reading..." = "Du liest...";
+"Save" = "Speichern";
+
+"Pages per minute" = "Seiten pro Minute";
+"Started on page" = "Begonnen auf Seite";
+"Finished on page" = "Beendet auf Seite";
+
+"Done" = "Fertig";
+"What page are you on?" = "Auf welcher Seite bist du?";
+"Reading activity" = "Leseaktivität";
+"Finish reading" = "Fertig gelesen";
+"missing-page" = "Bitte gib an auf welcher Seite du bist.";
+"page-greater-than-total %lld" = "Deine aktuelle Seitenzahl kann nicht größer sein als die Gesamtseitenzahl (%lld).";
+
+// BookView
+"Your History" = "Deine Historie";
+"Logs" = "Einträge";
+"reading-log" = "Lese-Eintrag";
+"You've spent %@ reading this book." = "Du hast %@ mit Lesen verbracht.";
+"Total time reading" = "Ingesamt gelesen";
+"Pages per Minute" = "Seiten pro Minute";
+"%@ Books" = "%@ Bücher";
+"currently-reading" = "Du liest gerade dieses Buch.";
+
+"Books" = "Bücher";
+"Authors" = "Autoren";
+"Read" = "Gelesen";
+"Recently read" = "Kürzlich gelesen";
+"Recently added" = "Kürzlich hinzugefügt";
+"Library" = "Bücherei";
+"Books You've Put Away" = "Bücher, die du weggelegt hast";
+"Books You've Read" = "Bücher, die du gelesen hast";
+
+// Genres
+"Fiction" = "Fiktion";
+"History" = "Geschichte";
+"Biography & Autobiography" = "Biographie & Autobiographie";
+"Fantasy" = "Fantasy";
+"War" = "Krieg";
+"Romance" = "Romanze";

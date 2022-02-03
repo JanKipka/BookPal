@@ -20,7 +20,14 @@ struct BookView: View {
                     Text("Your History")
                         .font(.title)
                         .fontWeight(.bold)
-                    Text("You've read this book \(generateTimesString(count:book.readingCyclesAsArray.filter({$0.finishedStatus == .read}).count)).")
+                    if book.readingCyclesAsArray.filter {$0.active}.count > 0 {
+                        Text("currently-reading")
+                            .foregroundColor(.blue)
+                    }
+                    Text("read-times \(book.readingCyclesAsArray.filter({$0.finishedStatus == .read}).count).")
+                    if !book.readingCyclesAsArray.filter { $0.finishedStatus == .stopped }.isEmpty {
+                        Text("put-away-times \(book.readingCyclesAsArray.filter { $0.finishedStatus == .stopped }.count).")
+                    }
                     Text("You've spent \(book.averageTotalTimeSpentReading.asDaysHoursMinutesString ?? "0m") reading this book.")
                     Text("Logs")
                         .font(.title2)
@@ -39,18 +46,6 @@ struct BookView: View {
             
         }.navigationTitle(book.title!)
     }
-    
-    func generateTimesString(count: Int) -> String {
-        switch count {
-        case 1: return "once"
-        case 2: return "twice"
-            
-        default:
-            return "\(count) times"
-        }
-        
-        
-    }
 }
 
 struct ReadingCycleDetailComponent: View {
@@ -66,7 +61,7 @@ struct ReadingCycleDetailComponent: View {
                     }
                     Spacer()
                     VStack(alignment: .trailing, spacing: 5) {
-                        Text("\(cycle.totalTimeSpentReading?.asHoursMinutesString ?? "")")
+                        Text("\(cycle.totalTimeSpentReading?.asHoursMinutesString ?? "0m")")
                         Text("Total time reading").font(.caption)
                     }
                 }
@@ -88,8 +83,8 @@ struct BookDetailsComponent: View {
                     .fontWeight(.semibold)
                 Spacer()
                 Spacer()
-                Text("\(book.numOfPages) pages")
-                Text("\(book.genre?.name ?? "")")
+                Text("\(Int(book.numOfPages)) pages")
+                Text(LocalizedStringKey(book.genre?.name ?? ""))
                 Text(book.isbn!)
                     .onTapGesture {
                         UIPasteboard.general.string = book.isbn!
@@ -110,6 +105,7 @@ struct BookViewPreviews: PreviewProvider {
             NavigationView {
                 BookView(book: book)
             }
+            .environment(\.locale, .init(identifier: "de"))
             NavigationView {
                 BookView(book: book)
             }

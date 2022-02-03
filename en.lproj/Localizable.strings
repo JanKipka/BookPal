@@ -1,0 +1,83 @@
+/* 
+  Localization.strings
+  BookPal
+
+  Created by Jan Kipka on 03.02.22.
+  
+*/
+
+// ReadNowView
+"read-now" = "Read now";
+"Put Away" = "Put Away";
+"put-away" = "Put Away";
+"Yes" = "Yes";
+"No" = "No";
+"Are you sure you want to put this book away?" = "Are you sure you want to put this book away?";
+"Add a new book" = "Add a new book";
+"Add new book" = "Add new book";
+"Add a book" = "Add a book";
+"active-activities" = "Active reading activities";
+"books-reading" = "Books you're reading";
+"Reading activity started!" = "Reading activity started!";
+"Active activity ongoing" = "Active activity ongoing";
+"already-active" = "There already is an active reading activity.";
+"Reading" = "Reading";
+"started-date %@" = "Added %@ ago";
+"done-in %@" = "Done in %@";
+"on-page-of %lld %lld" = "p. %lld/%lld";
+"active" = "Active";
+"%lld pages" = "%lld pages";
+"Time spent reading" = "Time spent reading";
+"Average pages per minute" = "Average pages per minute";
+"End Date" = "End Date";
+"Pages read so far" = "Pages read so far";
+"Pages read" = "Pages read";
+
+"Search" = "Search";
+"search" = "Search";
+"Start Date" = "Start Date";
+"Start reading" = "Start reading";
+"book-added" = "The book was added. Do you want to start reading now?";
+"Activities" = "Activities";
+"Notes" = "Notes";
+"You're reading..." = "You're reading...";
+"Save" = "Save";
+
+"Pages per minute" = "Pages per minute";
+"Started on page" = "Started on page";
+"Finished on page" = "Finished on page";
+
+"Done" = "Done";
+"What page are you on?" = "What page are you on?";
+"Reading activity" = "Reading activity";
+"Finish reading" = "Finish reading";
+"missing-page" = "Please enter the page you're on.";
+"page-greater-than-total %lld" = "The page you're on can't be greater than the total page number (%lld).";
+
+// BookView
+"Your History" = "Your History";
+"Logs" = "Logs";
+"reading-log" = "Reading Log";
+"You've spent %@ reading this book." = "You've spent %@ reading this book.";
+"Total time reading" = "Total time reading";
+"Pages per Minute" = "Pages per Minute";
+"%@ Books" = "%@ Books";
+"currently-reading" = "You're currently reading this book.";
+
+"Books" = "Books";
+"Authors" = "Authors";
+"Read" = "Read";
+"Recently read" = "Recently read";
+"Recently added" = "Recently added";
+"Library" = "Library";
+"Books You've Put Away" = "Books You've Put Away";
+"Books You've Read" = "Books You've Read";
+
+// Genres
+"Fiction" = "Fiction";
+"History" = "History";
+"Biography & Autobiography" = "Biography & Autobiography";
+"Fantasy" = "Fantasy";
+"War" = "War";
+"Romance" = "Romance";
+

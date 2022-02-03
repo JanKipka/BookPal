@@ -39,27 +39,27 @@ struct ReadingCycleDetailView: View {
                 Form {
                     BookComponent(book: readingCycle.book!)
                         .padding(.vertical)
-                    Section("Start Date") {
+                    Section(LocalizedStringKey("start-date")) {
                         Text(readingCycle.startedAt?.asLocalizedStringHoursMinutes ?? "")
                     }
                     if !readingCycle.active {
-                        Section("End Date") {
+                        Section(LocalizedStringKey("End Date")) {
                             Text(readingCycle.completedOn?.asLocalizedStringHoursMinutes ?? "")
                         }
                     }
-                    Section(readingCycle.active ? "Pages read so far" : "Pages read") {
+                    Section(LocalizedStringKey(readingCycle.active ? "Pages read so far" : "Pages read")) {
                         Text("\(readingCycle.currentPage) of \(readingCycle.book!.numOfPages)")
                     }
-                    Section("Time spent reading") {
-                        Text("\(readingCycle.totalTimeSpentReading?.asHoursMinutesString ?? "0m")")
+                    Section(LocalizedStringKey("Time spent reading")) {
+                        Text("\(readingCycle.totalTimeSpentReadingInterval.asDaysHoursMinutesString ?? "0m")")
                     }
-                    Section("Average pages per minute") {
+                    Section(LocalizedStringKey("Average pages per minute")) {
                         Text(avgPagesPerMinute)
                     }
-                    Section("Notes") {
+                    Section(LocalizedStringKey("Notes")) {
                         TextEditor(text: $notes)
                     }
-                    Section("Activities") {
+                    Section(LocalizedStringKey("Activities")) {
                         ForEach(activities) { ac in
                             NavigationLink(destination: ReadingActivityDetailView(readingActivity: ac)) {
                                 ReadingActivityListComponent(ac: ac)
@@ -68,13 +68,13 @@ struct ReadingCycleDetailView: View {
                     }
                 }
             }
-        }.navigationTitle("You're reading...")
+        }.navigationTitle(readingCycle.active ? LocalizedStringKey("You're reading...") : LocalizedStringKey("reading-log"))
             .onAppear {
                 self.avgPagesPerMinute = readingCycle.avgPagesPerMinute.asDecimalString
             }
             .toolbar {
                 ToolbarItem {
-                    Button("Save") {
+                    Button(LocalizedStringKey("Save")) {
                         readingCycle.notes = notes.trimmingCharacters(in: .whitespaces)
                         dataController.save()
                     }
