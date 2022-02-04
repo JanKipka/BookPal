@@ -124,11 +124,8 @@ struct ReadNowView: View {
                 }
             }
             .toolbar {
-                ToolbarItem(placement: .navigationBarTrailing) {
+                ToolbarItem(placement: .navigationBarLeading) {
                     Menu {
-                        Button("Add a new book") {
-                            navigateToNewCycleView = true
-                        }
                         Button("Dev: Delete all") {
                             dataController.deleteAll(entityName: "Genre")
                             dataController.deleteAll(entityName: "Book")
@@ -137,6 +134,13 @@ struct ReadNowView: View {
                             dataController.deleteAll(entityName: "ReadingActivity")
                             dataController.deleteAll(entityName: "CoverLinks")
                         }
+                    } label: {
+                        Label("Settings", systemImage: "gear")
+                    }
+                }
+                ToolbarItem(placement: .navigationBarTrailing) {
+                    Button {
+                        navigateToNewCycleView = true
                     } label: {
                         Label("Add new book", systemImage: "plus")
                     }
