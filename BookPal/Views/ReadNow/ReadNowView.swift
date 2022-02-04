@@ -32,6 +32,7 @@ struct ReadNowView: View {
     @State var showCancelWarning: Bool = false
     @State var selectedActivity: ReadingActivity?
     @State var selectedCycleToStop: ReadingCycle?
+    @State var presentActivitySheet = false
     
     fileprivate func startReadingActivityForCycle(_ cycle: ReadingCycle) {
         let hasActiveActivities = !activities.isEmpty
@@ -61,6 +62,17 @@ struct ReadNowView: View {
                             ForEach(activities) { ac in
                                 NavigationLink(destination: ReadingActivityDetailView(readingActivity: ac)) {
                                     ReadingActivityComponent(readingActivity: ac)
+                                        .sheet(isPresented: $presentActivitySheet) {
+                                            ReadingActivityDetailView(readingActivity: ac, showButton: true)
+                                        }
+                                }
+                                .swipeActions(edge: .leading) {
+                                    Button {
+                                        presentActivitySheet.toggle()
+                                    } label: {
+                                        Label("finish", systemImage: "checkmark.circle.fill")
+                                    }
+                                    .tint(.blue)
                                 }
                             }
                         }

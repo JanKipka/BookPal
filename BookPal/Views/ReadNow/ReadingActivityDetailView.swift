@@ -25,6 +25,7 @@ struct ReadingActivityDetailView: View {
     @State var message: LocalizedStringKey = ""
     @State var notes: String = ""
     @State var pagesPerMinute: String = ""
+    var showButton = false
     
     @Environment(\.dismiss) var dismiss
     
@@ -84,6 +85,13 @@ struct ReadingActivityDetailView: View {
                     }
                     Section(LocalizedStringKey("Notes")) {
                         TextEditor(text: $notes)
+                    }
+                    if showButton {
+                        Button(LocalizedStringKey("Finish reading")) {
+                            buttonAction()
+                        }
+                        .listRowBackground(Color.blue)
+                        .foregroundColor(.white)
                     }
                 }
                 Spacer()
