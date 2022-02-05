@@ -48,10 +48,12 @@ struct ReadingCycleDetailView: View {
                         }
                     }
                     Section(LocalizedStringKey(readingCycle.active ? "Pages read so far" : "Pages read")) {
-                        Text("\(readingCycle.currentPage) of \(readingCycle.book!.numOfPages)")
+                        Text(LocalizedStringKey("\(Int(readingCycle.currentPage)) of \(Int(readingCycle.book!.numOfPages))"))
                     }
                     Section(LocalizedStringKey("Time spent reading")) {
-                        Text("\(readingCycle.totalTimeSpentReadingInterval.asDaysHoursMinutesString ?? "0m")")
+                        TimelineView(.everyMinute) { _ in
+                            Text("\(readingCycle.totalTimeSpentReadingInterval.asDaysHoursMinutesString ?? "0m")")
+                        }
                     }
                     Section(LocalizedStringKey("Average pages per minute")) {
                         Text(avgPagesPerMinute)

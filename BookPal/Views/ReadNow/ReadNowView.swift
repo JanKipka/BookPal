@@ -11,6 +11,10 @@ import CoreData
 
 struct ReadNowView: View {
     
+    init(){
+        UITableView.appearance().backgroundColor = .clear
+    }
+    
     @FetchRequest(sortDescriptors: [
         NSSortDescriptor(key: #keyPath(ReadingCycle.startedAt), ascending: true)
     ], predicate: NSPredicate(format: "active = true")) var cycles: FetchedResults<ReadingCycle>
@@ -32,6 +36,10 @@ struct ReadNowView: View {
     @State var showCancelWarning: Bool = false
     @State var selectedActivity: ReadingActivity?
     @State var selectedCycleToStop: ReadingCycle?
+    @State var presentActivitySheet = false
+    @State var showSearchSheet = false
+    @State var titleAsString = ""
+    @State var selectedVolume: VolumeInfo = VolumeInfo()
     
     fileprivate func startReadingActivityForCycle(_ cycle: ReadingCycle) {
         let hasActiveActivities = !activities.isEmpty
@@ -53,14 +61,22 @@ struct ReadNowView: View {
                 Colors.linearGradient(topColor: Colors.darkerBlue, bottomColor: Colors.lighterBlue)
                     .ignoresSafeArea()
                 VStack {
-                    NavigationLink(destination: NewReadingCycleView(), isActive: $navigateToNewCycleView) {
-                        EmptyView()
-                    }
                     List {
                         Section(LocalizedStringKey("active-activities")) {
                             ForEach(activities) { ac in
                                 NavigationLink(destination: ReadingActivityDetailView(readingActivity: ac)) {
                                     ReadingActivityComponent(readingActivity: ac)
+                                        .sheet(isPresented: $presentActivitySheet) {
+                                            ReadingActivityDetailView(readingActivity: ac, showButton: true)
+                                        }
+                                }
+                                .swipeActions(edge: .leading) {
+                                    Button {
+                                        presentActivitySheet.toggle()
+                                    } label: {
+                                        Label("finish", systemImage: "checkmark.circle.fill")
+                                    }
+                                    .tint(.blue)
                                 }
                             }
                         }
@@ -112,11 +128,8 @@ struct ReadNowView: View {
                 }
             }
             .toolbar {
-                ToolbarItem(placement: .navigationBarTrailing) {
+                ToolbarItem(placement: .navigationBarLeading) {
                     Menu {
-                        Button("Add a new book") {
-                            navigateToNewCycleView = true
-                        }
                         Button("Dev: Delete all") {
                             dataController.deleteAll(entityName: "Genre")
                             dataController.deleteAll(entityName: "Book")
@@ -126,7 +139,23 @@ struct ReadNowView: View {
                             dataController.deleteAll(entityName: "CoverLinks")
                         }
                     } label: {
-                        Label("Add new book", systemImage: "plus")
+                        Label("Settings", systemImage: "gear")
+                    }
+                }
+                ToolbarItem(placement: .navigationBarTrailing) {
+                    Button {
+                        showSearchSheet = true
+                    } label: {
+                        Label("Add new book", systemImage: "magnifyingglass")
+                    }
+                    .sheet(isPresented: $showSearchSheet, onDismiss: {
+                        titleAsString = selectedVolume.title ?? ""
+                        navigateToNewCycleView = !titleAsString.isEmpty
+                    }){
+                        SearchView(selectedVolume: $selectedVolume)
+                    }
+                    .sheet(isPresented: $navigateToNewCycleView) {
+                        AddBookView(selectedVolume: $selectedVolume, titleAsString: $titleAsString)
                     }
                 }
             }
@@ -143,15 +172,3 @@ struct ReadNowView: View {
         return cycles.filter({$0.active})
     }
 }
-
-
-
-//struct ContentView_Previews: PreviewProvider {
-//    static var previews: some View {
-//
-//        let dataController = DataController.preview
-//
-//        MainView()
-//            .environment(\.managedObjectContext, dataController.container.viewContext)
-//    }
-//}

@@ -24,11 +24,10 @@ struct ReadingCycleComponent: View {
             HStack {
                 ImageComponent(thumbnail: readingCycle.book?.coverLinks?.thumbnail ?? "", width: 70, height: 75)
                 VStack(alignment: .leading, spacing: 5) {
-                        TimelineView(.everyMinute) { context in
-                            Text(LocalizedStringKey("started-date \(context.date.timeIntervalSince(readingCycle.startedAt!).asDaysHoursMinutesString ?? "0m")"))
-                                .font(.callout)
-                        }
-                    Text("\(readingCycle.book?.title ?? "")").font(.headline)
+                    Text("\(readingCycle.book?.title ?? "")").font(.system(size: 20))
+                        .fontWeight(.semibold)
+                    Text(Authors((readingCycle.book?.authors)!).names)
+                    Spacer()
                     if readingCycle.active {
                         HStack {
                             Text("on-page-of \(Int(readingCycle.currentPage)) \(Int(readingCycle.book!.numOfPages))")

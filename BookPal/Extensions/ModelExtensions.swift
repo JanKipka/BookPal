@@ -76,6 +76,8 @@ extension ReadingCycle: DynamicDateComponent {
         for ac in acArray {
             if !ac.active {
                 sum += (ac.finishedAt?.timeIntervalSince(ac.startedAt!))!
+            } else {
+                sum += Date.now.timeIntervalSince(ac.startedAt!)
             }
         }
         return sum
@@ -141,15 +143,14 @@ extension Book {
     
     var averageTotalTimeSpentReading: TimeInterval {
         var res = TimeInterval()
-        let inactiveCycles = readingCyclesAsArray.filter({!$0.active})
-        if inactiveCycles.isEmpty {
+        if readingCyclesAsArray.isEmpty {
             return 0.0
         }
-        for cycle in inactiveCycles {
+        for cycle in readingCyclesAsArray {
             let interval = cycle.totalTimeSpentReadingInterval
             res += interval
         }
-        return res / Double(inactiveCycles.count)
+        return res / Double(readingCyclesAsArray.count)
     }
     
 }

@@ -14,7 +14,7 @@ struct LibraryView: View {
     
     @FetchRequest(sortDescriptors: [], predicate: NSPredicate(format: "finishedStatusValue == 1")) var booksPutAway: FetchedResults<ReadingCycle>
     
-    @FetchRequest(sortDescriptors: []) var allBooks: FetchedResults<ReadingCycle>
+    @FetchRequest(sortDescriptors: []) var allBooks: FetchedResults<Book>
     
     @State var pairs: [[Book]] = []
     
@@ -50,8 +50,8 @@ struct LibraryView: View {
                         }
                     }
                     Section(LocalizedStringKey("Recently added")) {
-                        ForEach(allBooks.sorted(by: {$0.startedAt! > $1.startedAt!})) { cycle in
-                            BookTile(book: cycle.book!)
+                        ForEach(allBooks.sorted(by: {$0.dateAdded! > $1.dateAdded!})) { book in
+                            BookTile(book: book)
                         }
                     }
                     

@@ -29,6 +29,7 @@ struct BooksController {
         }
         book.id = UUID()
         book.isbn = isbn
+        book.dateAdded = Date.now
         book.title = selectedVolume.title!
         book.numOfPages = Int16(selectedVolume.pageCount!)
         let genreString = selectedVolume.mainCategory ?? selectedVolume.categories?.first ?? ""
@@ -50,6 +51,7 @@ struct BooksController {
             covers.large = links.large
             book.coverLinks = covers
         }
+        DataController.shared.save()
         return book
     }
     

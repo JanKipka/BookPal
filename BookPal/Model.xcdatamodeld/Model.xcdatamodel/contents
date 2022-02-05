@@ -8,6 +8,7 @@
     </entity>
     <entity name="Book" representedClassName="Book" syncable="YES" codeGenerationType="class">
         <attribute name="cover" optional="YES" attributeType="URI"/>
+        <attribute name="dateAdded" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
         <attribute name="id" optional="YES" attributeType="UUID" usesScalarValueType="NO"/>
         <attribute name="isbn" attributeType="String"/>
         <attribute name="numOfPages" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES"/>
@@ -66,7 +67,7 @@
     </entity>
     <elements>
         <element name="Author" positionX="-18" positionY="108" width="128" height="89"/>
-        <element name="Book" positionX="-36" positionY="27" width="128" height="164"/>
+        <element name="Book" positionX="-36" positionY="27" width="128" height="179"/>
         <element name="CoverLinks" positionX="-27" positionY="108" width="128" height="119"/>
         <element name="Genre" positionX="-54" positionY="-9" width="128" height="74"/>
         <element name="ReadingActivity" positionX="0" positionY="99" width="128" height="179"/>
