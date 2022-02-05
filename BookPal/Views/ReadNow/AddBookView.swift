@@ -8,7 +8,7 @@
 import Foundation
 import SwiftUI
 
-struct NewReadingCycleView: View {
+struct AddBookView: View {
     
     @Binding var selectedVolume: VolumeInfo
     @State var startedAtDate: Date = Date()
