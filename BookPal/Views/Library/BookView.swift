@@ -10,6 +10,12 @@ import SwiftUI
 
 struct BookView: View {
     var book: Book
+    
+    init(book: Book) {
+        self.book = book
+        UILabel.appearance(whenContainedInInstancesOf: [UINavigationBar.self]).adjustsFontSizeToFitWidth = true
+    }
+    
     var body: some View {
         ZStack {
             List {
@@ -28,7 +34,9 @@ struct BookView: View {
                     if !book.readingCyclesAsArray.filter { $0.finishedStatus == .stopped }.isEmpty {
                         Text("put-away-times \(book.readingCyclesAsArray.filter { $0.finishedStatus == .stopped }.count).")
                     }
-                    Text("You've spent \(book.averageTotalTimeSpentReading.asDaysHoursMinutesString ?? "0m") reading this book.")
+                    TimelineView(.everyMinute) { _ in
+                        Text("You've spent \(book.averageTotalTimeSpentReading.asDaysHoursMinutesString ?? "0m") reading this book.")
+                    }
                     Text("Logs")
                         .font(.title2)
                         .fontWeight(.semibold)
@@ -45,6 +53,7 @@ struct BookView: View {
             .listStyle(.grouped)
             
         }.navigationTitle(book.title!)
+            
     }
 }
 
@@ -61,7 +70,9 @@ struct ReadingCycleDetailComponent: View {
                     }
                     Spacer()
                     VStack(alignment: .trailing, spacing: 5) {
-                        Text("\(cycle.totalTimeSpentReading?.asHoursMinutesString ?? "0m")")
+                        TimelineView(.everyMinute) { _ in
+                            Text("\(cycle.totalTimeSpentReading?.asHoursMinutesString ?? "0m")")
+                        }
                         Text("Total time reading").font(.caption)
                     }
                 }

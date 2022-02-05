@@ -64,7 +64,7 @@ extension ReadingController {
         readingCycle.startedAt = startedOn
         readingCycle.active = true
         readingCycle.id = UUID()
-        readingCycle.book = book
+        book.addToReadingCycles(readingCycle)
         readingCycle.maxPages = readingCycle.book!.numOfPages
         dataController.save()
         return readingCycle

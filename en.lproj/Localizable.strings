@@ -33,8 +33,10 @@
 "Pages read so far" = "Pages read so far";
 "Pages read" = "Pages read";
 "finish" = "Finish";
+"%lld of %lld" = "%lld von %lld";
+"book-already-added" = "This book is already in your library.";
 
-"Search" = "Search";
+"Search" = "Book Search";
 "search" = "Search";
 "Start Date" = "Start Date";
 "Start reading" = "Start reading";

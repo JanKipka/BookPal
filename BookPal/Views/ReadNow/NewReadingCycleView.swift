@@ -10,14 +10,16 @@ import SwiftUI
 
 struct NewReadingCycleView: View {
     
-    @State var selectedVolume: VolumeInfo = VolumeInfo()
+    @Binding var selectedVolume: VolumeInfo
     @State var startedAtDate: Date = Date()
-    @State var titleAsString: String = ""
+    @Binding var titleAsString: String
     @State var showingAlert = false
     @State var showingAlertAlreadyActive = false
+    @State var showingAlreadyAddedAlert = false
     @State var readingCycle = ReadingCycle()
     @State var showSearchSheet = false
     @State var searchQuery = ""
+    @State var book: Book?
     
     @FetchRequest(sortDescriptors: [], predicate: NSPredicate(format: "active = true")) var activities: FetchedResults<ReadingActivity>
     
@@ -26,70 +28,67 @@ struct NewReadingCycleView: View {
     let booksController = BooksController()
     let readingController = ReadingController()
     
-    init(){
-        UITableView.appearance().backgroundColor = .clear
-    }
-    
     var body: some View {
-        ZStack {
-            Colors.linearGradient(topColor: Colors.mint, bottomColor: Colors.lighterMint)
-                .ignoresSafeArea()
-            VStack {
-                Form {
-                    Section("") {
-                        DatePicker("Start Date", selection: $startedAtDate)
-                            .padding(.horizontal, 10)
-                    }
-                    if !titleAsString.isEmpty {
-                        HStack {
-                            ImageComponent(thumbnail: selectedVolume.imageLinks?.thumbnail ?? "")
-                            VStack(alignment: .leading, spacing: 5) {
-                                Text(titleAsString).font(.headline)
-                                Text(selectedVolume.authors?.joined(separator: ", ") ?? "")
+        NavigationView {
+            ZStack {
+                Colors.linearGradient(topColor: Colors.mint, bottomColor: Colors.lighterMint)
+                    .ignoresSafeArea()
+                VStack {
+                    List {
+                        if !titleAsString.isEmpty {
+                            HStack {
+                                ImageComponent(thumbnail: selectedVolume.imageLinks?.thumbnail ?? "")
+                                VStack(alignment: .leading, spacing: 5) {
+                                    Text(titleAsString).font(.headline)
+                                    Text(selectedVolume.authors?.joined(separator: ", ") ?? "")
+                                }
                             }
                         }
+                        Button {
+                            showSearchSheet.toggle()
+                        }
+                    label: {
+                        HStack {
+                            Image(systemName: "magnifyingglass")
+                            Text("search")
+                            Spacer()
+                        }
                     }
-                    Button {
-                        showSearchSheet.toggle()
+                    .sheet(isPresented: $showSearchSheet, onDismiss: {
+                        titleAsString = selectedVolume.title ?? ""
+                    }){
+                        SearchView(selectedVolume: $selectedVolume)
                     }
-                label: {
-                    HStack {
-                        Image(systemName: "magnifyingglass")
-                        Text("search")
-                        Spacer()
+                        Section {
+                            Button("Start reading") {
+                                createNewCycle()
+                            }.disabled(titleAsString == "")
+                                .foregroundColor(.white)
+                                .background(.blue)
+                                .listRowBackground(Color.blue)
+                        }
+                    }
+                    .background(.clear)
+                    .padding(.bottom)
+                    
+                    
+                }
+                .alert(isPresented: $showingAlert) {
+                    presentAlert()
+                }
+                .alert("already-active", isPresented: $showingAlertAlreadyActive) {
+                    Button("OK") {
+                        navigateBack()
                     }
                 }
-                .sheet(isPresented: $showSearchSheet, onDismiss: {
-                    titleAsString = selectedVolume.title ?? ""
-                }){
-                    SearchView(selectedVolume: $selectedVolume)
+                .alert("book-already-added", isPresented: $showingAlreadyAddedAlert) {
+                    Button("OK") {}
                 }
-                    Section {
-                        Button("Start reading") {
-                            createNewCycle()
-                        }.disabled(titleAsString == "")
-                            .foregroundColor(.white)
-                            .background(.blue)
-                            .listRowBackground(Color.blue)
-                    }
+                .onAppear {
+                    self.startedAtDate = Date()
                 }
-                .background(.clear)
-                .padding(.bottom)
-                
-                
+                .navigationTitle(LocalizedStringKey("Add a book"))
             }
-            .alert(isPresented: $showingAlert) {
-                presentAlert()
-            }
-            .alert("already-active", isPresented: $showingAlertAlreadyActive) {
-                Button("OK") {
-                    navigateBack()
-                }
-            }
-            .onAppear {
-                self.startedAtDate = Date()
-            }
-            .navigationTitle(LocalizedStringKey("Add a book"))
         }
     }
     
@@ -99,9 +98,8 @@ struct NewReadingCycleView: View {
             primaryButton: .default(Text("Yes")) {
                 if !activities.isEmpty {
                     showingAlertAlreadyActive.toggle()
-                    readingCycle.active = false
-                    readingController.save()
                 } else {
+                    readingCycle = readingController.createNewReadingCycle(book: book!, startedOn: startedAtDate)
                     let _ = readingController.createNewActivity(readingCycle: readingCycle)
                     navigateBack()
                 }
@@ -113,14 +111,14 @@ struct NewReadingCycleView: View {
     }
     
     private func createNewCycle() {
-        
         let isbn = selectedVolume.industryIdentifiers![0].identifier! // for now always use the first available isbn
-        var book = booksController.getBookByISBN(isbn)
+        book = booksController.getBookByISBN(isbn)
         if book == nil {
             book = booksController.createNewBookFromVolume(selectedVolume)
+            showingAlert = true
+        } else {
+            showingAlreadyAddedAlert = true
         }
-        readingCycle = readingController.createNewReadingCycle(book: book!, startedOn: startedAtDate)
-        showingAlert = true
     }
     
     private func navigateBack() {
@@ -220,13 +218,4 @@ struct VolumeInfoView: View {
         .onTapGesture(perform: onTap)
     }
     
-}
-
-struct NewReadingCycleViewPreviews: PreviewProvider {
-    static var previews: some View {
-        NavigationView {
-            NewReadingCycleView()
-                .environment(\.locale, .init(identifier: "de"))
-        }
-    }
 }

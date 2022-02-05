@@ -33,8 +33,10 @@
 "Pages read so far" = "Seiten bisher gelesen";
 "Pages read" = "Seiten gelesen";
 "finish" = "Beenden";
+"%lld of %lld" = "%lld von %lld";
+"book-already-added" = "Das Buch ist bereits in deiner Sammlung.";
 
-"Search" = "Suche";
+"Search" = "Buch-Suche";
 "search" = "Suchen";
 "Start Date" = "Start Datum";
 "start-date" = "Begonnen am";
