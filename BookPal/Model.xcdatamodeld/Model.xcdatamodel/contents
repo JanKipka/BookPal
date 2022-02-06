@@ -14,9 +14,9 @@
         <attribute name="numOfPages" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES"/>
         <attribute name="title" attributeType="String"/>
         <relationship name="authors" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Author" inverseName="books" inverseEntity="Author"/>
-        <relationship name="coverLinks" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="CoverLinks" inverseName="book" inverseEntity="CoverLinks"/>
+        <relationship name="coverLinks" optional="YES" maxCount="1" deletionRule="Cascade" destinationEntity="CoverLinks" inverseName="book" inverseEntity="CoverLinks"/>
         <relationship name="genre" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Genre" inverseName="books" inverseEntity="Genre"/>
-        <relationship name="readingCycles" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="ReadingCycle" inverseName="book" inverseEntity="ReadingCycle"/>
+        <relationship name="readingCycles" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="ReadingCycle" inverseName="book" inverseEntity="ReadingCycle"/>
         <uniquenessConstraints>
             <uniquenessConstraint>
                 <constraint value="isbn"/>
@@ -63,7 +63,7 @@
         <attribute name="notes" optional="YES" attributeType="String"/>
         <attribute name="startedAt" attributeType="Date" usesScalarValueType="NO"/>
         <relationship name="book" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Book" inverseName="readingCycles" inverseEntity="Book"/>
-        <relationship name="readingActivities" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="ReadingActivity" inverseName="readingCycle" inverseEntity="ReadingActivity"/>
+        <relationship name="readingActivities" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="ReadingActivity" inverseName="readingCycle" inverseEntity="ReadingActivity"/>
     </entity>
     <elements>
         <element name="Author" positionX="-18" positionY="108" width="128" height="89"/>

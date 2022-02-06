@@ -46,6 +46,7 @@
 "Notes" = "Notizen";
 "You're reading..." = "Du liest...";
 "Save" = "Speichern";
+"delete-book" = "Möchtest du dieses Buch und alle Lese-Einträge wirklich löschen?";
 
 "Pages per minute" = "Seiten pro Minute";
 "Started on page" = "Begonnen auf Seite";

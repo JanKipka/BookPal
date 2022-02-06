@@ -24,6 +24,19 @@ struct ReadingController {
 
 extension ReadingController {
     // activities
+    func hasActiveReadingActivities() -> Bool {
+        let fetchRequest: NSFetchRequest<ReadingActivity> = ReadingActivity.fetchRequest()
+        fetchRequest.predicate = NSPredicate(
+            format: "active = true"
+        )
+        do {
+            return try moc.fetch(fetchRequest).count > 0
+        } catch let error {
+            print(error.localizedDescription)
+            return false
+        }
+    }
+    
     func createNewActivity(readingCycle: ReadingCycle, onPage: Int16 = 0) -> ReadingActivity {
         let readingActivity = ReadingActivity(context: moc)
         readingActivity.id = UUID()

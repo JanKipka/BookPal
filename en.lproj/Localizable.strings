@@ -45,6 +45,7 @@
 "Notes" = "Notes";
 "You're reading..." = "You're reading...";
 "Save" = "Save";
+"delete-book" = "Do you really want to delete this book and all reading logs?";
 
 "Pages per minute" = "Pages per minute";
 "Started on page" = "Started on page";
