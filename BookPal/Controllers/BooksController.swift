@@ -31,6 +31,7 @@ struct BooksController {
         book.isbn = isbn
         book.dateAdded = Date.now
         book.title = selectedVolume.title!
+        book.infoLink = selectedVolume.canonicalVolumeLink ?? selectedVolume.infoLink
         book.numOfPages = Int16(selectedVolume.pageCount!)
         let genreString = selectedVolume.mainCategory ?? selectedVolume.categories?.first ?? ""
         if let genre = self.searchForGenreByString(genreString) {
@@ -79,6 +80,11 @@ struct BooksController {
             return nil
         }
         
+    }
+    
+    func deleteBook(_ book: Book) {
+        moc.delete(book)
+        DataController.shared.save()
     }
     
     

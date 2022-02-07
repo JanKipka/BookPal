@@ -26,11 +26,11 @@ struct ReadingCycleComponent: View {
                 VStack(alignment: .leading, spacing: 5) {
                     Text("\(readingCycle.book?.title ?? "")").font(.system(size: 20))
                         .fontWeight(.semibold)
-                    Text(Authors((readingCycle.book?.authors)!).names)
+                    Text(Authors((readingCycle.book?.authors) ?? []).names)
                     Spacer()
                     if readingCycle.active {
                         HStack {
-                            Text("on-page-of \(Int(readingCycle.currentPage)) \(Int(readingCycle.book!.numOfPages))")
+                            Text("on-page-of \(Int(readingCycle.currentPage)) \(Int(readingCycle.book?.numOfPages ?? 0))")
                             Spacer()
                             Text(readingCycle.hasActiveActivities ? "Reading" : readingCycle.readingActivities?.count == 0 ? "" : LocalizedStringKey("done-in \(readingCycle.remainingTime?.asHoursMinutesString ?? "??m")"))
                                 .foregroundColor(.blue)

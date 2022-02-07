@@ -45,12 +45,12 @@ struct LibraryView: View {
                     }
                     .listRowBackground(Color.clear)
                     Section(LocalizedStringKey("Recently read")) {
-                        ForEach(books.sorted(by: {$0.lastUpdated > $1.lastUpdated})) { cycle in
+                        ForEach(books.sorted(by: {$0.lastUpdated > $1.lastUpdated}).prefix(5)) { cycle in
                             BookTile(book: cycle.book!)
                         }
                     }
                     Section(LocalizedStringKey("Recently added")) {
-                        ForEach(allBooks.sorted(by: {$0.dateAdded! > $1.dateAdded!})) { book in
+                        ForEach(allBooks.sorted(by: {$0.dateAdded! > $1.dateAdded!}).prefix(5)) { book in
                             BookTile(book: book)
                         }
                     }
@@ -64,6 +64,10 @@ struct LibraryView: View {
 
 struct BookTile: View {
     var book: Book
+    @State var presentAlert = false
+    @State var hasActiveActivityAlert: Bool = false
+    let readingController = ReadingController()
+    
     var body: some View {
         NavigationLink(destination: BookView(book: book)) {
             ZStack {
@@ -71,13 +75,41 @@ struct BookTile: View {
                     ImageComponent(thumbnail: book.coverLinks?.thumbnail ?? "", width: 60, height: 90)
                     VStack(alignment: .leading, spacing: 5) {
                         Spacer()
-                        Text(book.title!).font(.system(size: 20))
+                        Text(book.title ?? "").font(.system(size: 20))
                             .fontWeight(.semibold)
-                        Text(Authors(book.authors!).names)
+                        Text(Authors(book.authors ?? []).names)
                         Spacer()
                     }
                 }
             }
+        }
+        .swipeActions(edge: .leading) {
+            Button {
+                let active = readingController.hasActiveReadingActivities()
+                if active {
+                    hasActiveActivityAlert.toggle()
+                    return
+                }
+                let cycle = readingController.createNewReadingCycle(book: book, startedOn: Date.now)
+                let _ = readingController.createNewActivity(readingCycle: cycle)
+            } label: {
+                Label("read-now", systemImage: "book.fill")
+            }
+            .tint(.blue)
+            Button(role: .destructive) {
+                presentAlert = true
+            } label: {
+                Image(systemName: "trash")
+            }
+        }
+        .alert("delete-book", isPresented: $presentAlert) {
+            Button(LocalizedStringKey("No"), role: .cancel) {}
+            Button(LocalizedStringKey("Yes")) {
+                BooksController().deleteBook(book)
+            }
+        }
+        .alert(isPresented: $hasActiveActivityAlert) {
+            Alert(title: Text("Active activity ongoing"), message: Text("already-active"))
         }
         
     }

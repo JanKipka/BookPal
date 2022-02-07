@@ -23,7 +23,7 @@ struct GenreView: View {
                 .ignoresSafeArea()
             List {
                 ForEach(genresToDisplay) { genre in
-                    NavigationLink(destination: AllBooksView(allBooks: Array(genre.books as! Set<Book>), navigationTitle: "\(genre.name ?? "")")) {
+                    NavigationLink(destination: AllBooksView(allBooks: Array(genre.books as! Set<Book>), fetchBooks: false, navigationTitle: "\(genre.name ?? "")")) {
                         Text(LocalizedStringKey(genre.name ?? ""))
                             .font(.title)
                     }.listRowBackground(Color.clear)
@@ -44,6 +44,7 @@ struct GenreView: View {
             }
             .onAppear {
                 allGenres = BooksController().getAllSavedGenres()
+                    .filter({$0.books?.count ?? 0 > 0})
                 genresToDisplay = allGenres
             }
     }

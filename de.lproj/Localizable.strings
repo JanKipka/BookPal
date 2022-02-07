@@ -16,6 +16,7 @@
 "Add a new book" = "Buch hinzufügen";
 "Add new book" = "Buch hinzufügen";
 "Add a book" = "Buch hinzufügen";
+"add" = "Hinzufügen";
 "active-activities" = "Aktive Leseaktivitäten";
 "books-reading" = "Bücher, die du liest";
 "Reading activity started!" = "Leseaktivität gestartet!";
@@ -35,17 +36,21 @@
 "finish" = "Beenden";
 "%lld of %lld" = "%lld von %lld";
 "book-already-added" = "Das Buch ist bereits in deiner Sammlung.";
+"query" = "Titel oder Autor:in";
+"isbn" = "ISBN";
 
 "Search" = "Buch-Suche";
 "search" = "Suchen";
 "Start Date" = "Start Datum";
 "start-date" = "Begonnen am";
+"Search Mode" = "Suchen nach...";
 "Start reading" = "Beginne zu lesen";
 "book-added" = "Buch hinzugefügt. Möchtest du jetzt gleich anfangen zu lesen?";
 "Activities" = "Aktivitäten";
 "Notes" = "Notizen";
 "You're reading..." = "Du liest...";
 "Save" = "Speichern";
+"delete-book" = "Möchtest du dieses Buch und alle Lese-Einträge wirklich löschen?";
 
 "Pages per minute" = "Seiten pro Minute";
 "Started on page" = "Begonnen auf Seite";
@@ -69,7 +74,7 @@
 "currently-reading" = "Du liest gerade dieses Buch.";
 
 "Books" = "Bücher";
-"Authors" = "Autoren";
+"Authors" = "Autor:innen";
 "Read" = "Gelesen";
 "Recently read" = "Kürzlich gelesen";
 "Recently added" = "Kürzlich hinzugefügt";

@@ -41,7 +41,7 @@ struct ReadNowView: View {
     @State var titleAsString = ""
     @State var selectedVolume: VolumeInfo = VolumeInfo()
     
-    fileprivate func startReadingActivityForCycle(_ cycle: ReadingCycle) {
+    func startReadingActivityForCycle(_ cycle: ReadingCycle) {
         let hasActiveActivities = !activities.isEmpty
         if hasActiveActivities {
             hasActiveActivityAlert.toggle()
