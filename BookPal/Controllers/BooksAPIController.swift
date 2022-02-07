@@ -6,9 +6,10 @@
 //
 
 import Foundation
+import SwiftUI
 
 protocol IGoogleBooksAPIController {
-    mutating func queryForBooks(_ searchQuery: String, startIndex: Int, maxResults: Int, completion:@escaping ([Volume]) -> ()) async throws
+    mutating func queryForBooks(_ searchQuery: String, startIndex: Int, maxResults: Int, searchMode: SearchMode, completion:@escaping ([Volume]) -> ()) async throws
 }
 
 struct GoogleBooksAPIController: IGoogleBooksAPIController {
@@ -19,7 +20,7 @@ struct GoogleBooksAPIController: IGoogleBooksAPIController {
     let plus = "+"
     var prevSearchQuery = ""
     
-    mutating func queryForBooks(_ searchQuery: String, startIndex: Int = 0, maxResults: Int = 40, completion:@escaping ([Volume]) -> ()) throws {
+    mutating func queryForBooks(_ searchQuery: String, startIndex: Int = 0, maxResults: Int = 40, searchMode: SearchMode = .query, completion:@escaping ([Volume]) -> ()) throws {
         if (searchQuery.isEmpty) {
             completion([])
         }
@@ -34,11 +35,10 @@ struct GoogleBooksAPIController: IGoogleBooksAPIController {
             throw BookPalError.runtimeError("API Key not found, verify your configuration setup.")
         }
         
-        guard let url = URL(string: buildURLString(query: searchQuery, key: key, startIndex: startIndex, maxResults: maxResults)) else {
+        guard let url = URL(string: buildURLString(query: searchQuery, key: key, startIndex: startIndex, maxResults: maxResults, searchMode: searchMode)) else {
             throw BookPalError.runtimeError("Invalid URL for accessing Google Books API")
         }
         print(url)
-        //DispatchQueue.main.asyncAfter(deadline: .now() + 0.8) {
         URLSession.shared.dataTask(with: url) { data, response, error in
             if let theData = data {
                 if let results = try? JSONDecoder().decode(VolumeResult.self, from: theData) {
@@ -50,11 +50,11 @@ struct GoogleBooksAPIController: IGoogleBooksAPIController {
                 }
             }
         }.resume()
-        // }
     }
     
-    private func buildURLString(query: String, key: String, startIndex: Int, maxResults: Int) -> String {
-        return volumePrefix + convertToSearchString(inputString: query) + configurePagination(startIndex: startIndex, maxResults: maxResults) + keyPrefix + key
+    private func buildURLString(query: String, key: String, startIndex: Int, maxResults: Int, searchMode: SearchMode) -> String {
+        let searchBase = searchMode == .isbn ? volumePrefix + "isbn:" + query : volumePrefix + convertToSearchString(inputString: query)
+        return searchBase + configurePagination(startIndex: startIndex, maxResults: maxResults) + keyPrefix + key
     }
     
     private func convertToSearchString(inputString: String) -> String {
@@ -65,6 +65,13 @@ struct GoogleBooksAPIController: IGoogleBooksAPIController {
         return "&startIndex=\(startIndex)&maxResults=\(maxResults)"
     }
     
+}
+
+enum SearchMode: String, Equatable, CaseIterable {
+    case query = "query"
+    case isbn = "isbn"
+    
+    var localizedName: LocalizedStringKey { LocalizedStringKey(rawValue) }
 }
 
 struct VolumeInfo: Codable, Hashable {
@@ -88,6 +95,8 @@ struct VolumeInfo: Codable, Hashable {
     var imageLinks: ImageLinks?
     var categories: [String]?
     var industryIdentifiers: [IndustryIdentifier]?
+    var canonicalVolumeLink: String?
+    var infoLink: String?
 }
 
 struct ImageLinks: Codable {

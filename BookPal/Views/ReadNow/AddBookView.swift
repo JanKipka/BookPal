@@ -60,7 +60,7 @@ struct AddBookView: View {
                         SearchView(selectedVolume: $selectedVolume)
                     }
                         Section {
-                            Button("Start reading") {
+                            Button("add") {
                                 createNewCycle()
                             }.disabled(titleAsString == "")
                                 .foregroundColor(.white)
@@ -134,6 +134,7 @@ struct SearchView: View {
     @Binding var selectedVolume: VolumeInfo
     @State var apiController: GoogleBooksAPIController = GoogleBooksAPIController()
     @Environment(\.dismiss) var dismiss
+    @State var selection: SearchMode = .query
     
     var body: some View {
         NavigationView {
@@ -141,18 +142,30 @@ struct SearchView: View {
                 Colors.lighterOrange.ignoresSafeArea()
                 VStack {
                     List {
-                        ForEach(volumes) { volume in
-                            VolumeInfoView(volumeInfo: volume.volumeInfo) {
-                                selectedVolume = volume.volumeInfo
-                                dismiss()
+                        Section(LocalizedStringKey("Search Mode")) {
+                            Picker("Search Mode", selection: $selection) {
+                                ForEach(SearchMode.allCases, id: \.self) { mode in
+                                    Text(mode.localizedName)
+                                        .tag(mode)
+                                }
+                            }
+                            .pickerStyle(.segmented)
+                        }
+                        Group {
+                            ForEach(volumes) { volume in
+                                VolumeInfoView(volumeInfo: volume.volumeInfo) {
+                                    selectedVolume = volume.volumeInfo
+                                    dismiss()
+                                }
                             }
                         }
                     }
-                    .padding(.top, 5)
                     .listStyle(.grouped)
+                    .padding(.top, -30)
                 }
             }
             .navigationTitle("Search")
+            .navigationBarTitleDisplayMode(.inline)
         }
         .searchable(text: $searchQuery, placement: .navigationBarDrawer(displayMode: .always))
         .onChange(of: searchQuery) { query in
@@ -167,7 +180,7 @@ struct SearchView: View {
     private func callApi() {
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.8) {
             do {
-                try apiController.queryForBooks(searchQuery) { (results) in
+                try apiController.queryForBooks(searchQuery, searchMode: selection) { (results) in
                     volumes = performQualityFilter(results)
                 }
             } catch let error {
@@ -180,7 +193,6 @@ struct SearchView: View {
         return values.filter({$0.volumeInfo.title != nil})
             .filter({$0.volumeInfo.pageCount != nil})
             .filter({$0.volumeInfo.authors != nil})
-            .filter({$0.volumeInfo.categories != nil})
             .filter({$0.volumeInfo.industryIdentifiers != nil && $0.volumeInfo.industryIdentifiers!.count > 0})
     }
 }
