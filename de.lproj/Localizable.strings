@@ -51,6 +51,7 @@
 "You're reading..." = "Du liest...";
 "Save" = "Speichern";
 "delete-book" = "Möchtest du dieses Buch und alle Lese-Einträge wirklich löschen?";
+"not-added" = "Das Buch konnte aufgrund fehlender Metadaten nicht hinzugefügt werden. Versuche es über die Titel-Suche.";
 
 "Pages per minute" = "Seiten pro Minute";
 "Started on page" = "Begonnen auf Seite";
@@ -72,15 +73,21 @@
 "Pages per Minute" = "Seiten pro Minute";
 "%@ Books" = "%@ Bücher";
 "currently-reading" = "Du liest gerade dieses Buch.";
+"more-info" = "Mehr Infos";
 
 "Books" = "Bücher";
 "Authors" = "Autor:innen";
+"Author" = "Author:in";
+"Publishing" = "Veröffentlichung";
+"desc" = "Inhaltsbeschreibung";
+"pages" = "Seitenzahl";
 "Read" = "Gelesen";
 "Recently read" = "Kürzlich gelesen";
 "Recently added" = "Kürzlich hinzugefügt";
 "Library" = "Bücherei";
 "Books You've Put Away" = "Bücher, die du weggelegt hast";
 "Books You've Read" = "Bücher, die du gelesen hast";
+"info-info" = "Bereitgestellt durch Google Books";
 
 // Genres
 "Fiction" = "Fiktion";

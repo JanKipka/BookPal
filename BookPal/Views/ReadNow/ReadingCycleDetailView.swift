@@ -32,7 +32,7 @@ struct ReadingCycleDetailView: View {
     
     var body: some View {
         ZStack {
-            Colors.linearGradient(topColor: Colors.orange, bottomColor: Colors.lighterOrange)
+            Color.linearGradient(topColor: Color.orangeAccent, bottomColor: Color.orangeAccent2)
                 .ignoresSafeArea()
             VStack {
                 

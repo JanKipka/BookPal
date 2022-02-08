@@ -138,7 +138,7 @@ extension Book {
     }
     
     var readingCyclesAsArray: [ReadingCycle] {
-        return Array(self.readingCycles as! Set<ReadingCycle>)
+        return Array(self.readingCycles as? Set<ReadingCycle> ?? [])
     }
     
     var averageTotalTimeSpentReading: TimeInterval {

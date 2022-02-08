@@ -41,7 +41,7 @@ struct ReadingActivityDetailView: View {
     
     var body: some View {
         ZStack {
-            Colors.linearGradient(topColor: Colors.mint, bottomColor: Colors.lighterMint)
+            Color.linearGradient(topColor: Color.mintAccent, bottomColor: Color.mintAccent2)
                 .ignoresSafeArea()
             VStack {
                 Form {

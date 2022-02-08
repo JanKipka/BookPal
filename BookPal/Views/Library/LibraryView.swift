@@ -21,7 +21,7 @@ struct LibraryView: View {
     var body: some View {
         NavigationView {
             ZStack {
-                Colors.linearGradient(topColor: Colors.darkerBlue, bottomColor: Colors.lighterBlue)
+                Color.linearGradient(topColor: Color.primaryColor, bottomColor: Color.secondaryColor)
                     .ignoresSafeArea()
                 List {
                     NavigationLink(destination: AllBooksView(navigationTitle: "Books")) {
@@ -50,7 +50,7 @@ struct LibraryView: View {
                         }
                     }
                     Section(LocalizedStringKey("Recently added")) {
-                        ForEach(allBooks.sorted(by: {$0.dateAdded! > $1.dateAdded!}).prefix(5)) { book in
+                        ForEach(allBooks.sorted(by: {$0.dateAdded ?? Date.now > $1.dateAdded ?? Date.now}).prefix(5)) { book in
                             BookTile(book: book)
                         }
                     }

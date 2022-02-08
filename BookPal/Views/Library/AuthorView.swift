@@ -19,7 +19,7 @@ struct AuthorView: View {
     
     var body: some View {
         ZStack {
-            Colors.linearGradient(topColor: Colors.darkerBlue, bottomColor: Colors.lighterBlue)
+            Color.linearGradient(topColor: Color.primaryColor, bottomColor: Color.secondaryColor)
                 .ignoresSafeArea()
             List {
                 ForEach(authorsToDisplay) { author in

@@ -136,7 +136,7 @@ struct ReadingActivityListComponent: View {
                     .font(.caption)
             }
         }
-        .listRowBackground(ac.active ? Colors.lighterOrange : .white)
+        .listRowBackground(ac.active ? Color.orangeAccent2 : .white)
         .padding(.vertical)
     }
     

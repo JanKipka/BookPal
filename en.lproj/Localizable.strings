@@ -50,6 +50,7 @@
 "You're reading..." = "You're reading...";
 "Save" = "Save";
 "delete-book" = "Do you really want to delete this book and all reading logs?";
+"not-added" = "The book couldn't be added due to missing meta data. Try the title search.";
 
 "Pages per minute" = "Pages per minute";
 "Started on page" = "Started on page";
@@ -71,15 +72,21 @@
 "Pages per Minute" = "Pages per Minute";
 "%@ Books" = "%@ Books";
 "currently-reading" = "You're currently reading this book.";
+"more-info" = "More Info";
 
 "Books" = "Books";
 "Authors" = "Authors";
+"Author" = "Author";
+"Publishing" = "Publishing";
+"desc" = "Description";
+"pages" = "Pages";
 "Read" = "Read";
 "Recently read" = "Recently read";
 "Recently added" = "Recently added";
 "Library" = "Library";
 "Books You've Put Away" = "Books You've Put Away";
 "Books You've Read" = "Books You've Read";
+"info-info" = "Provided by Google Books";
 
 // Genres
 "Fiction" = "Fiction";

@@ -40,6 +40,7 @@ struct ReadNowView: View {
     @State var showSearchSheet = false
     @State var titleAsString = ""
     @State var selectedVolume: VolumeInfo = VolumeInfo()
+    @State var searchMode: SearchMode = .query
     
     func startReadingActivityForCycle(_ cycle: ReadingCycle) {
         let hasActiveActivities = !activities.isEmpty
@@ -58,7 +59,7 @@ struct ReadNowView: View {
     var body: some View {
         NavigationView {
             ZStack {
-                Colors.linearGradient(topColor: Colors.darkerBlue, bottomColor: Colors.lighterBlue)
+                Color.linearGradient(topColor: Color.primaryColor, bottomColor: Color.secondaryColor)
                     .ignoresSafeArea()
                 VStack {
                     List {
@@ -152,10 +153,12 @@ struct ReadNowView: View {
                         titleAsString = selectedVolume.title ?? ""
                         navigateToNewCycleView = !titleAsString.isEmpty
                     }){
-                        SearchView(selectedVolume: $selectedVolume)
+                        SearchView(selectedVolume: $selectedVolume, searchMode: $searchMode)
                     }
-                    .sheet(isPresented: $navigateToNewCycleView) {
-                        AddBookView(selectedVolume: $selectedVolume, titleAsString: $titleAsString)
+                    .sheet(isPresented: $navigateToNewCycleView, onDismiss: {
+                        selectedVolume = VolumeInfo()
+                    }) {
+                        AddBookView(selectedVolume: $selectedVolume, titleAsString: $titleAsString, searchMode: $searchMode)
                     }
                 }
             }

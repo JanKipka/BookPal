@@ -9,11 +9,14 @@
     <entity name="Book" representedClassName="Book" syncable="YES" codeGenerationType="class">
         <attribute name="cover" optional="YES" attributeType="URI"/>
         <attribute name="dateAdded" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
+        <attribute name="desc" optional="YES" attributeType="String"/>
         <attribute name="id" optional="YES" attributeType="UUID" usesScalarValueType="NO"/>
         <attribute name="infoLink" optional="YES" attributeType="String"/>
         <attribute name="isbn" attributeType="String"/>
         <attribute name="numOfPages" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES"/>
         <attribute name="publishedDate" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
+        <attribute name="publisher" optional="YES" attributeType="String"/>
+        <attribute name="subtitle" optional="YES" attributeType="String"/>
         <attribute name="title" attributeType="String"/>
         <relationship name="authors" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Author" inverseName="books" inverseEntity="Author"/>
         <relationship name="coverLinks" optional="YES" maxCount="1" deletionRule="Cascade" destinationEntity="CoverLinks" inverseName="book" inverseEntity="CoverLinks"/>
@@ -69,7 +72,7 @@
     </entity>
     <elements>
         <element name="Author" positionX="-18" positionY="108" width="128" height="89"/>
-        <element name="Book" positionX="-36" positionY="27" width="128" height="209"/>
+        <element name="Book" positionX="-36" positionY="27" width="128" height="254"/>
         <element name="CoverLinks" positionX="-27" positionY="108" width="128" height="119"/>
         <element name="Genre" positionX="-54" positionY="-9" width="128" height="74"/>
         <element name="ReadingActivity" positionX="0" positionY="99" width="128" height="179"/>
