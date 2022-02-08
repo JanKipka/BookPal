@@ -85,6 +85,7 @@ struct ReadingCycleDetailComponent: View {
 struct BookDetailsComponent: View {
     
     var book: Book
+    @State var showDetailsSheet: Bool = false
     
     var body: some View {
         HStack {
@@ -100,12 +101,58 @@ struct BookDetailsComponent: View {
                     .onTapGesture {
                         UIPasteboard.general.string = book.isbn!
                     }
+                Button("more-info") {
+                    showDetailsSheet.toggle()
+                }
+                .sheet(isPresented: $showDetailsSheet) {
+                    BookDetailsSheet(book: book)
+                }
                 Spacer()
             }
             .font(.system(size: 18))
         }
         .padding(.leading, 8)
         .listRowSeparator(.hidden)
+        
+    }
+}
+
+struct BookDetailsSheet: View {
+    var book: Book
+    var body: some View {
+        VStack {
+            List {
+                Text(book.title!)
+                    .fontWeight(.semibold)
+                if !(book.subtitle ?? "").isEmpty {
+                    Text(book.subtitle!)
+                        .font(.subheadline)
+                }
+                Section(LocalizedStringKey("Author")) {
+                    Text(Authors(book.authors!).names)
+                }
+                Section(LocalizedStringKey("Publishing")) {
+                    Text(book.publisher ?? "")
+                    Text("\(book.publishedDate?.formatted(date: .abbreviated, time: .omitted) ?? "")")
+                }
+                
+                Section(LocalizedStringKey("desc")) {
+                    Text(book.desc ?? "")
+                        .font(.callout)
+                }
+                Section("isbn") {
+                    Text(book.isbn ?? "")
+                }
+                Section(LocalizedStringKey("pages")) {
+                    Text("\(book.numOfPages)")
+                }
+                Text(LocalizedStringKey("info-info"))
+                    .font(.caption)
+                    .listRowSeparator(.hidden)
+            }
+            
+        }
+        
     }
 }
 

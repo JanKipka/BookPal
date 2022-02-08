@@ -72,15 +72,21 @@
 "Pages per Minute" = "Pages per Minute";
 "%@ Books" = "%@ Books";
 "currently-reading" = "You're currently reading this book.";
+"more-info" = "More Info";
 
 "Books" = "Books";
 "Authors" = "Authors";
+"Author" = "Author";
+"Publishing" = "Publishing";
+"desc" = "Description";
+"pages" = "Pages";
 "Read" = "Read";
 "Recently read" = "Recently read";
 "Recently added" = "Recently added";
 "Library" = "Library";
 "Books You've Put Away" = "Books You've Put Away";
 "Books You've Read" = "Books You've Read";
+"info-info" = "Provided by Google Books";
 
 // Genres
 "Fiction" = "Fiction";

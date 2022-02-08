@@ -19,7 +19,7 @@ struct GoogleBooksAPIController: IGoogleBooksAPIController {
     let keyPrefix = "&key="
     let plus = "+"
     var prevSearchQuery = ""
-    var prevSearchMode: SearchMode = .query
+    var prevSearchMode: SearchMode?
     
     mutating func queryForBooks(_ searchQuery: String, startIndex: Int = 0, maxResults: Int = 40, searchMode: SearchMode = .query, completion:@escaping ([Volume]) -> ()) throws {
         if (searchQuery.isEmpty) {
@@ -29,7 +29,7 @@ struct GoogleBooksAPIController: IGoogleBooksAPIController {
         if (prevSearchMode == searchMode && prevSearchQuery == searchQuery) {
             return
         }
-        
+
         prevSearchMode = searchMode
         prevSearchQuery = searchQuery
             
@@ -44,8 +44,10 @@ struct GoogleBooksAPIController: IGoogleBooksAPIController {
         }
         print(url)
         URLSession.shared.dataTask(with: url) { data, response, error in
+            let decoder = JSONDecoder()
+            decoder.dateDecodingStrategy = .formatted(DateFormatter.yyyyMMdd)
             if let theData = data {
-                if let results = try? JSONDecoder().decode(VolumeResult.self, from: theData) {
+                if let results = try? decoder.decode(VolumeResult.self, from: theData) {
                     DispatchQueue.main.async {
                         completion(results.items)
                     }
@@ -112,9 +114,30 @@ enum SearchMode: String, Equatable, CaseIterable {
     var localizedName: LocalizedStringKey { LocalizedStringKey(rawValue) }
 }
 
+
 struct VolumeInfo: Codable, Hashable {
     static func == (lhs: VolumeInfo, rhs: VolumeInfo) -> Bool {
         return lhs.title == rhs.title && lhs.authors == rhs.authors && lhs.industryIdentifiers == lhs.industryIdentifiers
+    }
+    
+    init() {
+    }
+    
+    init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        title = try? container.decode(String.self, forKey: .title)
+        subtitle = try? container.decode(String.self, forKey: .subtitle)
+        authors = try? container.decode(Array.self, forKey: .authors)
+        description = try? container.decode(String.self, forKey: .description)
+        pageCount = try? container.decode(Int.self, forKey: .pageCount)
+        mainCategory = try? container.decode(String.self, forKey: .mainCategory)
+        imageLinks = try? container.decode(ImageLinks.self, forKey: .imageLinks)
+        categories = try? container.decode(Array.self, forKey: .categories)
+        industryIdentifiers = try? container.decode(Array.self, forKey: .industryIdentifiers)
+        canonicalVolumeLink = try? container.decode(String.self, forKey: .canonicalVolumeLink)
+        infoLink = try? container.decode(String.self, forKey: .infoLink)
+        publisher = try? container.decode(String.self, forKey: .publisher)
+        publishedDate = try? container.decode(Date.self, forKey: .publishedDate)
     }
     
     func hash(into hasher: inout Hasher) {
@@ -135,6 +158,8 @@ struct VolumeInfo: Codable, Hashable {
     var industryIdentifiers: [IndustryIdentifier]?
     var canonicalVolumeLink: String?
     var infoLink: String?
+    var publisher: String?
+    var publishedDate: Date?
 }
 
 struct ImageLinks: Codable {

@@ -42,6 +42,10 @@ struct BooksController {
         book.isbn = isbn
         book.dateAdded = Date.now
         book.title = selectedVolume.title!
+        book.subtitle = selectedVolume.subtitle ?? ""
+        book.publisher = selectedVolume.publisher ?? ""
+        book.publishedDate = selectedVolume.publishedDate
+        book.desc = selectedVolume.description ?? ""
         book.infoLink = selectedVolume.canonicalVolumeLink ?? selectedVolume.infoLink
         book.numOfPages = Int16(pageCount ?? selectedVolume.pageCount!)
         

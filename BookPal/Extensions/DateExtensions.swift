@@ -45,13 +45,13 @@ extension Date {
 }
 
 extension Date {
-
+    
     var zeroSeconds: Date? {
         let calendar = Calendar.current
         let dateComponents = calendar.dateComponents([.year, .month, .day, .hour, .minute], from: self)
         return calendar.date(from: dateComponents)
     }
-
+    
 }
 
 extension TimeUnit {
@@ -104,4 +104,14 @@ extension TimeUnit {
             return hours * 60 + minutes + (seconds ?? 0 > 0 ? Int(round(60 / Double(seconds ?? 0))) : 0)
         }
     }
+}
+
+extension DateFormatter {
+    static let yyyyMMdd: DateFormatter = {
+        let formatter = DateFormatter()
+        formatter.dateFormat = "yyyy-MM-dd"
+        formatter.locale = Locale(identifier: "en_US_POSIX")
+        formatter.timeZone = TimeZone(secondsFromGMT: 0)
+        return formatter
+    }()
 }
