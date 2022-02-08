@@ -19,17 +19,21 @@ struct GoogleBooksAPIController: IGoogleBooksAPIController {
     let keyPrefix = "&key="
     let plus = "+"
     var prevSearchQuery = ""
+    var prevSearchMode: SearchMode = .query
     
     mutating func queryForBooks(_ searchQuery: String, startIndex: Int = 0, maxResults: Int = 40, searchMode: SearchMode = .query, completion:@escaping ([Volume]) -> ()) throws {
         if (searchQuery.isEmpty) {
             completion([])
         }
         
-        if (prevSearchQuery == searchQuery) {
+        if (prevSearchMode == searchMode && prevSearchQuery == searchQuery) {
             return
         }
         
+        prevSearchMode = searchMode
         prevSearchQuery = searchQuery
+            
+        
         
         guard let key = apiKey else {
             throw BookPalError.runtimeError("API Key not found, verify your configuration setup.")
@@ -50,6 +54,40 @@ struct GoogleBooksAPIController: IGoogleBooksAPIController {
                 }
             }
         }.resume()
+    }
+    
+    func enrichVolumeWithCategoryInformation(title: String, authors: [String]) async -> VolumeInfo? {
+        do {
+            guard let key = apiKey else {
+                throw BookPalError.runtimeError("API Key not found, verify your configuration setup.")
+            }
+            
+            let urlString = volumePrefix + "intitle:\(convertToSearchString(inputString: title))+inauthor:\(convertAuthorToSearchString(authors.first ?? ""))" + "&filter=ebooks" + keyPrefix + key
+            print(urlString)
+            guard let url = URL(string: urlString) else {
+                throw BookPalError.runtimeError("Invalid URL for accessing Google Books API")
+            }
+            let (data, _) = try await URLSession.shared.data(from: url)
+            if let results = try? JSONDecoder().decode(VolumeResult.self, from: data) {
+                let foundVolume = results.items.map({$0.volumeInfo})
+                    .filter({$0.categories != nil})
+                    .filter({$0.pageCount != nil})
+                    .first ?? nil
+                return foundVolume
+            } else {
+                return nil
+            }
+            
+        } catch let error {
+            print(error.localizedDescription)
+            return nil
+        }
+        
+        
+    }
+    
+    private func convertAuthorToSearchString(_ author: String) -> String {
+        return author.split(separator: " ").joined(separator: "%20")
     }
     
     private func buildURLString(query: String, key: String, startIndex: Int, maxResults: Int, searchMode: SearchMode) -> String {

@@ -40,6 +40,7 @@ struct ReadNowView: View {
     @State var showSearchSheet = false
     @State var titleAsString = ""
     @State var selectedVolume: VolumeInfo = VolumeInfo()
+    @State var searchMode: SearchMode = .query
     
     func startReadingActivityForCycle(_ cycle: ReadingCycle) {
         let hasActiveActivities = !activities.isEmpty
@@ -152,10 +153,10 @@ struct ReadNowView: View {
                         titleAsString = selectedVolume.title ?? ""
                         navigateToNewCycleView = !titleAsString.isEmpty
                     }){
-                        SearchView(selectedVolume: $selectedVolume)
+                        SearchView(selectedVolume: $selectedVolume, searchMode: $searchMode)
                     }
                     .sheet(isPresented: $navigateToNewCycleView) {
-                        AddBookView(selectedVolume: $selectedVolume, titleAsString: $titleAsString)
+                        AddBookView(selectedVolume: $selectedVolume, titleAsString: $titleAsString, searchMode: $searchMode)
                     }
                 }
             }

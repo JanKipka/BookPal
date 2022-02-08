@@ -16,10 +16,12 @@ struct AddBookView: View {
     @State var showingAlert = false
     @State var showingAlertAlreadyActive = false
     @State var showingAlreadyAddedAlert = false
+    @State var showNotAddedAlert = false
     @State var readingCycle = ReadingCycle()
     @State var showSearchSheet = false
     @State var searchQuery = ""
     @State var book: Book?
+    @Binding var searchMode: SearchMode
     
     @FetchRequest(sortDescriptors: [], predicate: NSPredicate(format: "active = true")) var activities: FetchedResults<ReadingActivity>
     
@@ -57,7 +59,7 @@ struct AddBookView: View {
                     .sheet(isPresented: $showSearchSheet, onDismiss: {
                         titleAsString = selectedVolume.title ?? ""
                     }){
-                        SearchView(selectedVolume: $selectedVolume)
+                        SearchView(selectedVolume: $selectedVolume, searchMode: $searchMode)
                     }
                         Section {
                             Button("add") {
@@ -82,6 +84,9 @@ struct AddBookView: View {
                     }
                 }
                 .alert("book-already-added", isPresented: $showingAlreadyAddedAlert) {
+                    Button("OK") {}
+                }
+                .alert("not-added", isPresented: $showNotAddedAlert) {
                     Button("OK") {}
                 }
                 .onAppear {
@@ -114,8 +119,14 @@ struct AddBookView: View {
         let isbn = selectedVolume.industryIdentifiers![0].identifier! // for now always use the first available isbn
         book = booksController.getBookByISBN(isbn)
         if book == nil {
-            book = booksController.createNewBookFromVolume(selectedVolume)
-            showingAlert = true
+            booksController.createNewBookFromVolume(selectedVolume, searchMode: searchMode) { createdBook in
+                if createdBook == nil {
+                    showNotAddedAlert = true
+                    return
+                }
+                book = createdBook
+                showingAlert = true
+            }
         } else {
             showingAlreadyAddedAlert = true
         }
@@ -134,7 +145,7 @@ struct SearchView: View {
     @Binding var selectedVolume: VolumeInfo
     @State var apiController: GoogleBooksAPIController = GoogleBooksAPIController()
     @Environment(\.dismiss) var dismiss
-    @State var selection: SearchMode = .query
+    @Binding var searchMode: SearchMode
     
     var body: some View {
         NavigationView {
@@ -143,13 +154,16 @@ struct SearchView: View {
                 VStack {
                     List {
                         Section(LocalizedStringKey("Search Mode")) {
-                            Picker("Search Mode", selection: $selection) {
+                            Picker("Search Mode", selection: $searchMode) {
                                 ForEach(SearchMode.allCases, id: \.self) { mode in
                                     Text(mode.localizedName)
                                         .tag(mode)
                                 }
                             }
                             .pickerStyle(.segmented)
+                            .onChange(of: searchMode) { _ in
+                                checkAndCall()
+                            }
                         }
                         Group {
                             ForEach(volumes) { volume in
@@ -169,18 +183,28 @@ struct SearchView: View {
         }
         .searchable(text: $searchQuery, placement: .navigationBarDrawer(displayMode: .always))
         .onChange(of: searchQuery) { query in
-            if query.count >= 2 {
-                callApi()
-            }
+            checkAndCall()
         }
         
         
     }
     
+    private func checkAndCall() {
+        if searchMode == .isbn {
+            if searchQuery.count >= 10 {
+                callApi()
+            }
+        } else {
+            if searchQuery.count >= 2 {
+                callApi()
+            }
+        }
+    }
+    
     private func callApi() {
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.8) {
             do {
-                try apiController.queryForBooks(searchQuery, searchMode: selection) { (results) in
+                try apiController.queryForBooks(searchQuery, searchMode: searchMode) { (results) in
                     volumes = performQualityFilter(results)
                 }
             } catch let error {

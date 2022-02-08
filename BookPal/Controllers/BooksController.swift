@@ -12,9 +12,20 @@ struct BooksController {
     
     let moc = DataController.shared.context
     
-    func createNewBookFromVolume(_ selectedVolume: VolumeInfo) -> Book {
-        let isbn = selectedVolume.industryIdentifiers![0].identifier! // for now always use the first available isbn
-        let book = Book(context: moc)
+    let apiController = GoogleBooksAPIController()
+    
+    fileprivate func setGenre(_ category: String, book: Book) {
+        if let genre = self.searchForGenreByString(category) {
+            book.genre = genre
+        } else {
+            let genre = Genre(context: moc)
+            genre.id = UUID()
+            genre.name = category
+            book.genre = genre
+        }
+    }
+    
+    func extractVolumeInformation(selectedVolume: VolumeInfo, book: Book, isbn: String, pageCount: Int?) {
         for author in selectedVolume.authors! {
             let names = author.split(separator: " ")
             if let aut = self.searchForPotentialAuthorMatch(firstName: String(names.first ?? ""), lastName: String(names.last ?? "")) {
@@ -32,18 +43,8 @@ struct BooksController {
         book.dateAdded = Date.now
         book.title = selectedVolume.title!
         book.infoLink = selectedVolume.canonicalVolumeLink ?? selectedVolume.infoLink
-        book.numOfPages = Int16(selectedVolume.pageCount!)
-        let genreString = selectedVolume.mainCategory ?? selectedVolume.categories?.first ?? ""
-        if let genre = self.searchForGenreByString(genreString) {
-            book.genre = genre
-        } else {
-            if !genreString.isEmpty {
-                let genre = Genre(context: moc)
-                genre.id = UUID()
-                genre.name = genreString
-                book.genre = genre
-            }
-        }
+        book.numOfPages = Int16(pageCount ?? selectedVolume.pageCount!)
+        
         if let links = selectedVolume.imageLinks {
             let covers = CoverLinks(context: moc)
             covers.thumbnail = links.thumbnail
@@ -52,8 +53,29 @@ struct BooksController {
             covers.large = links.large
             book.coverLinks = covers
         }
+        
+        let genreString = selectedVolume.mainCategory ?? selectedVolume.categories?.first ?? ""
+        setGenre(genreString, book: book)
         DataController.shared.save()
-        return book
+    }
+    
+    func createNewBookFromVolume(_ selectedVolume: VolumeInfo, searchMode: SearchMode, completion:@escaping (Book?) -> ()) {
+        let isbn = selectedVolume.industryIdentifiers![0].identifier! // for now always use the first available isbn
+        if searchMode == .isbn {
+            Task {
+                if let volume = await apiController.enrichVolumeWithCategoryInformation(title: selectedVolume.title!, authors: selectedVolume.authors!) {
+                    let book = Book(context: moc)
+                    extractVolumeInformation(selectedVolume: volume, book: book, isbn: isbn, pageCount: selectedVolume.pageCount)
+                    completion(book)
+                } else {
+                    completion(nil)
+                }
+            }
+        } else {
+            let book = Book(context: moc)
+            extractVolumeInformation(selectedVolume: selectedVolume, book: book, isbn: isbn, pageCount: selectedVolume.pageCount)
+            completion(book)
+        }
     }
     
     func getAllSavedBooks() -> [Book] {
