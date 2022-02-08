@@ -21,7 +21,7 @@ struct LibraryView: View {
     var body: some View {
         NavigationView {
             ZStack {
-                Colors.linearGradient(topColor: Colors.darkerBlue, bottomColor: Colors.lighterBlue)
+                Color.linearGradient(topColor: Color.primaryColor, bottomColor: Color.secondaryColor)
                     .ignoresSafeArea()
                 List {
                     NavigationLink(destination: AllBooksView(navigationTitle: "Books")) {

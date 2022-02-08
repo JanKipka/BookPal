@@ -8,22 +8,19 @@
 import Foundation
 import SwiftUI
 
-struct Colors {
-    static let orange = Color(red: 255 / 255, green: 209 / 255, blue: 52 / 255)
+extension Color {
     
-    static let lighterOrange = Color(red: 255 / 255, green: 244 / 255, blue: 207 / 255)
-
-    static let lighterBlue = Color(red: 214 / 255, green: 227 / 255, blue: 255 / 255)
-
-    static let darkerBlue = Color(red: 152 / 255, green: 223 / 255, blue: 255 / 255)
-
-    static let mint = Color(red: 129 / 255, green: 252 / 255, blue: 228 / 255)
+    static let primaryColor = Color("primaryColor")
     
-    static let lighterMint = Color(red: 194 / 255, green: 255 / 255, blue: 241 / 255)
+    static let secondaryColor = Color("secondaryColor")
     
-    static func getRGB(red: Int, green: Int, blue: Int) -> Color {
-        return Color(red: Double(red / 255), green: Double(green / 255), blue: Double(blue / 255))
-    }
+    static let orangeAccent = Color("orangeAccent")
+    
+    static let orangeAccent2 = Color("orangeAccent2")
+    
+    static let mintAccent = Color("mintAccent")
+    
+    static let mintAccent2 = Color("mintAccent2")
     
     static func linearGradient(topColor: Color, bottomColor: Color) -> LinearGradient {
         LinearGradient(gradient: Gradient(colors: [topColor, bottomColor]), startPoint: .top, endPoint: .bottom)

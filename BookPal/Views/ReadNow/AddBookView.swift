@@ -33,7 +33,7 @@ struct AddBookView: View {
     var body: some View {
         NavigationView {
             ZStack {
-                Colors.linearGradient(topColor: Colors.mint, bottomColor: Colors.lighterMint)
+                Color.linearGradient(topColor: Color.mintAccent, bottomColor: Color.mintAccent2)
                     .ignoresSafeArea()
                 VStack {
                     List {
@@ -150,7 +150,6 @@ struct SearchView: View {
     var body: some View {
         NavigationView {
             ZStack {
-                Colors.lighterOrange.ignoresSafeArea()
                 VStack {
                     List {
                         Section(LocalizedStringKey("Search Mode")) {

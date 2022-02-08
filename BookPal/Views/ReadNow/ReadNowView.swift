@@ -59,7 +59,7 @@ struct ReadNowView: View {
     var body: some View {
         NavigationView {
             ZStack {
-                Colors.linearGradient(topColor: Colors.darkerBlue, bottomColor: Colors.lighterBlue)
+                Color.linearGradient(topColor: Color.primaryColor, bottomColor: Color.secondaryColor)
                     .ignoresSafeArea()
                 VStack {
                     List {

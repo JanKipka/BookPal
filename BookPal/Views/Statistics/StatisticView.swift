@@ -13,7 +13,7 @@ struct StatisticView: View {
     var body: some View {
         NavigationView {
             ZStack {
-                LinearGradient(gradient: Gradient(colors: [Colors.darkerBlue, Colors.lighterBlue]), startPoint: .top, endPoint: .bottom)
+                Color.linearGradient(topColor: Color.primaryColor, bottomColor: Color.secondaryColor)
                     .ignoresSafeArea()
             }.navigationTitle("Statistics")
         }
