@@ -36,7 +36,6 @@ struct ReadNowView: View {
     @State var showCancelWarning: Bool = false
     @State var selectedActivity: ReadingActivity?
     @State var selectedCycleToStop: ReadingCycle?
-    @State var presentActivitySheet = false
     @State var showSearchSheet = false
     @State var titleAsString = ""
     @State var selectedVolume: VolumeInfo = VolumeInfo()
@@ -65,15 +64,18 @@ struct ReadNowView: View {
                     List {
                         Section(LocalizedStringKey("active-activities")) {
                             ForEach(activities) { ac in
-                                NavigationLink(destination: ReadingActivityDetailView(readingActivity: ac)) {
+                                Button {
+                                    selectedActivity = ac
+                                } label: {
                                     ReadingActivityComponent(readingActivity: ac)
-                                        .sheet(isPresented: $presentActivitySheet) {
-                                            ReadingActivityDetailView(readingActivity: ac, showButton: true)
-                                        }
+                                }
+                                .foregroundColor(.primary)
+                                .sheet(item: $selectedActivity) { activity in
+                                    ReadingActivityDetailView(readingActivity: activity)
                                 }
                                 .swipeActions(edge: .leading) {
                                     Button {
-                                        presentActivitySheet.toggle()
+                                        selectedActivity = ac
                                     } label: {
                                         Label("finish", systemImage: "checkmark.circle.fill")
                                     }
