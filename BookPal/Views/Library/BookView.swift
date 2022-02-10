@@ -35,7 +35,7 @@ struct BookView: View {
                         Text("put-away-times \(book.readingCyclesAsArray.filter { $0.finishedStatus == .stopped }.count).")
                     }
                     TimelineView(.everyMinute) { _ in
-                        Text("You've spent \(book.averageTotalTimeSpentReading.asDaysHoursMinutesString ?? "0m") reading this book.")
+                        Text("You've spent \(book.totalTimeSpentReading.asDaysHoursMinutesString ?? "0m") reading this book.")
                     }
                     Text("Logs")
                         .font(.title2)

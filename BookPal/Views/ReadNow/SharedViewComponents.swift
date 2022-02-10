@@ -121,7 +121,7 @@ struct ReadingActivityListComponent: View {
     var body: some View {
         VStack(spacing: 10) {
             HStack {
-                TimelineView(.periodic(from: ac.startedAt!, by: ac.active ? 30 : 0)) { context in
+                TimelineView(.everyMinute) { context in
                     Text("\(ac.active ? ac.passedTimeFromDateSinceStart(context.date)?.asHoursMinutesString ?? "0m" : ac.timeSpentReading.asHoursMinutesString)")
                 }
                 

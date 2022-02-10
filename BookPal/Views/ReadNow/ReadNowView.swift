@@ -85,7 +85,7 @@ struct ReadNowView: View {
                         }
                         
                         Section(LocalizedStringKey("books-reading")) {
-                            ForEach(cycles.sorted(by: {$0.lastUpdated > $1.lastUpdated})) { cycle in
+                            ForEach(cycles) { cycle in
                                 NavigationLink(destination: ReadingCycleDetailView(readingCycle: cycle)) {
                                     ReadingCycleComponent(readingCycle: cycle)
                                 }
