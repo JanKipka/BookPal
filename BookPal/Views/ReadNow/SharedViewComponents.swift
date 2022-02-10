@@ -75,7 +75,7 @@ struct ReadingActivityComponent: View {
                 ImageComponent(thumbnail: readingActivity.readingCycle?.book?.coverLinks?.thumbnail ?? "")
                 VStack(alignment: .leading, spacing: 5) {
                     TimelineView(.everyMinute) { context in
-                        Text("\(readingActivity.passedTimeFromDateSinceStart(context.date).asDaysHoursMinutesString ?? "0m")")
+                        Text("\(readingActivity.passedTimeFromDateSinceStart(context.date).asDaysHoursMinutesString )")
                             .fontWeight(.semibold)
                             .foregroundColor(.blue)
                     }
@@ -122,7 +122,7 @@ struct ReadingActivityListComponent: View {
         VStack(spacing: 10) {
             HStack {
                 TimelineView(.everyMinute) { context in
-                    Text("\(ac.active ? ac.passedTimeFromDateSinceStart(context.date).asDaysHoursMinutesString ?? "0m" : ac.timeSpentReading.asDaysHoursMinutesString ?? "0m")")
+                    Text("\(ac.active ? ac.passedTimeFromDateSinceStart(context.date).asDaysHoursMinutesString : ac.timeSpentReading.asDaysHoursMinutesString )")
                 }
                 
                 Spacer()

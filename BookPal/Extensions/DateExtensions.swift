@@ -9,12 +9,12 @@ import Foundation
 
 extension TimeInterval {
     
-    var asDaysHoursMinutesString: String? {
+    public var asDaysHoursMinutesString: String {
         let formatter: DateComponentsFormatter = DateComponentsFormatter()
         formatter.allowedUnits = [.day, .hour, .minute]
         formatter.unitsStyle = .abbreviated
         formatter.zeroFormattingBehavior = .dropLeading
-        return formatter.string(from: self)
+        return formatter.string(from: self)!
     }
 }
 

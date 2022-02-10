@@ -54,7 +54,7 @@ struct ReadingCycleDetailView: View {
                     }
                     Section(LocalizedStringKey("Time spent reading")) {
                         TimelineView(.everyMinute) { _ in
-                            Text("\(readingCycle.totalTimeSpentReadingInterval.asDaysHoursMinutesString ?? "0m")")
+                            Text("\(readingCycle.totalTimeSpentReadingInterval.asDaysHoursMinutesString )")
                         }
                     }
                     Section(LocalizedStringKey("Average pages per minute")) {
