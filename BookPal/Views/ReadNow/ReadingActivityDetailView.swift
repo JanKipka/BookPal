@@ -25,7 +25,6 @@ struct ReadingActivityDetailView: View {
     @State var message: LocalizedStringKey = ""
     @State var notes: String = ""
     @State var pagesPerMinute: String = ""
-    var showButton = false
     
     @Environment(\.dismiss) var dismiss
     
@@ -86,35 +85,26 @@ struct ReadingActivityDetailView: View {
                     Section(LocalizedStringKey("Notes")) {
                         TextEditor(text: $notes)
                     }
-                    if showButton {
-                        Button(LocalizedStringKey("Finish reading")) {
-                            buttonAction()
-                        }
-                        .listRowBackground(Color.blue)
-                        .foregroundColor(.white)
+                    
+                    Button(readingActivity.active ? LocalizedStringKey("Finish reading") : LocalizedStringKey("Done")) {
+                        buttonAction()
                     }
+                    .listRowBackground(Color.blue)
+                    .foregroundColor(.white)
                 }
                 Spacer()
             }
             
-        }.navigationTitle(LocalizedStringKey("Reading activity"))
-            .onAppear {
-                self.endDate = readingActivity.finishedAt ?? Date()
-                self.notes = readingActivity.notes ?? ""
-                self.timeSpentReadingString = !readingActivity.active ? timeSpentReading : timePassed
-                self.pagesPerMinute = readingActivity.pagesPerMinute.asDecimalString
-            }
-            .toolbar {
-                ToolbarItem {
-                    Button(readingActivity.active ? LocalizedStringKey("Finish reading") : LocalizedStringKey("Done")) {
-                        buttonAction()
-                    }
-                }
-            }
-            .navigationBarBackButtonHidden(!readingActivity.active)
-            .alert(isPresented: $showMessage) {
-                Alert(title: Text(message))
-            }
+        }
+        .onAppear {
+            self.endDate = readingActivity.finishedAt ?? Date()
+            self.notes = readingActivity.notes ?? ""
+            self.timeSpentReadingString = !readingActivity.active ? timeSpentReading : timePassed
+            self.pagesPerMinute = readingActivity.pagesPerMinute.asDecimalString
+        }
+        .alert(isPresented: $showMessage) {
+            Alert(title: Text(message))
+        }
     }
     
     fileprivate func buttonAction(){

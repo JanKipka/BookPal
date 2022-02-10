@@ -14,6 +14,8 @@ struct ReadingCycleDetailView: View {
     var activities: [ReadingActivity]
     @State var notes: String
     @State var avgPagesPerMinute = ""
+    @State var showActivityDetailSheet = false
+    @State var tappedReadingActivity: ReadingActivity?
     let dataController = DataController.shared
     
     init(readingCycle: ReadingCycle) {
@@ -63,9 +65,13 @@ struct ReadingCycleDetailView: View {
                     }
                     Section(LocalizedStringKey("Activities")) {
                         ForEach(activities) { ac in
-                            NavigationLink(destination: ReadingActivityDetailView(readingActivity: ac)) {
+                            Button {
+                                tappedReadingActivity = ac
+                                showActivityDetailSheet.toggle()
+                            } label: {
                                 ReadingActivityListComponent(ac: ac)
                             }
+                            .foregroundColor(.primary)
                         }
                     }
                 }
@@ -73,6 +79,9 @@ struct ReadingCycleDetailView: View {
         }.navigationTitle(readingCycle.active ? LocalizedStringKey("You're reading...") : LocalizedStringKey("reading-log"))
             .onAppear {
                 self.avgPagesPerMinute = readingCycle.avgPagesPerMinute.asDecimalString
+            }
+            .sheet(item: $tappedReadingActivity) { ac in
+                ReadingActivityDetailView(readingActivity: ac)
             }
             .toolbar {
                 ToolbarItem {

@@ -10,7 +10,7 @@ import SwiftUI
 
 struct LibraryView: View {
     
-    @FetchRequest(sortDescriptors: [], predicate: NSPredicate(format: "readingActivities.@count > 0")) var books: FetchedResults<ReadingCycle>
+    @FetchRequest(sortDescriptors: [], predicate: NSPredicate(format: "lastRead != nil")) var books: FetchedResults<Book>
     
     @FetchRequest(sortDescriptors: [], predicate: NSPredicate(format: "finishedStatusValue == 1")) var booksPutAway: FetchedResults<ReadingCycle>
     
@@ -36,7 +36,7 @@ struct LibraryView: View {
                         LibrarySectionComponent(title: "Genres", systemImage: "list.bullet")
                     }
                     .listRowBackground(Color.clear)
-                    NavigationLink(destination: AllBooksView(allBooks: books.filter({$0.finishedStatus == .read}).map({$0.book!}), fetchBooks: false, navigationTitle: "Books You've Read")) {
+                    NavigationLink(destination: AllBooksView(allBooks: books.filter({$0.isRead}), fetchBooks: false, navigationTitle: "Books You've Read")) {
                         LibrarySectionComponent(title: "Read", systemImage: "book")
                     }
                     .listRowBackground(Color.clear)
@@ -45,8 +45,8 @@ struct LibraryView: View {
                     }
                     .listRowBackground(Color.clear)
                     Section(LocalizedStringKey("Recently read")) {
-                        ForEach(books.sorted(by: {$0.lastUpdated > $1.lastUpdated}).prefix(5)) { cycle in
-                            BookTile(book: cycle.book!)
+                        ForEach(books.sorted(by: {$0.lastRead! > $1.lastRead!}).prefix(5)) { book in
+                            BookTile(book: book)
                         }
                     }
                     Section(LocalizedStringKey("Recently added")) {
@@ -91,7 +91,7 @@ struct BookTile: View {
                     return
                 }
                 let cycle = readingController.createNewReadingCycle(book: book, startedOn: Date.now)
-                let _ = readingController.createNewActivity(readingCycle: cycle)
+                let _ = readingController.createNewActivity(readingCycle: cycle, onPage: cycle.currentPage)
             } label: {
                 Label("read-now", systemImage: "book.fill")
             }

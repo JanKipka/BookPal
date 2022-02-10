@@ -133,6 +133,14 @@ extension Double {
 
 extension Book {
     
+    var isRead: Bool {
+        return readingCyclesAsArray.contains(where: {$0.finishedStatus == .read})
+    }
+    
+    var lastUpdated: Date {
+        return readingCyclesAsArray.map({$0.lastUpdated}).sorted(by: {$0 > $1}).first ?? Date.distantPast
+    }
+    
     func filterAuthors(_ query: String) -> Bool {
         return Authors(self.authors!).names.contains(query)
     }
@@ -142,15 +150,22 @@ extension Book {
     }
     
     var averageTotalTimeSpentReading: TimeInterval {
-        var res = TimeInterval()
         if readingCyclesAsArray.isEmpty {
             return 0.0
         }
+        return totalTimeSpentReading / Double(readingCyclesAsArray.count)
+    }
+    
+    var totalTimeSpentReading: TimeInterval {
+        if readingCyclesAsArray.isEmpty {
+            return 0.0
+        }
+        var res = TimeInterval()
         for cycle in readingCyclesAsArray {
             let interval = cycle.totalTimeSpentReadingInterval
             res += interval
         }
-        return res / Double(readingCyclesAsArray.count)
+        return res
     }
     
 }

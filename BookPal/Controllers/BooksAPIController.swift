@@ -15,8 +15,6 @@ protocol IGoogleBooksAPIController {
 struct GoogleBooksAPIController: IGoogleBooksAPIController {
     
     let volumePrefix = "https://www.googleapis.com/books/v1/volumes?q="
-    let apiKey = Bundle.main.object(forInfoDictionaryKey: "API Key") as? String
-    let keyPrefix = "&key="
     let plus = "+"
     var prevSearchQuery = ""
     var prevSearchMode: SearchMode?
@@ -29,20 +27,16 @@ struct GoogleBooksAPIController: IGoogleBooksAPIController {
         if (prevSearchMode == searchMode && prevSearchQuery == searchQuery) {
             return
         }
-
+        
         prevSearchMode = searchMode
         prevSearchQuery = searchQuery
-            
         
-        
-        guard let key = apiKey else {
-            throw BookPalError.runtimeError("API Key not found, verify your configuration setup.")
-        }
-        
-        guard let url = URL(string: buildURLString(query: searchQuery, key: key, startIndex: startIndex, maxResults: maxResults, searchMode: searchMode)) else {
+        guard let url = URL(string: buildURLString(query: searchQuery, startIndex: startIndex, maxResults: maxResults, searchMode: searchMode)) else {
             throw BookPalError.runtimeError("Invalid URL for accessing Google Books API")
         }
+#if DEBUG
         print(url)
+#endif
         URLSession.shared.dataTask(with: url) { data, response, error in
             let decoder = JSONDecoder()
             decoder.dateDecodingStrategy = .formatted(DateFormatter.yyyyMMdd)
@@ -60,12 +54,10 @@ struct GoogleBooksAPIController: IGoogleBooksAPIController {
     
     func enrichVolumeWithCategoryInformation(title: String, authors: [String]) async -> VolumeInfo? {
         do {
-            guard let key = apiKey else {
-                throw BookPalError.runtimeError("API Key not found, verify your configuration setup.")
-            }
-            
-            let urlString = volumePrefix + "intitle:\(convertToSearchString(inputString: title))+inauthor:\(convertAuthorToSearchString(authors.first ?? ""))" + "&filter=ebooks" + keyPrefix + key
+            let urlString = volumePrefix + "intitle:\(convertToSearchString(inputString: title))+inauthor:\(convertAuthorToSearchString(authors.first ?? ""))" + "&filter=ebooks"
+#if DEBUG
             print(urlString)
+#endif
             guard let url = URL(string: urlString) else {
                 throw BookPalError.runtimeError("Invalid URL for accessing Google Books API")
             }
@@ -92,9 +84,9 @@ struct GoogleBooksAPIController: IGoogleBooksAPIController {
         return author.split(separator: " ").joined(separator: "%20")
     }
     
-    private func buildURLString(query: String, key: String, startIndex: Int, maxResults: Int, searchMode: SearchMode) -> String {
+    private func buildURLString(query: String, startIndex: Int, maxResults: Int, searchMode: SearchMode) -> String {
         let searchBase = searchMode == .isbn ? volumePrefix + "isbn:" + query : volumePrefix + convertToSearchString(inputString: query)
-        return searchBase + configurePagination(startIndex: startIndex, maxResults: maxResults) + keyPrefix + key
+        return searchBase + configurePagination(startIndex: startIndex, maxResults: maxResults)
     }
     
     private func convertToSearchString(inputString: String) -> String {
