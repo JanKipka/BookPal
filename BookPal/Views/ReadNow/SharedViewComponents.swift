@@ -146,29 +146,91 @@ struct ReadingActivityListComponent: View {
     
 }
 
+struct GradientProgressBarStyle: ProgressViewStyle {
+    
+    var height: Int = 20
+
+    func makeBody(configuration: Configuration) -> some View {
+        let fraction = configuration.fractionCompleted ?? 0
+        ZStack {
+            GeometryReader { geo in
+                RoundedRectangle(cornerRadius: 8)
+                    .foregroundColor(.white)
+                    .frame(width: geo.size.width, height: CGFloat(height))
+                RoundedRectangle(cornerRadius: 8)
+                    .fill(LinearGradient(colors: [.blue, .mint], startPoint: .leading, endPoint: .trailing))
+                    .frame(width: geo.size.width * fraction, height: CGFloat(height))
+                RoundedRectangle(cornerRadius: 8).stroke(Color.gray)
+                    .frame(width: geo.size.width, height: CGFloat(height))
+                VStack(alignment: .center) {
+                    configuration.label?.foregroundColor(Color.black)
+                }.frame(width: geo.size.width, height: CGFloat(height))
+            }
+        }
+    }
+}
+
+struct CircularProgressBarStyle: ProgressViewStyle {
+    func makeBody(configuration: Configuration) -> some View {
+        ZStack {
+            GeometryReader { geo in
+                Circle()
+                    .stroke(Color.gray, style: StrokeStyle(lineWidth: 2, dash: [10]))
+                Circle()
+                    .trim(from: 0, to: configuration.fractionCompleted ?? 0)
+                    .stroke(LinearGradient(colors: [.blue, .mint], startPoint: .trailing, endPoint: .leading), style: StrokeStyle(lineWidth: geo.size.width / 5))
+                    .rotationEffect(Angle(degrees: -90))
+            }
+        }
+        .padding()
+    }
+}
+
 // PREVIEWS
 
-struct ImageComponentPreviews: PreviewProvider {
+struct ProgressBarPreviews: PreviewProvider {
     static var previews: some View {
-        ImageComponent(thumbnail: "https://assets.thalia.media/img/artikel/537d8abe0db2fc7bccb7a989a135a06553028624-00-00.jpeg", width: 100, height: 180)
-    }
-    
-}
-
-struct ReadingActivityListComponentPreviews: PreviewProvider {
-    
-    static var previews: some View {
-        let ac = PreviewController().createActiveRunningReadingActivity()
-        return ReadingActivityListComponent(ac: ac)
-    }
-}
-
-struct BookComponentPreviews: PreviewProvider {
-    static var previews: some View {
-        let book = PreviewController().createNewBookForPreview()
-        return List {
-            BookComponent(book: book)
+        VStack {
+            ProgressView("Test", value: 0.98, total: 1)
+                .progressViewStyle(GradientProgressBarStyle(height: 25))
+            
+            
+            List {
+                ProgressView("Test", value: 0.98, total: 1)
+                    .progressViewStyle(GradientProgressBarStyle())
+                HStack {
+                    ProgressView(value: 0.5, total: 1)
+                        .progressViewStyle(CircularProgressBarStyle())
+                        .frame(width: 65, height: 65)
+                    Text("Test")
+                }
+            }
         }
-        .listStyle(.grouped)
+        
     }
 }
+
+//struct ImageComponentPreviews: PreviewProvider {
+//    static var previews: some View {
+//        ImageComponent(thumbnail: "https://assets.thalia.media/img/artikel/537d8abe0db2fc7bccb7a989a135a06553028624-00-00.jpeg", width: 100, height: 180)
+//    }
+//
+//}
+//
+//struct ReadingActivityListComponentPreviews: PreviewProvider {
+//
+//    static var previews: some View {
+//        let ac = PreviewController().createActiveRunningReadingActivity()
+//        return ReadingActivityListComponent(ac: ac)
+//    }
+//}
+//
+//struct BookComponentPreviews: PreviewProvider {
+//    static var previews: some View {
+//        let book = PreviewController().createNewBookForPreview()
+//        return List {
+//            BookComponent(book: book)
+//        }
+//        .listStyle(.grouped)
+//    }
+//}

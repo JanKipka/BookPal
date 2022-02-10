@@ -38,6 +38,9 @@
 "book-already-added" = "This book is already in your library.";
 "query" = "Title or Author";
 "isbn" = "ISBN";
+"no-goals-set" = "You haven't set any reading goals yet.";
+"set-goals" = "Set goals";
+"Time" = "Time";
 
 "Search" = "Book Search";
 "search" = "Search";

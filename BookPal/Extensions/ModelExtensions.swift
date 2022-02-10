@@ -154,3 +154,20 @@ extension Book {
     }
     
 }
+
+extension Goal {
+    
+    var totalTimeRead: TimeInterval {
+        let array = Array(self.cycles as? Set<ReadingCycle> ?? [])
+        if array.isEmpty {
+            return 0
+        }
+        
+        var result = TimeInterval()
+        for cycle in array {
+            result += cycle.totalTimeSpentReadingInterval
+        }
+        return result
+    }
+    
+}

@@ -79,6 +79,9 @@ extension ReadingController {
         readingCycle.id = UUID()
         book.addToReadingCycles(readingCycle)
         readingCycle.maxPages = readingCycle.book!.numOfPages
+        if let goal = getGoalForCurrentYear() {
+           readingCycle.addToGoals(goal)
+        }
         dataController.save()
         return readingCycle
     }
@@ -93,4 +96,21 @@ extension ReadingController {
         cycle.completedOn = finishedDate
         dataController.save()
     }
+}
+
+extension ReadingController {
+    // reading goals
+    
+    func getGoalForCurrentYear() -> Goal? {
+        let year = Calendar.current.component(.year, from: Date())
+        let fetchRequest: NSFetchRequest<Goal> = Goal.fetchRequest()
+        fetchRequest.predicate = NSPredicate(format: "year = %i", Int(year))
+        do {
+            return try moc.fetch(fetchRequest).first
+        } catch let error {
+            print(error.localizedDescription)
+            return nil
+        }
+    }
+    
 }

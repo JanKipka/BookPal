@@ -38,6 +38,9 @@
 "book-already-added" = "Das Buch ist bereits in deiner Sammlung.";
 "query" = "Titel oder Autor:in";
 "isbn" = "ISBN";
+"no-goals-set" = "Du hast noch keine Leseziele gesetzt.";
+"set-goals" = "Ziele festlegen";
+"Time" = "Zeit";
 
 "Search" = "Buch-Suche";
 "search" = "Suchen";

@@ -16,6 +16,7 @@
         <attribute name="numOfPages" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES"/>
         <attribute name="publishedDate" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
         <attribute name="publisher" optional="YES" attributeType="String"/>
+        <attribute name="pushEnabled" optional="YES" attributeType="Boolean" usesScalarValueType="YES"/>
         <attribute name="subtitle" optional="YES" attributeType="String"/>
         <attribute name="title" attributeType="String"/>
         <relationship name="authors" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Author" inverseName="books" inverseEntity="Author"/>
@@ -46,6 +47,19 @@
             </uniquenessConstraint>
         </uniquenessConstraints>
     </entity>
+    <entity name="Goal" representedClassName="Goal" syncable="YES" codeGenerationType="class">
+        <attribute name="id" optional="YES" attributeType="UUID" usesScalarValueType="NO"/>
+        <attribute name="interval" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="numOfBooks" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="perDay" optional="YES" attributeType="Boolean" usesScalarValueType="YES"/>
+        <attribute name="year" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES"/>
+        <relationship name="cycles" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="ReadingCycle" inverseName="goals" inverseEntity="ReadingCycle"/>
+        <uniquenessConstraints>
+            <uniquenessConstraint>
+                <constraint value="year"/>
+            </uniquenessConstraint>
+        </uniquenessConstraints>
+    </entity>
     <entity name="ReadingActivity" representedClassName="ReadingActivity" syncable="YES" codeGenerationType="class">
         <attribute name="active" optional="YES" attributeType="Boolean" usesScalarValueType="YES"/>
         <attribute name="finishedActivityOnPage" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES"/>
@@ -68,14 +82,16 @@
         <attribute name="notes" optional="YES" attributeType="String"/>
         <attribute name="startedAt" attributeType="Date" usesScalarValueType="NO"/>
         <relationship name="book" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Book" inverseName="readingCycles" inverseEntity="Book"/>
+        <relationship name="goals" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Goal" inverseName="cycles" inverseEntity="Goal"/>
         <relationship name="readingActivities" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="ReadingActivity" inverseName="readingCycle" inverseEntity="ReadingActivity"/>
     </entity>
     <elements>
         <element name="Author" positionX="-18" positionY="108" width="128" height="89"/>
-        <element name="Book" positionX="-36" positionY="27" width="128" height="254"/>
+        <element name="Book" positionX="-36" positionY="27" width="128" height="269"/>
         <element name="CoverLinks" positionX="-27" positionY="108" width="128" height="119"/>
         <element name="Genre" positionX="-54" positionY="-9" width="128" height="74"/>
+        <element name="Goal" positionX="-27" positionY="126" width="128" height="119"/>
         <element name="ReadingActivity" positionX="0" positionY="99" width="128" height="179"/>
-        <element name="ReadingCycle" positionX="-18" positionY="81" width="128" height="179"/>
+        <element name="ReadingCycle" positionX="-18" positionY="81" width="128" height="194"/>
     </elements>
 </model>
