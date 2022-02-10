@@ -20,6 +20,11 @@ struct ReadingController {
         dataController.save()
     }
     
+    func delete(object: NSManagedObject) {
+        moc.delete(object)
+        save()
+    }
+    
 }
 
 extension ReadingController {
@@ -91,8 +96,9 @@ extension ReadingController {
     
     func findActiveReadingCycle(book: Book) -> ReadingCycle? {
         let request = ReadingCycle.fetchRequest()
+        let predicate = NSPredicate(format: "active = true")
         let predicate1 = NSPredicate(format: "book.isbn = %@", book.isbn!)
-        request.predicate = predicate1
+        request.predicate = NSCompoundPredicate(type: .and, subpredicates: [predicate, predicate1])
         do {
             return try moc.fetch(request).first
         } catch let error {
