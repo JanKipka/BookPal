@@ -8,28 +8,28 @@
 import Foundation
 
 protocol DynamicDateComponent {
-    func passedTimeFromDateSinceStart(_ date: Date) -> TimeUnit?
+    func passedTimeFromDateSinceStart(_ date: Date) -> TimeInterval
 }
 
 extension ReadingActivity: DynamicDateComponent {
     
-    var passedTimeUntilNow: TimeUnit {
+    var passedTimeUntilNow: TimeInterval {
         get {
             let interval = Date().timeIntervalSince(startedAt ?? Date())
-            return getTimeUnitFromTimeInterval(interval)!
+            return interval
         }
     }
     
-    func passedTimeFromDateSinceStart(_ date: Date) -> TimeUnit? {
+    func passedTimeFromDateSinceStart(_ date: Date) -> TimeInterval {
         let interval = date.timeIntervalSince(startedAt ?? Date())
-        return getTimeUnitFromTimeInterval(interval)
+        return interval
     }
     
-    var timeSpentReading: TimeUnit {
+    var timeSpentReading: TimeInterval {
         get {
             if let end = finishedAt {
                 let interval = end.timeIntervalSince(startedAt!)
-                return getTimeUnitFromTimeInterval(interval)!
+                return interval
             }
             
             return passedTimeUntilNow
@@ -39,19 +39,19 @@ extension ReadingActivity: DynamicDateComponent {
 
 extension ReadingCycle: DynamicDateComponent {
     
-    func passedTimeFromDateSinceStart(_ date: Date) -> TimeUnit? {
+    func passedTimeFromDateSinceStart(_ date: Date) -> TimeInterval {
         let interval = date.timeIntervalSince(startedAt ?? Date())
-        return getTimeUnitFromTimeInterval(interval)
+        return interval
     }
     
     
-    var remainingTime: TimeUnit? {
+    var remainingTime: TimeInterval? {
         let pagesLeft = self.book!.numOfPages - self.currentPage
         let avgPages = self.avgPagesPerMinute
         if avgPages > 0.0 {
             let roundedTimeLeft = round(Double(pagesLeft) / avgPages)
             let asIntasSeconds = Int(roundedTimeLeft) * 60
-            return getTimeUnitFromTimeInterval(TimeInterval(asIntasSeconds))
+            return TimeInterval(asIntasSeconds)
         }
         
         return nil
@@ -83,8 +83,8 @@ extension ReadingCycle: DynamicDateComponent {
         return sum
     }
     
-    var totalTimeSpentReading: TimeUnit? {
-        return getTimeUnitFromTimeInterval(totalTimeSpentReadingInterval)
+    var totalTimeSpentReading: TimeInterval {
+        return totalTimeSpentReadingInterval
     }
     
     var getActivities: [ReadingActivity] {
@@ -133,6 +133,14 @@ extension Double {
 
 extension Book {
     
+    var isRead: Bool {
+        return readingCyclesAsArray.contains(where: {$0.finishedStatus == .read})
+    }
+    
+    var lastUpdated: Date {
+        return readingCyclesAsArray.map({$0.lastUpdated}).sorted(by: {$0 > $1}).first ?? Date.distantPast
+    }
+    
     func filterAuthors(_ query: String) -> Bool {
         return Authors(self.authors!).names.contains(query)
     }
@@ -142,15 +150,22 @@ extension Book {
     }
     
     var averageTotalTimeSpentReading: TimeInterval {
-        var res = TimeInterval()
         if readingCyclesAsArray.isEmpty {
             return 0.0
         }
+        return totalTimeSpentReading / Double(readingCyclesAsArray.count)
+    }
+    
+    var totalTimeSpentReading: TimeInterval {
+        if readingCyclesAsArray.isEmpty {
+            return 0.0
+        }
+        var res = TimeInterval()
         for cycle in readingCyclesAsArray {
             let interval = cycle.totalTimeSpentReadingInterval
             res += interval
         }
-        return res / Double(readingCyclesAsArray.count)
+        return res
     }
     
 }

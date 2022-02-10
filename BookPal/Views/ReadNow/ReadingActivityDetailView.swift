@@ -15,10 +15,10 @@ struct ReadingActivityDetailView: View {
     @State var timeSpentReadingString: String = ""
     var refreshDate: Date?
     var timePassed: String {
-        readingActivity.passedTimeFromDateSinceStart(refreshDate ?? .now)?.asHoursMinutesString ?? "0m"
+        readingActivity.passedTimeFromDateSinceStart(refreshDate ?? .now).asDaysHoursMinutesString 
     }
     var timeSpentReading: String {
-        readingActivity.timeSpentReading.asHoursMinutesString
+        readingActivity.timeSpentReading.asDaysHoursMinutesString 
     }
     @State var pagesRead: String = ""
     @State var showMessage: Bool = false
@@ -33,7 +33,7 @@ struct ReadingActivityDetailView: View {
     
     fileprivate func refreshDateRelatedValues(_ d: Date) {
         let interval = d.timeIntervalSince(readingActivity.startedAt!)
-        self.timeSpentReadingString = getTimeUnitFromTimeInterval(interval)!.asHoursMinutesString
+        self.timeSpentReadingString = interval.asDaysHoursMinutesString 
         readingActivity.pagesPerMinute = calculatePagesPerMinuteFromInterval(interval, pagesRead: readingActivity.pagesRead)
         self.pagesPerMinute = readingActivity.pagesPerMinute.asDecimalString
     }
@@ -60,7 +60,7 @@ struct ReadingActivityDetailView: View {
                     Section(LocalizedStringKey("Time spent reading")) {
                         if readingActivity.active {
                             TimelineView(.everyMinute) { context in
-                                Text("\(getTimeUnitFromTimeInterval(context.date.timeIntervalSince(readingActivity.startedAt!))?.asHoursMinutesString ?? "0m")")
+                                Text("\(context.date.timeIntervalSince(readingActivity.startedAt!).asDaysHoursMinutesString )")
                             }
                         } else {
                             Text(timeSpentReadingString)

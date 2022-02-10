@@ -17,7 +17,7 @@ struct ReadNowView: View {
     
     @FetchRequest(sortDescriptors: [
         NSSortDescriptor(key: #keyPath(ReadingCycle.startedAt), ascending: true)
-    ]) var cycles: FetchedResults<ReadingCycle>
+    ], predicate: NSPredicate(format: "active = true")) var cycles: FetchedResults<ReadingCycle>
     @FetchRequest(sortDescriptors: [
         NSSortDescriptor(key: #keyPath(ReadingActivity.startedAt), ascending: true)
     ], predicate: NSPredicate(format: "active = true")) var activities: FetchedResults<ReadingActivity>
@@ -86,7 +86,7 @@ struct ReadNowView: View {
                         }
                         
                         Section(LocalizedStringKey("books-reading")) {
-                            ForEach(cycles.filter({$0.active}).sorted(by: {$0.lastUpdated > $1.lastUpdated})) { cycle in
+                            ForEach(cycles) { cycle in
                                 NavigationLink(destination: ReadingCycleDetailView(readingCycle: cycle)) {
                                     ReadingCycleComponent(readingCycle: cycle)
                                 }
@@ -159,7 +159,7 @@ struct ReadNowView: View {
                                                     .progressViewStyle(CircularProgressBarStyle())
                                                     .frame(width: 65, height: 65)
                                                 TimelineView(.everyMinute) { _ in
-                                                    Text("\(goal.totalTimeRead.asDaysHoursMinutesString ?? "") of \(TimeInterval(goal.interval).asDaysHoursMinutesString ?? "") read")
+                                                    Text("\(goal.totalTimeRead.asDaysHoursMinutesString ) of \(TimeInterval(goal.interval).asDaysHoursMinutesString ) read")
                                                 }
                                                 
                                             }

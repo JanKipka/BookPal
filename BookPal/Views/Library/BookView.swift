@@ -35,7 +35,7 @@ struct BookView: View {
                         Text("put-away-times \(book.readingCyclesAsArray.filter { $0.finishedStatus == .stopped }.count).")
                     }
                     TimelineView(.everyMinute) { _ in
-                        Text("You've spent \(book.averageTotalTimeSpentReading.asDaysHoursMinutesString ?? "0m") reading this book.")
+                        Text("You've spent \(book.totalTimeSpentReading.asDaysHoursMinutesString ) reading this book.")
                     }
                     Text("Logs")
                         .font(.title2)
@@ -53,7 +53,7 @@ struct BookView: View {
             .listStyle(.grouped)
             
         }.navigationTitle(book.title!)
-            
+        
     }
 }
 
@@ -71,7 +71,7 @@ struct ReadingCycleDetailComponent: View {
                     Spacer()
                     VStack(alignment: .trailing, spacing: 5) {
                         TimelineView(.everyMinute) { _ in
-                            Text("\(cycle.totalTimeSpentReading?.asHoursMinutesString ?? "0m")")
+                            Text("\(cycle.totalTimeSpentReading.asDaysHoursMinutesString )")
                         }
                         Text("Total time reading").font(.caption)
                     }

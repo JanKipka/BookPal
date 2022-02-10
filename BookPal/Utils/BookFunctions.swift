@@ -9,5 +9,9 @@ import Foundation
 
 func calculatePagesPerMinuteFromInterval(_ interval: TimeInterval, pagesRead: Int16) -> Double {
     let minutesInInterval = getMinutesFromTimeInterval(interval)
-    return Double(pagesRead) / round(minutesInInterval)
+    let rounded = round(minutesInInterval)
+    if rounded == 0.0 {
+        return 0.0
+    }
+    return Double(pagesRead) / rounded
 }

@@ -20,6 +20,11 @@ struct ReadingController {
         dataController.save()
     }
     
+    func delete(object: NSManagedObject) {
+        moc.delete(object)
+        save()
+    }
+    
 }
 
 extension ReadingController {
@@ -42,6 +47,7 @@ extension ReadingController {
         readingActivity.id = UUID()
         readingActivity.startedAt = Date().zeroSeconds
         readingActivity.readingCycle = readingCycle
+        readingCycle.book?.lastRead = readingActivity.startedAt
         readingActivity.startedActivityOnPage = onPage
         readingActivity.active = true
         dataController.save()
@@ -55,6 +61,7 @@ extension ReadingController {
         readingActivity.pagesRead = onPage - onPageBefore
         readingActivity.readingCycle?.currentPage = onPage
         readingActivity.finishedAt = Date().zeroSeconds
+        readingActivity.readingCycle?.book?.lastRead = readingActivity.finishedAt
         let timePassedInterval = readingActivity.finishedAt?.timeIntervalSince(readingActivity.startedAt!)
         readingActivity.pagesPerMinute = calculatePagesPerMinuteFromInterval(timePassedInterval!, pagesRead: readingActivity.pagesRead)
         readingActivity.active = false
@@ -73,17 +80,34 @@ extension ReadingController {
 extension ReadingController {
     // cycles
     func createNewReadingCycle(book: Book, startedOn: Date) -> ReadingCycle {
-        let readingCycle = ReadingCycle(context: moc)
-        readingCycle.startedAt = startedOn
-        readingCycle.active = true
-        readingCycle.id = UUID()
-        book.addToReadingCycles(readingCycle)
-        readingCycle.maxPages = readingCycle.book!.numOfPages
-        if let goal = getGoalForCurrentYear() {
-           readingCycle.addToGoals(goal)
+        if let readingCycle = findActiveReadingCycle(book: book) {
+            return readingCycle
+        } else {
+            let readingCycle = ReadingCycle(context: moc)
+            readingCycle.startedAt = startedOn
+            readingCycle.active = true
+            readingCycle.id = UUID()
+            book.addToReadingCycles(readingCycle)
+            readingCycle.maxPages = readingCycle.book!.numOfPages
+            if let goal = getGoalForCurrentYear() {
+               readingCycle.addToGoals(goal)
+            }
+            dataController.save()
+            return readingCycle
         }
-        dataController.save()
-        return readingCycle
+    }
+    
+    func findActiveReadingCycle(book: Book) -> ReadingCycle? {
+        let request = ReadingCycle.fetchRequest()
+        let predicate = NSPredicate(format: "active = true")
+        let predicate1 = NSPredicate(format: "book.isbn = %@", book.isbn!)
+        request.predicate = NSCompoundPredicate(type: .and, subpredicates: [predicate, predicate1])
+        do {
+            return try moc.fetch(request).first
+        } catch let error {
+            print(error.localizedDescription)
+            return nil
+        }
     }
     
     func stopReading(cycle: ReadingCycle) {

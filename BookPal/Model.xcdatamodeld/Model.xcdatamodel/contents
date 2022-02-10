@@ -13,6 +13,7 @@
         <attribute name="id" optional="YES" attributeType="UUID" usesScalarValueType="NO"/>
         <attribute name="infoLink" optional="YES" attributeType="String"/>
         <attribute name="isbn" attributeType="String"/>
+        <attribute name="lastRead" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
         <attribute name="numOfPages" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES"/>
         <attribute name="publishedDate" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
         <attribute name="publisher" optional="YES" attributeType="String"/>

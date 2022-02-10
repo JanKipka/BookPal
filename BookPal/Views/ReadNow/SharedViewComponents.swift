@@ -32,7 +32,7 @@ struct ReadingCycleComponent: View {
                         HStack {
                             Text("on-page-of \(Int(readingCycle.currentPage)) \(Int(readingCycle.book?.numOfPages ?? 0))")
                             Spacer()
-                            Text(readingCycle.hasActiveActivities ? "Reading" : readingCycle.readingActivities?.count == 0 ? "" : LocalizedStringKey("done-in \(readingCycle.remainingTime?.asHoursMinutesString ?? "??m")"))
+                            Text(readingCycle.hasActiveActivities ? "Reading" : readingCycle.readingActivities?.count == 0 ? "" : LocalizedStringKey("done-in \(readingCycle.remainingTime?.asDaysHoursMinutesString ?? "??m")"))
                                 .foregroundColor(.blue)
                                 .fontWeight(.semibold)
                         }
@@ -75,7 +75,7 @@ struct ReadingActivityComponent: View {
                 ImageComponent(thumbnail: readingActivity.readingCycle?.book?.coverLinks?.thumbnail ?? "")
                 VStack(alignment: .leading, spacing: 5) {
                     TimelineView(.everyMinute) { context in
-                        Text("\(readingActivity.passedTimeFromDateSinceStart(context.date)?.asHoursMinutesString ?? "0m")")
+                        Text("\(readingActivity.passedTimeFromDateSinceStart(context.date).asDaysHoursMinutesString )")
                             .fontWeight(.semibold)
                             .foregroundColor(.blue)
                     }
@@ -121,8 +121,8 @@ struct ReadingActivityListComponent: View {
     var body: some View {
         VStack(spacing: 10) {
             HStack {
-                TimelineView(.periodic(from: ac.startedAt!, by: ac.active ? 30 : 0)) { context in
-                    Text("\(ac.active ? ac.passedTimeFromDateSinceStart(context.date)?.asHoursMinutesString ?? "0m" : ac.timeSpentReading.asHoursMinutesString)")
+                TimelineView(.everyMinute) { context in
+                    Text("\(ac.active ? ac.passedTimeFromDateSinceStart(context.date).asDaysHoursMinutesString : ac.timeSpentReading.asDaysHoursMinutesString )")
                 }
                 
                 Spacer()
