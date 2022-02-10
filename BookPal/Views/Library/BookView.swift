@@ -71,7 +71,7 @@ struct ReadingCycleDetailComponent: View {
                     Spacer()
                     VStack(alignment: .trailing, spacing: 5) {
                         TimelineView(.everyMinute) { _ in
-                            Text("\(cycle.totalTimeSpentReading?.asHoursMinutesString ?? "0m")")
+                            Text("\(cycle.totalTimeSpentReading.asDaysHoursMinutesString ?? "0m")")
                         }
                         Text("Total time reading").font(.caption)
                     }
