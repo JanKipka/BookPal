@@ -10,15 +10,14 @@ import SwiftUI
 
 struct BookView: View {
     @ObservedObject var book: Book
-    
-    init(book: Book) {
-        self.book = book
-        UILabel.appearance(whenContainedInInstancesOf: [UINavigationBar.self]).adjustsFontSizeToFitWidth = true
-    }
+    var isSheet: Bool = false
     
     var body: some View {
         ZStack {
             List {
+                if isSheet {
+                    FavoriteButtonBar(book: book)
+                }
                 BookDetailsComponent(book: book)
                 Divider()
                     .listRowSeparator(.hidden)
@@ -37,13 +36,15 @@ struct BookView: View {
                     TimelineView(.everyMinute) { _ in
                         Text("You've spent \(book.totalTimeSpentReading.asDaysHoursMinutesString ) reading this book.")
                     }
-                    Text("Logs")
-                        .font(.title2)
-                        .fontWeight(.semibold)
-                    ForEach(book.readingCyclesAsArray) { cycle in
-                        ReadingCycleDetailComponent(cycle: cycle)
+                    if !isSheet {
+                        Text("Logs")
+                            .font(.title2)
+                            .fontWeight(.semibold)
+                        ForEach(book.readingCyclesAsArray) { cycle in
+                            ReadingCycleDetailComponent(cycle: cycle)
+                        }
+                        .listRowSeparator(.visible)
                     }
-                    .listRowSeparator(.visible)
                 }
                 .listRowSeparator(.hidden)
                 .padding(.leading, 10)
@@ -52,16 +53,17 @@ struct BookView: View {
             }
             .listStyle(.grouped)
             
-        }.navigationTitle(book.title!)
-            .toolbar {
-                ToolbarItem(placement: .navigationBarTrailing) {
-                    Button {
-                        book.isFavorite.toggle()
-                    } label: {
-                        Image(systemName: book.isFavorite ? "star.fill" : "star")
-                    }
+        }
+        .navigationBarTitleDisplayMode(.inline)
+        .toolbar {
+            ToolbarItem(placement: .navigationBarTrailing) {
+                Button {
+                    book.isFavorite.toggle()
+                } label: {
+                    Image(systemName: book.isFavorite ? "star.fill" : "star")
                 }
             }
+        }
         
     }
 }
@@ -97,32 +99,44 @@ struct BookDetailsComponent: View {
     @State var showDetailsSheet: Bool = false
     
     var body: some View {
-        HStack {
-            ImageComponent(thumbnail: book.coverLinks?.thumbnail ?? "", width: 120, height: 180)
-            VStack(alignment: .leading, spacing: 10){
-                Text(Authors(book.authors!).names).font(.system(size: 24))
+        VStack(alignment: .center) {
+            VStack(alignment: .center, spacing: 8) {
+                Text(book.title!)
+                    .font(.system(size: 26))
                     .fontWeight(.semibold)
-                Spacer()
-                Spacer()
-                Text("\(Int(book.numOfPages)) pages")
-                Text(LocalizedStringKey(book.genre?.name ?? ""))
-                Text(book.isbn!)
-                    .onTapGesture {
-                        UIPasteboard.general.string = book.isbn!
-                    }
-                Button("more-info") {
-                    showDetailsSheet.toggle()
-                }
-                .sheet(isPresented: $showDetailsSheet) {
-                    BookDetailsSheet(book: book)
-                }
-                Spacer()
+                    .multilineTextAlignment(.center)
+                Text(Authors(book.authors!).names).font(.system(size: 22))
             }
-            .font(.system(size: 18))
+            .padding(.bottom, 20)
+            
+            HStack {
+                Spacer()
+                Spacer()
+                ImageComponent(thumbnail: book.coverLinks?.thumbnail ?? "", width: 120, height: 180)
+                Spacer()
+                VStack(alignment: .leading, spacing: 10){
+                    Spacer()
+                    Text("\(Int(book.numOfPages)) pages")
+                    Text(LocalizedStringKey(book.genre?.name ?? ""))
+                    Text(book.isbn!)
+                        .onTapGesture {
+                            UIPasteboard.general.string = book.isbn!
+                        }
+                    Button("more-info") {
+                        showDetailsSheet.toggle()
+                    }
+                    .sheet(isPresented: $showDetailsSheet) {
+                        BookDetailsSheet(book: book)
+                    }
+                    Spacer()
+                }
+                Spacer()
+                Spacer()
+                    .font(.system(size: 18))
+            }
+            .padding(.leading, 8)
+            .listRowSeparator(.hidden)
         }
-        .padding(.leading, 8)
-        .listRowSeparator(.hidden)
-        
     }
 }
 
@@ -178,12 +192,34 @@ struct BookDetailsSheet: View {
     }
 }
 
+struct FavoriteButtonBar: View {
+    @ObservedObject var book: Book
+    var body: some View {
+        VStack (alignment: .trailing){
+            HStack {
+                Spacer()
+                Button {
+                    book.isFavorite.toggle()
+                } label: {
+                    Image(systemName: book.isFavorite ? "star.fill" : "star")
+                        .resizable()
+                        .frame(width: 22, height: 22)
+                }
+                .frame(maxWidth: 25)
+                .padding(.trailing, 5)
+            }
+        }
+        .listRowSeparator(.hidden)
+        .frame(maxWidth: .infinity)
+    }
+}
+
 struct BookViewPreviews: PreviewProvider {
     static var previews: some View {
         let book = PreviewController().createNewBookForPreview()
         return Group {
             NavigationView {
-                BookView(book: book)
+                BookView(book: book, isSheet: true)
             }
             .environment(\.locale, .init(identifier: "de"))
             NavigationView {

@@ -17,6 +17,7 @@ struct StatisticView: View {
                     .ignoresSafeArea()
             }.navigationTitle("Statistics")
         }
+        .navigationViewStyle(.stack)
         // TODO
     }
     

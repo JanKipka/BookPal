@@ -162,7 +162,7 @@ struct ReadNowView: View {
                 }
             }
             .navigationTitle("read-now")
-            
         }
+        .navigationViewStyle(.stack)
     }
 }

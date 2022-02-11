@@ -38,6 +38,7 @@ struct ReadingCycleComponent: View {
                 }
             }
         }
+        .padding(.vertical, 8)
     }
 }
 
@@ -80,6 +81,7 @@ struct ReadingActivityComponent: View {
                 }
             }
         }
+        .padding(.vertical)
     }
 }
 
@@ -88,15 +90,19 @@ struct BookComponent: View {
     @ObservedObject var book: Book
     var authors: Authors
     var font: Font?
+    @State var presentAlert = false
+    @State var hasActiveActivityAlert = false
+    var hasSwipeActions: Bool
     
-    init(book: Book) {
-        self.init(book: book, font: .headline)
+    init(book: Book, hasSwipeActions: Bool = true) {
+        self.init(book: book, font: .headline, hasSwipeActions: hasSwipeActions)
     }
     
-    init(book: Book, font: Font) {
+    init(book: Book, font: Font, hasSwipeActions: Bool = true) {
         self.book = book
         self.authors = Authors(book.authors!)
         self.font = font
+        self.hasSwipeActions = hasSwipeActions
     }
     
     var body: some View {
@@ -107,6 +113,23 @@ struct BookComponent: View {
                 Text("\(authors.names)")
             }
         }
+        .swipeActions(edge: .leading) {
+            if hasSwipeActions {
+                BookSwipeActions(book: book, presentAlert: $presentAlert, hasActiveActivityAlert: $hasActiveActivityAlert)
+            } else {
+                EmptyView()
+            }
+        }
+        .alert("delete-book", isPresented: $presentAlert) {
+            ConfirmAlert {
+                BooksController().deleteBook(book)
+            }
+        }
+        .alert(LocalizedStringKey("Active activity ongoing"), isPresented: $hasActiveActivityAlert, actions: {
+            Button("OK") {}
+        }, message: {
+            Text("already-active")
+        })
     }
     
 }
@@ -141,6 +164,73 @@ struct ReadingActivityListComponent: View {
         return readingActivitiy.active ? LocalizedStringKey("active") : LocalizedStringKey("\(Int(readingActivitiy.pagesRead)) pages")
     }
     
+}
+
+struct ConfirmAlert: View {
+    
+    var onCancel: (() -> Void)?
+    var onConfirm: () -> Void
+    
+    
+    @ViewBuilder
+    var body: some View {
+        Button(LocalizedStringKey("No"), role: .cancel) {
+            if let onCancel = onCancel {
+                onCancel()
+            }
+        }
+        Button(LocalizedStringKey("Yes")) {
+            onConfirm()
+        }
+    }
+}
+
+struct BookSwipeActions: View {
+
+    var book: Book
+    @Binding var presentAlert: Bool
+    @Binding var hasActiveActivityAlert: Bool
+    
+    let readingController: ReadingController = ReadingController()
+
+    @ViewBuilder
+    var body: some View {
+        Button {
+            let active = readingController.hasActiveReadingActivities()
+            if active {
+                hasActiveActivityAlert.toggle()
+                return
+            }
+            let cycle = readingController.createNewReadingCycle(book: book, startedOn: Date.now)
+            let _ = readingController.createNewActivity(readingCycle: cycle, onPage: cycle.currentPage)
+        } label: {
+            Label("read-now", systemImage: "book.fill")
+        }
+        .tint(.blue)
+        Button(role: .destructive) {
+            presentAlert = true
+        } label: {
+            Image(systemName: "trash")
+        }
+    }
+}
+
+struct TappedBookButton: View {
+    @State var tappedBook: Book?
+    var book: Book
+    
+    var body: some View {
+        Button {
+            tappedBook = book
+        } label: {
+            BookComponent(book: book, hasSwipeActions: false)
+        }
+        .padding(.vertical)
+        .foregroundColor(.primary)
+        .sheet(item: $tappedBook) {  book in
+            BookView(book: book, isSheet: true)
+        }
+    }
 }
 
 // PREVIEWS

@@ -29,8 +29,7 @@ struct ReadingCycleDetailView: View {
             VStack {
                 
                 Form {
-                    BookComponent(book: readingCycle.book!)
-                        .padding(.vertical)
+                    TappedBookButton(book: readingCycle.book!)
                     Section(LocalizedStringKey("start-date")) {
                         Text(readingCycle.startedAt?.asLocalizedStringHoursMinutes ?? "")
                     }

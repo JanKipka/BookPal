@@ -44,8 +44,7 @@ struct ReadingActivityDetailView: View {
                 .ignoresSafeArea()
             VStack {
                 Form {
-                    BookComponent(book: readingActivity.readingCycle!.book!)
-                        .padding()
+                    TappedBookButton(book: (readingActivity.readingCycle?.book!)!)
                     if readingActivity.active {
                         Section(LocalizedStringKey("Started on page")) {
                             Text("\(readingActivity.startedActivityOnPage)")

@@ -58,6 +58,7 @@ struct LibraryView: View {
                 }
             }.navigationTitle("Library")
         }
+        .navigationViewStyle(.stack)
     }
     
 }
@@ -84,34 +85,18 @@ struct BookTile: View {
             }
         }
         .swipeActions(edge: .leading) {
-            Button {
-                let active = readingController.hasActiveReadingActivities()
-                if active {
-                    hasActiveActivityAlert.toggle()
-                    return
-                }
-                let cycle = readingController.createNewReadingCycle(book: book, startedOn: Date.now)
-                let _ = readingController.createNewActivity(readingCycle: cycle, onPage: cycle.currentPage)
-            } label: {
-                Label("read-now", systemImage: "book.fill")
-            }
-            .tint(.blue)
-            Button(role: .destructive) {
-                presentAlert = true
-            } label: {
-                Image(systemName: "trash")
-            }
+            BookSwipeActions(book: book, presentAlert: $presentAlert, hasActiveActivityAlert: $hasActiveActivityAlert)
         }
         .alert("delete-book", isPresented: $presentAlert) {
-            Button(LocalizedStringKey("No"), role: .cancel) {}
-            Button(LocalizedStringKey("Yes")) {
+            ConfirmAlert {
                 BooksController().deleteBook(book)
             }
         }
-        .alert(isPresented: $hasActiveActivityAlert) {
-            Alert(title: Text("Active activity ongoing"), message: Text("already-active"))
-        }
-        
+        .alert(LocalizedStringKey("Active activity ongoing"), isPresented: $hasActiveActivityAlert, actions: {
+            Button("OK") {}
+        }, message: {
+            Text("already-active")
+        })
     }
 }
 
