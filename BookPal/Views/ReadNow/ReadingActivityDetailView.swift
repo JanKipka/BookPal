@@ -15,10 +15,10 @@ struct ReadingActivityDetailView: View {
     @State var timeSpentReadingString: String = ""
     var refreshDate: Date?
     var timePassed: String {
-        readingActivity.passedTimeFromDateSinceStart(refreshDate ?? .now).asDaysHoursMinutesString 
+        readingActivity.passedTimeFromDateSinceStart(refreshDate ?? .now).asDaysHoursMinutesString
     }
     var timeSpentReading: String {
-        readingActivity.timeSpentReading.asDaysHoursMinutesString 
+        readingActivity.timeSpentReading.asDaysHoursMinutesString
     }
     @State var pagesRead: String = ""
     @State var showMessage: Bool = false
@@ -33,7 +33,7 @@ struct ReadingActivityDetailView: View {
     
     fileprivate func refreshDateRelatedValues(_ d: Date) {
         let interval = d.timeIntervalSince(readingActivity.startedAt!)
-        self.timeSpentReadingString = interval.asDaysHoursMinutesString 
+        self.timeSpentReadingString = interval.asDaysHoursMinutesString
         readingActivity.pagesPerMinute = calculatePagesPerMinuteFromInterval(interval, pagesRead: readingActivity.pagesRead)
         self.pagesPerMinute = readingActivity.pagesPerMinute.asDecimalString
     }
@@ -46,38 +46,46 @@ struct ReadingActivityDetailView: View {
                 Form {
                     BookComponent(book: readingActivity.readingCycle!.book!)
                         .padding()
-                    Section(LocalizedStringKey("start-date")) {
-                        Text(readingActivity.startedAt?.asLocalizedStringHoursMinutes ?? Date().formatted())
-                    }
-                    if !readingActivity.active {
+                    if readingActivity.active {
+                        Section(LocalizedStringKey("Started on page")) {
+                            Text("\(readingActivity.startedActivityOnPage)")
+                        }
+                        Section(LocalizedStringKey("Finished on page")) {
+                            if !readingActivity.active {
+                                Text("\(readingActivity.finishedActivityOnPage)")
+                            } else {
+                                HStack {
+                                    TextField("What page are you on?", text: $pagesRead)
+                                    Button("I'm finished") {
+                                        pagesRead = String(readingActivity.readingCycle?.book?.numOfPages ?? 0)
+                                    }
+                                }
+                            }
+                        }
+                        Section(LocalizedStringKey("start-date")) {
+                            Text(readingActivity.startedAt?.asLocalizedStringHoursMinutes ?? Date().formatted())
+                        }
+                        Section(LocalizedStringKey("Time spent reading")) {
+                            TimelineView(.everyMinute) { context in
+                                Text("\(context.date.timeIntervalSince(readingActivity.startedAt!).asDaysHoursMinutesString )")
+                            }
+                        }
+                    } else {
+                        Section(LocalizedStringKey("start-date")) {
+                            Text(readingActivity.startedAt?.asLocalizedStringHoursMinutes ?? Date().formatted())
+                        }
                         Section(LocalizedStringKey("End Date")) {
                             DatePicker(LocalizedStringKey("End Date"), selection: $endDate)
                                 .onChange(of: endDate) { d in
                                     refreshDateRelatedValues(d)
                                 }
                         }
-                    }
-                    Section(LocalizedStringKey("Time spent reading")) {
-                        if readingActivity.active {
-                            TimelineView(.everyMinute) { context in
-                                Text("\(context.date.timeIntervalSince(readingActivity.startedAt!).asDaysHoursMinutesString )")
-                            }
-                        } else {
+                        Section(LocalizedStringKey("Time spent reading")) {
                             Text(timeSpentReadingString)
                         }
-                        
-                    }
-                    Section(LocalizedStringKey("Started on page")) {
-                        Text("\(readingActivity.startedActivityOnPage)")
-                    }
-                    Section(LocalizedStringKey("Finished on page")) {
-                        if !readingActivity.active {
-                            Text("\(readingActivity.finishedActivityOnPage)")
-                        } else {
-                            TextField("What page are you on?", text: $pagesRead)
+                        Section(LocalizedStringKey("Pages read")) {
+                            Text("\(readingActivity.pagesRead)")
                         }
-                    }
-                    if !readingActivity.active {
                         Section(LocalizedStringKey("Pages per minute")) {
                             Text(pagesPerMinute)
                         }
@@ -111,8 +119,8 @@ struct ReadingActivityDetailView: View {
         if !readingActivity.active {
             readingActivity.notes = notes
             readingActivity.finishedAt = endDate.zeroSeconds
-            dataController.save()
             dismiss()
+            dataController.save()
         } else {
             finishReadingActivity()
         }
