@@ -23,7 +23,7 @@ struct GenreView: View {
                 .ignoresSafeArea()
             List {
                 ForEach(genresToDisplay) { genre in
-                    NavigationLink(destination: AllBooksView(allBooks: Array(genre.books as! Set<Book>), fetchBooks: false, navigationTitle: "\(genre.name ?? "")")) {
+                    NavigationLink(destination: BookListView(allBooks: Array(genre.books as! Set<Book>), fetchBooks: false, navigationTitle: "\(genre.name ?? "")")) {
                         Text(LocalizedStringKey(genre.name ?? ""))
                             .font(.title)
                     }.listRowBackground(Color.clear)

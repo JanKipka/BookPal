@@ -23,7 +23,7 @@ struct AuthorView: View {
                 .ignoresSafeArea()
             List {
                 ForEach(authorsToDisplay) { author in
-                    NavigationLink(destination: AllBooksView(allBooks: Array(author.books as! Set<Book>), fetchBooks: false, navigationTitle: "Books by \(author.firstName ?? "") \(author.lastName ?? "")")) {
+                    NavigationLink(destination: BookListView(allBooks: Array(author.books as! Set<Book>), fetchBooks: false, navigationTitle: "Books by \(author.firstName ?? "") \(author.lastName ?? "")")) {
                         Text("\(author.firstName ?? "") \(author.lastName ?? "")")
                             .font(.title)
                     }

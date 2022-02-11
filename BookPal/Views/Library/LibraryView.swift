@@ -24,7 +24,7 @@ struct LibraryView: View {
                 Color.linearGradient(topColor: Color.primaryColor, bottomColor: Color.secondaryColor)
                     .ignoresSafeArea()
                 List {
-                    NavigationLink(destination: AllBooksView(navigationTitle: "Books")) {
+                    NavigationLink(destination: BookListView(navigationTitle: "Books")) {
                         LibrarySectionComponent(title: "Books", systemImage: "books.vertical")
                     }
                     .listRowBackground(Color.clear)
@@ -36,11 +36,11 @@ struct LibraryView: View {
                         LibrarySectionComponent(title: "Genres", systemImage: "list.bullet")
                     }
                     .listRowBackground(Color.clear)
-                    NavigationLink(destination: AllBooksView(allBooks: Array(booksRead), fetchBooks: false, navigationTitle: "Books You've Read")) {
+                    NavigationLink(destination: BookListView(allBooks: Array(booksRead), fetchBooks: false, navigationTitle: "Books You've Read")) {
                         LibrarySectionComponent(title: "Read", systemImage: "book")
                     }
                     .listRowBackground(Color.clear)
-                    NavigationLink(destination: AllBooksView(allBooks: Array(booksPutAway), fetchBooks: false, navigationTitle: "Books You've Put Away")) {
+                    NavigationLink(destination: BookListView(allBooks: Array(booksPutAway), fetchBooks: false, navigationTitle: "Books You've Put Away")) {
                         LibrarySectionComponent(title: "put-away", systemImage: "tray")
                     }
                     .listRowBackground(Color.clear)
