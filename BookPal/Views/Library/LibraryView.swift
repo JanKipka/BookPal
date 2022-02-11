@@ -10,13 +10,9 @@ import SwiftUI
 
 struct LibraryView: View {
     
-    @FetchRequest(sortDescriptors: [], predicate: NSPredicate(format: "lastRead != nil")) var books: FetchedResults<Book>
+    @FetchRequest(sortDescriptors: [NSSortDescriptor(key: "lastRead", ascending: false)], predicate: NSPredicate(format: "lastRead != nil")) var recentlyRead: FetchedResults<Book>
     
-    @FetchRequest(sortDescriptors: [], predicate: NSPredicate(format: "finishedStatusValue == 1")) var booksPutAway: FetchedResults<ReadingCycle>
-    
-    @FetchRequest(sortDescriptors: []) var allBooks: FetchedResults<Book>
-    
-    @State var pairs: [[Book]] = []
+    @FetchRequest(sortDescriptors: [NSSortDescriptor(key: "dateAdded", ascending: false)]) var recentlyAdded: FetchedResults<Book>
     
     var body: some View {
         NavigationView {
@@ -24,7 +20,7 @@ struct LibraryView: View {
                 Color.linearGradient(topColor: Color.primaryColor, bottomColor: Color.secondaryColor)
                     .ignoresSafeArea()
                 List {
-                    NavigationLink(destination: AllBooksView(navigationTitle: "Books")) {
+                    NavigationLink(destination: BookListView(navigationTitle: "Books")) {
                         LibrarySectionComponent(title: "Books", systemImage: "books.vertical")
                     }
                     .listRowBackground(Color.clear)
@@ -36,21 +32,25 @@ struct LibraryView: View {
                         LibrarySectionComponent(title: "Genres", systemImage: "list.bullet")
                     }
                     .listRowBackground(Color.clear)
-                    NavigationLink(destination: AllBooksView(allBooks: books.filter({$0.isRead}), fetchBooks: false, navigationTitle: "Books You've Read")) {
+                    NavigationLink(destination: BookListView(navigationTitle: "Books You've Read", predicate: NSPredicate(format: "ANY readingCycles.finishedStatusValue == 0"))) {
                         LibrarySectionComponent(title: "Read", systemImage: "book")
                     }
                     .listRowBackground(Color.clear)
-                    NavigationLink(destination: AllBooksView(allBooks: booksPutAway.map {$0.book!}, fetchBooks: false, navigationTitle: "Books You've Put Away")) {
+                    NavigationLink(destination: BookListView(navigationTitle: "Books You've Put Away", predicate: NSPredicate(format: "ANY readingCycles.finishedStatusValue == 1"))) {
                         LibrarySectionComponent(title: "put-away", systemImage: "tray")
                     }
                     .listRowBackground(Color.clear)
+                    NavigationLink(destination: BookListView(navigationTitle: "favorites", predicate: NSPredicate(format: "isFavorite == true"))) {
+                        LibrarySectionComponent(title: "favorites", systemImage: "star")
+                    }
+                    .listRowBackground(Color.clear)
                     Section(LocalizedStringKey("Recently read")) {
-                        ForEach(books.sorted(by: {$0.lastRead! > $1.lastRead!}).prefix(5)) { book in
+                        ForEach(recentlyRead.prefix(5)) { book in
                             BookTile(book: book)
                         }
                     }
                     Section(LocalizedStringKey("Recently added")) {
-                        ForEach(allBooks.sorted(by: {$0.dateAdded ?? Date.now > $1.dateAdded ?? Date.now}).prefix(5)) { book in
+                        ForEach(recentlyAdded.prefix(5)) { book in
                             BookTile(book: book)
                         }
                     }
@@ -58,6 +58,7 @@ struct LibraryView: View {
                 }
             }.navigationTitle("Library")
         }
+        .navigationViewStyle(.stack)
     }
     
 }
@@ -84,34 +85,18 @@ struct BookTile: View {
             }
         }
         .swipeActions(edge: .leading) {
-            Button {
-                let active = readingController.hasActiveReadingActivities()
-                if active {
-                    hasActiveActivityAlert.toggle()
-                    return
-                }
-                let cycle = readingController.createNewReadingCycle(book: book, startedOn: Date.now)
-                let _ = readingController.createNewActivity(readingCycle: cycle, onPage: cycle.currentPage)
-            } label: {
-                Label("read-now", systemImage: "book.fill")
-            }
-            .tint(.blue)
-            Button(role: .destructive) {
-                presentAlert = true
-            } label: {
-                Image(systemName: "trash")
-            }
+            BookSwipeActions(book: book, presentAlert: $presentAlert, hasActiveActivityAlert: $hasActiveActivityAlert)
         }
         .alert("delete-book", isPresented: $presentAlert) {
-            Button(LocalizedStringKey("No"), role: .cancel) {}
-            Button(LocalizedStringKey("Yes")) {
+            ConfirmAlert {
                 BooksController().deleteBook(book)
             }
         }
-        .alert(isPresented: $hasActiveActivityAlert) {
-            Alert(title: Text("Active activity ongoing"), message: Text("already-active"))
-        }
-        
+        .alert(LocalizedStringKey("Active activity ongoing"), isPresented: $hasActiveActivityAlert, actions: {
+            Button("OK") {}
+        }, message: {
+            Text("already-active")
+        })
     }
 }
 
@@ -133,9 +118,9 @@ struct LibraryViewPreviews: PreviewProvider {
         let _ = PreviewController().createNewBookForPreview()
         return Group {
             LibraryView()
-                .environment(\.managedObjectContext, DataController.preview.context)
+                .environment(\.managedObjectContext, DataController.preview.container.viewContext)
             LibraryView()
-                .environment(\.managedObjectContext, DataController.preview.context)
+                .environment(\.managedObjectContext, DataController.preview.container.viewContext)
                 .environment(\.locale, .init(identifier: "de"))
         }
     }

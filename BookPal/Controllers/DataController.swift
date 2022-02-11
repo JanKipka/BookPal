@@ -15,8 +15,6 @@ class DataController: ObservableObject {
     
     let modelName = "Model"
     
-    let context: NSManagedObjectContext
-    
     static var preview: DataController = {
         let controller = DataController(inMemory: true)
         return controller
@@ -24,7 +22,7 @@ class DataController: ObservableObject {
     
     init(inMemory: Bool = false) {
         container = NSPersistentContainer(name: modelName)
-        context = container.viewContext
+        
         if inMemory {
             container.persistentStoreDescriptions.first?.url = URL(fileURLWithPath: "/dev/null")
         }
@@ -42,6 +40,7 @@ class DataController: ObservableObject {
         let context = container.viewContext
 
         if context.hasChanges {
+            print("### Context has changes -- saving ###")
             do {
                 try context.save()
             } catch let error {
@@ -66,6 +65,7 @@ class DataController: ObservableObject {
 extension DataController {
     
     func getAllSavedBooks() -> [Book] {
+        let context = container.viewContext
         // Create a fetch request for a specific Entity type
         let fetchRequest: NSFetchRequest<Book> = Book.fetchRequest()
         
@@ -79,6 +79,7 @@ extension DataController {
     }
     
     func getBookByISBN(_ isbn: String) -> Book? {
+        let context = container.viewContext
         let fetchRequest: NSFetchRequest<Book> = Book.fetchRequest()
         fetchRequest.predicate = NSPredicate(
             format: "isbn = %@", isbn
@@ -97,6 +98,7 @@ extension DataController {
 extension DataController {
     
     func searchForPotentialAuthorMatch(firstName: String, lastName: String) -> Author? {
+        let context = container.viewContext
         let fetchRequest: NSFetchRequest<Author> = Author.fetchRequest();
         let firstNamePredicate = NSPredicate(format: "firstName BEGINSWITH %@", firstName)
         let lastNamePredicate = NSPredicate(format: "lastName BEGINSWITH %@", lastName)
@@ -119,6 +121,7 @@ extension DataController {
 extension DataController {
     
     func searchForGenreByString(_ s: String) -> Genre? {
+        let context = container.viewContext
         let fetchRequest: NSFetchRequest<Genre> = Genre.fetchRequest()
         fetchRequest.predicate = NSPredicate(
             format: "name = %@", s
@@ -136,6 +139,7 @@ extension DataController {
 extension DataController {
     
     func getActiveReadingActivities() -> [ReadingActivity] {
+        let context = container.viewContext
         let fetchRequest: NSFetchRequest<ReadingActivity> = ReadingActivity.fetchRequest()
         let endDateNotSetPred = NSPredicate(format: "ANY finishedAt = nil")
         fetchRequest.predicate = NSCompoundPredicate(
@@ -152,6 +156,7 @@ extension DataController {
     }
     
     func getActiveReadingCycles() -> [ReadingCycle] {
+        let context = container.viewContext
         let fetchRequest: NSFetchRequest<ReadingCycle> = ReadingCycle.fetchRequest()
         let endDateNotSetPred = NSPredicate(format: "active = true")
         fetchRequest.predicate = NSCompoundPredicate(

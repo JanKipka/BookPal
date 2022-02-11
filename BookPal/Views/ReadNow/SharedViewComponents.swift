@@ -10,14 +10,11 @@ import SwiftUI
 import UIKit
 
 struct ReadingCycleComponent: View {
-    
-    @Environment(\.managedObjectContext) var moc
     @Environment(\.dismiss) var dismiss
     
     let dataController = DataController.shared
     
     @ObservedObject var readingCycle: ReadingCycle
-    @State var showAlert = false
     
     var body: some View {
         VStack(spacing: 10) {
@@ -32,7 +29,7 @@ struct ReadingCycleComponent: View {
                         HStack {
                             Text("on-page-of \(Int(readingCycle.currentPage)) \(Int(readingCycle.book?.numOfPages ?? 0))")
                             Spacer()
-                            Text(readingCycle.hasActiveActivities ? "Reading" : readingCycle.readingActivities?.count == 0 ? "" : LocalizedStringKey("done-in \(readingCycle.remainingTime?.asHoursMinutesString ?? "??m")"))
+                            Text(readingCycle.hasActiveActivities ? "Reading" : readingCycle.readingActivities?.count == 0 ? "" : LocalizedStringKey("done-in \(readingCycle.remainingTime?.asDaysHoursMinutesString ?? "??m")"))
                                 .foregroundColor(.blue)
                                 .fontWeight(.semibold)
                         }
@@ -41,6 +38,7 @@ struct ReadingCycleComponent: View {
                 }
             }
         }
+        .padding(.vertical, 8)
     }
 }
 
@@ -75,7 +73,7 @@ struct ReadingActivityComponent: View {
                 ImageComponent(thumbnail: readingActivity.readingCycle?.book?.coverLinks?.thumbnail ?? "")
                 VStack(alignment: .leading, spacing: 5) {
                     TimelineView(.everyMinute) { context in
-                        Text("\(readingActivity.passedTimeFromDateSinceStart(context.date)?.asHoursMinutesString ?? "0m")")
+                        Text("\(readingActivity.passedTimeFromDateSinceStart(context.date).asDaysHoursMinutesString )")
                             .fontWeight(.semibold)
                             .foregroundColor(.blue)
                     }
@@ -83,23 +81,28 @@ struct ReadingActivityComponent: View {
                 }
             }
         }
+        .padding(.vertical)
     }
 }
 
 struct BookComponent: View {
     
-    @State var book: Book
-    @State var authors: Authors
+    @ObservedObject var book: Book
+    var authors: Authors
     var font: Font?
+    @State var presentAlert = false
+    @State var hasActiveActivityAlert = false
+    var hasSwipeActions: Bool
     
-    init(book: Book) {
-        self.init(book: book, font: .headline)
+    init(book: Book, hasSwipeActions: Bool = true) {
+        self.init(book: book, font: .headline, hasSwipeActions: hasSwipeActions)
     }
     
-    init(book: Book, font: Font) {
+    init(book: Book, font: Font, hasSwipeActions: Bool = true) {
         self.book = book
         self.authors = Authors(book.authors!)
         self.font = font
+        self.hasSwipeActions = hasSwipeActions
     }
     
     var body: some View {
@@ -110,6 +113,23 @@ struct BookComponent: View {
                 Text("\(authors.names)")
             }
         }
+        .swipeActions(edge: .leading) {
+            if hasSwipeActions {
+                BookSwipeActions(book: book, presentAlert: $presentAlert, hasActiveActivityAlert: $hasActiveActivityAlert)
+            } else {
+                EmptyView()
+            }
+        }
+        .alert("delete-book", isPresented: $presentAlert) {
+            ConfirmAlert {
+                BooksController().deleteBook(book)
+            }
+        }
+        .alert(LocalizedStringKey("Active activity ongoing"), isPresented: $hasActiveActivityAlert, actions: {
+            Button("OK") {}
+        }, message: {
+            Text("already-active")
+        })
     }
     
 }
@@ -122,7 +142,7 @@ struct ReadingActivityListComponent: View {
         VStack(spacing: 10) {
             HStack {
                 TimelineView(.everyMinute) { context in
-                    Text("\(ac.active ? ac.passedTimeFromDateSinceStart(context.date)?.asHoursMinutesString ?? "0m" : ac.timeSpentReading.asHoursMinutesString)")
+                    Text("\(ac.active ? ac.passedTimeFromDateSinceStart(context.date).asDaysHoursMinutesString : ac.timeSpentReading.asDaysHoursMinutesString )")
                 }
                 
                 Spacer()
@@ -144,6 +164,73 @@ struct ReadingActivityListComponent: View {
         return readingActivitiy.active ? LocalizedStringKey("active") : LocalizedStringKey("\(Int(readingActivitiy.pagesRead)) pages")
     }
     
+}
+
+struct ConfirmAlert: View {
+    
+    var onCancel: (() -> Void)?
+    var onConfirm: () -> Void
+    
+    
+    @ViewBuilder
+    var body: some View {
+        Button(LocalizedStringKey("No"), role: .cancel) {
+            if let onCancel = onCancel {
+                onCancel()
+            }
+        }
+        Button(LocalizedStringKey("Yes")) {
+            onConfirm()
+        }
+    }
+}
+
+struct BookSwipeActions: View {
+
+    var book: Book
+    @Binding var presentAlert: Bool
+    @Binding var hasActiveActivityAlert: Bool
+    
+    let readingController: ReadingController = ReadingController()
+
+    @ViewBuilder
+    var body: some View {
+        Button {
+            let active = readingController.hasActiveReadingActivities()
+            if active {
+                hasActiveActivityAlert.toggle()
+                return
+            }
+            let cycle = readingController.createNewReadingCycle(book: book, startedOn: Date.now)
+            let _ = readingController.createNewActivity(readingCycle: cycle, onPage: cycle.currentPage)
+        } label: {
+            Label("read-now", systemImage: "book.fill")
+        }
+        .tint(.blue)
+        Button(role: .destructive) {
+            presentAlert = true
+        } label: {
+            Image(systemName: "trash")
+        }
+    }
+}
+
+struct TappedBookButton: View {
+    @State var tappedBook: Book?
+    var book: Book
+    
+    var body: some View {
+        Button {
+            tappedBook = book
+        } label: {
+            BookComponent(book: book, hasSwipeActions: false)
+        }
+        .padding(.vertical)
+        .foregroundColor(.primary)
+        .sheet(item: $tappedBook) {  book in
+            BookView(book: book, isSheet: true)
+        }
+    }
 }
 
 // PREVIEWS

@@ -60,9 +60,11 @@
 "Done" = "Fertig";
 "What page are you on?" = "Auf welcher Seite bist du?";
 "Reading activity" = "Leseaktivität";
-"Finish reading" = "Fertig gelesen";
+"Finish reading" = "Fertig";
 "missing-page" = "Bitte gib an auf welcher Seite du bist.";
 "page-greater-than-total %lld" = "Deine aktuelle Seitenzahl kann nicht größer sein als die Gesamtseitenzahl (%lld).";
+"finished" = "Ich bin fertig";
+"favorites" = "Favoriten";
 
 // BookView
 "Your History" = "Deine Historie";
@@ -74,6 +76,7 @@
 "%@ Books" = "%@ Bücher";
 "currently-reading" = "Du liest gerade dieses Buch.";
 "more-info" = "Mehr Infos";
+"edit" = "Bearbeiten";
 
 "Books" = "Bücher";
 "Authors" = "Autor:innen";

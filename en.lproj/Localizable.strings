@@ -59,9 +59,11 @@
 "Done" = "Done";
 "What page are you on?" = "What page are you on?";
 "Reading activity" = "Reading activity";
-"Finish reading" = "Finish reading";
+"Finish reading" = "Done";
 "missing-page" = "Please enter the page you're on.";
 "page-greater-than-total %lld" = "The page you're on can't be greater than the total page number (%lld).";
+"finished" = "I'm done";
+"favorites" = "Favoriten";
 
 // BookView
 "Your History" = "Your History";
@@ -73,6 +75,7 @@
 "%@ Books" = "%@ Books";
 "currently-reading" = "You're currently reading this book.";
 "more-info" = "More Info";
+"edit" = "Bearbeiten";
 
 "Books" = "Books";
 "Authors" = "Authors";

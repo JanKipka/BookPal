@@ -13,7 +13,7 @@ struct PreviewController {
     let dataController = DataController.preview
     
     func createNewBookForPreview() -> Book {
-        let context = dataController.context
+        let context = dataController.container.viewContext
         let book = Book(context: context)
         book.title = "Preview Book"
         book.id = UUID()
@@ -61,7 +61,7 @@ struct PreviewController {
     
     
     func createActiveRunningReadingActivity() -> ReadingActivity {
-        let ac = ReadingActivity(context: dataController.context)
+        let ac = ReadingActivity(context: dataController.container.viewContext)
         ac.startedAt = Date()
         ac.active = true
         ac.pagesRead = 0

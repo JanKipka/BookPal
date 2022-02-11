@@ -26,9 +26,6 @@ struct ReadNowView: View {
     let dataController = DataController.shared
     let readingController = ReadingController()
     
-    @State var id: UUID = UUID()
-    
-    let apiController: GoogleBooksAPIController = GoogleBooksAPIController()
     @State var navigateToNewCycleView: Bool = false
     @State var navigateToActivityView: Bool = false
     @State var activityStartedAlert: Bool = false
@@ -165,15 +162,7 @@ struct ReadNowView: View {
                 }
             }
             .navigationTitle("read-now")
-            
         }
-    }
-    
-    func filterActivities() -> [ReadingActivity] {
-        return activities.filter({$0.finishedAt == nil})
-    }
-    
-    func filterCycles() -> [ReadingCycle] {
-        return cycles.filter({$0.active})
+        .navigationViewStyle(.stack)
     }
 }

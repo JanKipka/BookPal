@@ -10,9 +10,8 @@ import SwiftUI
 
 struct ReadingCycleDetailView: View {
     
-    var readingCycle: ReadingCycle
-    var activities: [ReadingActivity]
-    @State var notes: String
+    @ObservedObject var readingCycle: ReadingCycle
+    @State var notes: String = ""
     @State var avgPagesPerMinute = ""
     @State var showActivityDetailSheet = false
     @State var tappedReadingActivity: ReadingActivity?
@@ -20,15 +19,6 @@ struct ReadingCycleDetailView: View {
     
     init(readingCycle: ReadingCycle) {
         self.readingCycle = readingCycle
-        let activitiesSet = readingCycle.readingActivities as! Set<ReadingActivity>
-        self.activities = Array(activitiesSet).sorted {
-            if let start = $0.startedAt, let start2 = $1.startedAt {
-                return start < start2
-            }
-            
-            return false
-        }
-        self.notes = readingCycle.notes ?? ""
         UITableView.appearance().backgroundColor = .clear
     }
     
@@ -39,8 +29,7 @@ struct ReadingCycleDetailView: View {
             VStack {
                 
                 Form {
-                    BookComponent(book: readingCycle.book!)
-                        .padding(.vertical)
+                    TappedBookButton(book: readingCycle.book!)
                     Section(LocalizedStringKey("start-date")) {
                         Text(readingCycle.startedAt?.asLocalizedStringHoursMinutes ?? "")
                     }
@@ -54,17 +43,17 @@ struct ReadingCycleDetailView: View {
                     }
                     Section(LocalizedStringKey("Time spent reading")) {
                         TimelineView(.everyMinute) { _ in
-                            Text("\(readingCycle.totalTimeSpentReadingInterval.asDaysHoursMinutesString ?? "0m")")
+                            Text("\(readingCycle.totalTimeSpentReadingInterval.asDaysHoursMinutesString )")
                         }
                     }
                     Section(LocalizedStringKey("Average pages per minute")) {
-                        Text(avgPagesPerMinute)
+                        Text(readingCycle.avgPagesPerMinute.asDecimalString)
                     }
                     Section(LocalizedStringKey("Notes")) {
                         TextEditor(text: $notes)
                     }
                     Section(LocalizedStringKey("Activities")) {
-                        ForEach(activities) { ac in
+                        ForEach(readingCycle.getActivities.sorted(by: {$0.startedAt! < $1.startedAt!}) ) { ac in
                             Button {
                                 tappedReadingActivity = ac
                                 showActivityDetailSheet.toggle()
@@ -72,13 +61,25 @@ struct ReadingCycleDetailView: View {
                                 ReadingActivityListComponent(ac: ac)
                             }
                             .foregroundColor(.primary)
+                            .swipeActions(edge: .leading, allowsFullSwipe: false) {
+                                Button(role: .destructive) {
+                                    if readingCycle.readingActivities?.count == 1 {
+                                        readingCycle.currentPage = 0
+                                    } else if !ac.active {
+                                        readingCycle.currentPage = readingCycle.currentPage - ac.pagesRead
+                                    }
+                                    ReadingController().delete(object: ac)
+                                } label: {
+                                    Image(systemName: "trash")
+                                }
+                            }
                         }
                     }
                 }
             }
         }.navigationTitle(readingCycle.active ? LocalizedStringKey("You're reading...") : LocalizedStringKey("reading-log"))
             .onAppear {
-                self.avgPagesPerMinute = readingCycle.avgPagesPerMinute.asDecimalString
+                self.notes = readingCycle.notes ?? ""
             }
             .sheet(item: $tappedReadingActivity) { ac in
                 ReadingActivityDetailView(readingActivity: ac)
@@ -87,13 +88,12 @@ struct ReadingCycleDetailView: View {
                 ToolbarItem {
                     Button(LocalizedStringKey("Save")) {
                         readingCycle.notes = notes.trimmingCharacters(in: .whitespaces)
-                        dataController.save()
                     }
                     .disabled(notes == readingCycle.notes || (readingCycle.notes == nil && notes.isEmpty))
                 }
             }
     }
-
+    
     
     func getPagesString(readingActivitiy: ReadingActivity) -> String {
         return readingActivitiy.active ? "Active" : "\(readingActivitiy.pagesRead) pages"

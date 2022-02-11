@@ -10,7 +10,7 @@ import CoreData
 
 struct ReadingController {
     
-    let moc = DataController.shared.context
+    let moc = DataController.shared.container.viewContext
     
     let dataController = DataController.shared
     
@@ -18,6 +18,10 @@ struct ReadingController {
     
     func save() {
         dataController.save()
+    }
+    
+    func delete(object: NSManagedObject) {
+        moc.delete(object)
     }
     
 }
@@ -84,15 +88,15 @@ extension ReadingController {
             readingCycle.id = UUID()
             book.addToReadingCycles(readingCycle)
             readingCycle.maxPages = readingCycle.book!.numOfPages
-            dataController.save()
             return readingCycle
         }
     }
     
     func findActiveReadingCycle(book: Book) -> ReadingCycle? {
         let request = ReadingCycle.fetchRequest()
+        let predicate = NSPredicate(format: "active = true")
         let predicate1 = NSPredicate(format: "book.isbn = %@", book.isbn!)
-        request.predicate = predicate1
+        request.predicate = NSCompoundPredicate(type: .and, subpredicates: [predicate, predicate1])
         do {
             return try moc.fetch(request).first
         } catch let error {
@@ -109,6 +113,5 @@ extension ReadingController {
         }
         cycle.active = false
         cycle.completedOn = finishedDate
-        dataController.save()
     }
 }
