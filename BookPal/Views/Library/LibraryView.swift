@@ -11,11 +11,11 @@ import SwiftUI
 struct LibraryView: View {
     
     @FetchRequest(sortDescriptors: [NSSortDescriptor(key: "lastRead", ascending: false)], predicate: NSPredicate(format: "lastRead != nil")) var recentlyRead: FetchedResults<Book>
-
+    
     @FetchRequest(sortDescriptors: [], predicate: NSPredicate(format: "ANY readingCycles.finishedStatusValue == 1")) var booksPutAway: FetchedResults<Book>
     
     @FetchRequest(sortDescriptors: [], predicate: NSPredicate(format: "ANY readingCycles.finishedStatusValue == 0")) var booksRead: FetchedResults<Book>
-
+    
     @FetchRequest(sortDescriptors: [NSSortDescriptor(key: "dateAdded", ascending: false)]) var recentlyAdded: FetchedResults<Book>
     
     var body: some View {
@@ -133,9 +133,9 @@ struct LibraryViewPreviews: PreviewProvider {
         let _ = PreviewController().createNewBookForPreview()
         return Group {
             LibraryView()
-                .environment(\.managedObjectContext, DataController.preview.context)
+                .environment(\.managedObjectContext, DataController.preview.container.viewContext)
             LibraryView()
-                .environment(\.managedObjectContext, DataController.preview.context)
+                .environment(\.managedObjectContext, DataController.preview.container.viewContext)
                 .environment(\.locale, .init(identifier: "de"))
         }
     }

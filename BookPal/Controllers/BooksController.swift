@@ -10,7 +10,7 @@ import CoreData
 
 struct BooksController {
     
-    let moc = DataController.shared.context
+    let moc = DataController.shared.container.viewContext
     
     let apiController = GoogleBooksAPIController()
     

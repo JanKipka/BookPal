@@ -10,7 +10,7 @@ import CoreData
 
 struct ReadingController {
     
-    let moc = DataController.shared.context
+    let moc = DataController.shared.container.viewContext
     
     let dataController = DataController.shared
     
