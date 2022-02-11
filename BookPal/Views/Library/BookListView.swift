@@ -11,11 +11,31 @@ import SwiftUI
 struct BookListView: View {
     
     @State var searchQuery = ""
-    
-    @State var allBooks: [Book] = []
-    var fetchBooks: Bool = true
-    @State var booksToDisplay: [Book] = []
     var navigationTitle: String
+    @FetchRequest var books: FetchedResults<Book>
+    
+    init(navigationTitle: String, predicate: NSPredicate? = nil, sortDescriptors: [NSSortDescriptor] = [], fetchLimit: Int? = nil) {
+        self.navigationTitle = navigationTitle
+        let request = Book.fetchRequest()
+        if let predicate = predicate {
+            request.predicate = predicate
+        }
+        request.sortDescriptors = sortDescriptors
+        if let fetchLimit = fetchLimit {
+            request.fetchLimit = fetchLimit
+        }
+        _books = FetchRequest(fetchRequest: request)
+    }
+    
+    var filteredBooks: [Book] {
+        if searchQuery.isEmpty {
+            return Array(books)
+        } else {
+            return books.filter{
+                $0.title!.contains(searchQuery) || $0.filterAuthors(searchQuery)
+            }
+        }
+    }
     
     
     var body: some View {
@@ -23,7 +43,7 @@ struct BookListView: View {
             Color.linearGradient(topColor: Color.primaryColor, bottomColor: Color.secondaryColor)
                 .ignoresSafeArea()
             List {
-                ForEach(booksToDisplay, id: \.isbn) { book in
+                ForEach(filteredBooks, id: \.isbn) { book in
                     BookComponent(book: book, font: .system(size: 22))
                         .padding(.vertical, 3)
                         .listRowBackground(Color.clear)
@@ -33,21 +53,6 @@ struct BookListView: View {
         }.navigationTitle(LocalizedStringKey(navigationTitle))
             .navigationBarTitleDisplayMode(.inline)
             .searchable(text: $searchQuery, placement: .navigationBarDrawer(displayMode: .always))
-            .onChange(of: searchQuery) { query in
-                if searchQuery.isEmpty {
-                    booksToDisplay = allBooks
-                } else {
-                    booksToDisplay = allBooks.filter{
-                        $0.title!.contains(query) || $0.filterAuthors(query)
-                    }
-                }
-            }
-            .onAppear {
-                if allBooks.isEmpty && fetchBooks {
-                    allBooks = BooksController().getAllSavedBooks()
-                }
-                booksToDisplay = allBooks
-            }
     }
 }
 

@@ -12,10 +12,6 @@ struct LibraryView: View {
     
     @FetchRequest(sortDescriptors: [NSSortDescriptor(key: "lastRead", ascending: false)], predicate: NSPredicate(format: "lastRead != nil")) var recentlyRead: FetchedResults<Book>
     
-    @FetchRequest(sortDescriptors: [], predicate: NSPredicate(format: "ANY readingCycles.finishedStatusValue == 1")) var booksPutAway: FetchedResults<Book>
-    
-    @FetchRequest(sortDescriptors: [], predicate: NSPredicate(format: "ANY readingCycles.finishedStatusValue == 0")) var booksRead: FetchedResults<Book>
-    
     @FetchRequest(sortDescriptors: [NSSortDescriptor(key: "dateAdded", ascending: false)]) var recentlyAdded: FetchedResults<Book>
     
     var body: some View {
@@ -36,11 +32,11 @@ struct LibraryView: View {
                         LibrarySectionComponent(title: "Genres", systemImage: "list.bullet")
                     }
                     .listRowBackground(Color.clear)
-                    NavigationLink(destination: BookListView(allBooks: Array(booksRead), fetchBooks: false, navigationTitle: "Books You've Read")) {
+                    NavigationLink(destination: BookListView(navigationTitle: "Books You've Read", predicate: NSPredicate(format: "ANY readingCycles.finishedStatusValue == 0"))) {
                         LibrarySectionComponent(title: "Read", systemImage: "book")
                     }
                     .listRowBackground(Color.clear)
-                    NavigationLink(destination: BookListView(allBooks: Array(booksPutAway), fetchBooks: false, navigationTitle: "Books You've Put Away")) {
+                    NavigationLink(destination: BookListView(navigationTitle: "Books You've Put Away", predicate: NSPredicate(format: "ANY readingCycles.finishedStatusValue == 1"))) {
                         LibrarySectionComponent(title: "put-away", systemImage: "tray")
                     }
                     .listRowBackground(Color.clear)

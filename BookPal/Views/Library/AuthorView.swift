@@ -13,17 +13,25 @@ struct AuthorView: View {
     
     @State var searchQuery = ""
     
-    @State var allAuthors: [Author] = []
-    @State var authorsToDisplay: [Author] = []
+    @FetchRequest(entity: Author.entity(), sortDescriptors: [NSSortDescriptor(key: "lastName", ascending: true)], predicate: NSPredicate(format: "books.@count > 0")) var authors: FetchedResults<Author>
     
+    var filteredAuthors: [Author] {
+        if searchQuery.isEmpty {
+            return Array(authors)
+        } else {
+            return authors.filter {
+                $0.firstName!.contains(searchQuery) || $0.lastName!.contains(searchQuery)
+            }
+        }
+    }
     
     var body: some View {
         ZStack {
             Color.linearGradient(topColor: Color.primaryColor, bottomColor: Color.secondaryColor)
                 .ignoresSafeArea()
             List {
-                ForEach(authorsToDisplay) { author in
-                    NavigationLink(destination: BookListView(allBooks: Array(author.books as! Set<Book>), fetchBooks: false, navigationTitle: "Books by \(author.firstName ?? "") \(author.lastName ?? "")")) {
+                ForEach(filteredAuthors) { author in
+                    NavigationLink(destination: BookListView(navigationTitle: "Books by \(author.firstName ?? "") \(author.lastName ?? "")", predicate: NSCompoundPredicate(type: .and, subpredicates: [NSPredicate(format: "ANY authors.lastName = %@", author.lastName!), NSPredicate(format: "ANY authors.firstName = %@", author.firstName!)]))) {
                         Text("\(author.firstName ?? "") \(author.lastName ?? "")")
                             .font(.title)
                     }
@@ -34,19 +42,5 @@ struct AuthorView: View {
             .listStyle(.grouped)
         }.navigationTitle("Authors")
             .searchable(text: $searchQuery, placement: .navigationBarDrawer(displayMode: .always))
-            .onChange(of: searchQuery) { query in
-                if searchQuery.isEmpty {
-                    authorsToDisplay = allAuthors
-                } else {
-                    authorsToDisplay = allAuthors.filter {
-                        $0.firstName!.contains(query) || $0.lastName!.contains(searchQuery)
-                    }
-                }
-            }
-            .onAppear {
-                allAuthors = BooksController().getAllSavedAuthors()
-                    .filter({$0.books?.count ?? 0 > 0})
-                authorsToDisplay = allAuthors
-            }
     }
 }
