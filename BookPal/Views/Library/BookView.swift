@@ -9,7 +9,7 @@ import Foundation
 import SwiftUI
 
 struct BookView: View {
-    var book: Book
+    @ObservedObject var book: Book
     
     init(book: Book) {
         self.book = book
@@ -58,7 +58,7 @@ struct BookView: View {
 }
 
 struct ReadingCycleDetailComponent: View {
-    @State var cycle: ReadingCycle
+    @ObservedObject var cycle: ReadingCycle
     
     var body: some View {
         NavigationLink(destination: ReadingCycleDetailView(readingCycle: cycle)) {
@@ -84,7 +84,7 @@ struct ReadingCycleDetailComponent: View {
 
 struct BookDetailsComponent: View {
     
-    var book: Book
+    @ObservedObject var book: Book
     @State var showDetailsSheet: Bool = false
     
     var body: some View {
@@ -118,10 +118,17 @@ struct BookDetailsComponent: View {
 }
 
 struct BookDetailsSheet: View {
+    @State var numOfPagesString: String = ""
     var book: Book
+    
+    init(book: Book) {
+        self.book = book
+        _numOfPagesString = State(initialValue: String(book.numOfPages))
+    }
+    
     var body: some View {
         VStack {
-            List {
+            Form {
                 Text(book.title!)
                     .fontWeight(.semibold)
                 if !(book.subtitle ?? "").isEmpty {
@@ -144,7 +151,14 @@ struct BookDetailsSheet: View {
                     Text(book.isbn ?? "")
                 }
                 Section(LocalizedStringKey("pages")) {
-                    Text("\(book.numOfPages)")
+                    HStack {
+                        TextField(text: $numOfPagesString) {}
+                        .onChange(of: numOfPagesString) { pages in
+                            book.numOfPages = Int16(pages)!
+                        }
+                       
+                    }
+                    
                 }
                 Text(LocalizedStringKey("info-info"))
                     .font(.caption)

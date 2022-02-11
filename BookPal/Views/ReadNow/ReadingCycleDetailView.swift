@@ -89,7 +89,6 @@ struct ReadingCycleDetailView: View {
                 ToolbarItem {
                     Button(LocalizedStringKey("Save")) {
                         readingCycle.notes = notes.trimmingCharacters(in: .whitespaces)
-                        dataController.save()
                     }
                     .disabled(notes == readingCycle.notes || (readingCycle.notes == nil && notes.isEmpty))
                 }

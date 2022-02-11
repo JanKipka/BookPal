@@ -22,8 +22,17 @@ struct BookPalApp: App {
                     print("Documents Directory: ", FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).last ?? "Not Found!")
                 }
         }
-        .onChange(of: scenePhase) { _ in
-            dataController.save()
+        .onChange(of: scenePhase) { phase in
+            switch phase {
+            case .inactive:
+                fallthrough
+            case .background:
+                print("### Saving ###")
+                dataController.save()
+            default:
+                print("### App active ###")
+            }
+            
         }
     }
 }

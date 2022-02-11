@@ -42,6 +42,7 @@ class DataController: ObservableObject {
         let context = container.viewContext
 
         if context.hasChanges {
+            print("### Context has changes -- saving ###")
             do {
                 try context.save()
             } catch let error {

@@ -22,7 +22,6 @@ struct ReadingController {
     
     func delete(object: NSManagedObject) {
         moc.delete(object)
-        save()
     }
     
 }
@@ -89,7 +88,6 @@ extension ReadingController {
             readingCycle.id = UUID()
             book.addToReadingCycles(readingCycle)
             readingCycle.maxPages = readingCycle.book!.numOfPages
-            dataController.save()
             return readingCycle
         }
     }
@@ -115,6 +113,5 @@ extension ReadingController {
         }
         cycle.active = false
         cycle.completedOn = finishedDate
-        dataController.save()
     }
 }

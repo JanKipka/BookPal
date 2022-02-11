@@ -56,7 +56,7 @@ struct ReadingActivityDetailView: View {
                             } else {
                                 HStack {
                                     TextField("What page are you on?", text: $pagesRead)
-                                    Button("I'm finished") {
+                                    Button("finished") {
                                         pagesRead = String(readingActivity.readingCycle?.book?.numOfPages ?? 0)
                                     }
                                 }
@@ -120,7 +120,6 @@ struct ReadingActivityDetailView: View {
             readingActivity.notes = notes
             readingActivity.finishedAt = endDate.zeroSeconds
             dismiss()
-            dataController.save()
         } else {
             finishReadingActivity()
         }

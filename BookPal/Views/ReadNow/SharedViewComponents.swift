@@ -10,14 +10,11 @@ import SwiftUI
 import UIKit
 
 struct ReadingCycleComponent: View {
-    
-    @Environment(\.managedObjectContext) var moc
     @Environment(\.dismiss) var dismiss
     
     let dataController = DataController.shared
     
     @ObservedObject var readingCycle: ReadingCycle
-    @State var showAlert = false
     
     var body: some View {
         VStack(spacing: 10) {
@@ -88,8 +85,8 @@ struct ReadingActivityComponent: View {
 
 struct BookComponent: View {
     
-    @State var book: Book
-    @State var authors: Authors
+    @ObservedObject var book: Book
+    var authors: Authors
     var font: Font?
     
     init(book: Book) {

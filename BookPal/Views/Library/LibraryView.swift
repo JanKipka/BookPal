@@ -10,13 +10,13 @@ import SwiftUI
 
 struct LibraryView: View {
     
-    @FetchRequest(sortDescriptors: [], predicate: NSPredicate(format: "lastRead != nil")) var books: FetchedResults<Book>
+    @FetchRequest(sortDescriptors: [NSSortDescriptor(key: "lastRead", ascending: false)], predicate: NSPredicate(format: "lastRead != nil")) var recentlyRead: FetchedResults<Book>
+
+    @FetchRequest(sortDescriptors: [], predicate: NSPredicate(format: "ANY readingCycles.finishedStatusValue == 1")) var booksPutAway: FetchedResults<Book>
     
-    @FetchRequest(sortDescriptors: [], predicate: NSPredicate(format: "finishedStatusValue == 1")) var booksPutAway: FetchedResults<ReadingCycle>
-    
-    @FetchRequest(sortDescriptors: []) var allBooks: FetchedResults<Book>
-    
-    @State var pairs: [[Book]] = []
+    @FetchRequest(sortDescriptors: [], predicate: NSPredicate(format: "ANY readingCycles.finishedStatusValue == 0")) var booksRead: FetchedResults<Book>
+
+    @FetchRequest(sortDescriptors: [NSSortDescriptor(key: "dateAdded", ascending: false)]) var recentlyAdded: FetchedResults<Book>
     
     var body: some View {
         NavigationView {
@@ -36,21 +36,21 @@ struct LibraryView: View {
                         LibrarySectionComponent(title: "Genres", systemImage: "list.bullet")
                     }
                     .listRowBackground(Color.clear)
-                    NavigationLink(destination: AllBooksView(allBooks: books.filter({$0.isRead}), fetchBooks: false, navigationTitle: "Books You've Read")) {
+                    NavigationLink(destination: AllBooksView(allBooks: Array(booksRead), fetchBooks: false, navigationTitle: "Books You've Read")) {
                         LibrarySectionComponent(title: "Read", systemImage: "book")
                     }
                     .listRowBackground(Color.clear)
-                    NavigationLink(destination: AllBooksView(allBooks: booksPutAway.map {$0.book!}, fetchBooks: false, navigationTitle: "Books You've Put Away")) {
+                    NavigationLink(destination: AllBooksView(allBooks: Array(booksPutAway), fetchBooks: false, navigationTitle: "Books You've Put Away")) {
                         LibrarySectionComponent(title: "put-away", systemImage: "tray")
                     }
                     .listRowBackground(Color.clear)
                     Section(LocalizedStringKey("Recently read")) {
-                        ForEach(books.sorted(by: {$0.lastRead! > $1.lastRead!}).prefix(5)) { book in
+                        ForEach(recentlyRead.prefix(5)) { book in
                             BookTile(book: book)
                         }
                     }
                     Section(LocalizedStringKey("Recently added")) {
-                        ForEach(allBooks.sorted(by: {$0.dateAdded ?? Date.now > $1.dateAdded ?? Date.now}).prefix(5)) { book in
+                        ForEach(recentlyAdded.prefix(5)) { book in
                             BookTile(book: book)
                         }
                     }
