@@ -40,6 +40,10 @@ struct LibraryView: View {
                         LibrarySectionComponent(title: "put-away", systemImage: "tray")
                     }
                     .listRowBackground(Color.clear)
+                    NavigationLink(destination: BookListView(navigationTitle: "favorites", predicate: NSPredicate(format: "isFavorite == true"))) {
+                        LibrarySectionComponent(title: "favorites", systemImage: "star")
+                    }
+                    .listRowBackground(Color.clear)
                     Section(LocalizedStringKey("Recently read")) {
                         ForEach(recentlyRead.prefix(5)) { book in
                             BookTile(book: book)

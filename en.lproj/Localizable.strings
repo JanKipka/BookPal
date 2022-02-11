@@ -63,6 +63,7 @@
 "missing-page" = "Please enter the page you're on.";
 "page-greater-than-total %lld" = "The page you're on can't be greater than the total page number (%lld).";
 "finished" = "I'm done";
+"favorites" = "Favoriten";
 
 // BookView
 "Your History" = "Your History";

@@ -64,6 +64,7 @@
 "missing-page" = "Bitte gib an auf welcher Seite du bist.";
 "page-greater-than-total %lld" = "Deine aktuelle Seitenzahl kann nicht größer sein als die Gesamtseitenzahl (%lld).";
 "finished" = "Ich bin fertig";
+"favorites" = "Favoriten";
 
 // BookView
 "Your History" = "Deine Historie";

@@ -53,6 +53,15 @@ struct BookView: View {
             .listStyle(.grouped)
             
         }.navigationTitle(book.title!)
+            .toolbar {
+                ToolbarItem(placement: .navigationBarTrailing) {
+                    Button {
+                        book.isFavorite.toggle()
+                    } label: {
+                        Image(systemName: book.isFavorite ? "star.fill" : "star")
+                    }
+                }
+            }
         
     }
 }
@@ -164,7 +173,6 @@ struct BookDetailsSheet: View {
                     .font(.caption)
                     .listRowSeparator(.hidden)
             }
-            
         }
         
     }
