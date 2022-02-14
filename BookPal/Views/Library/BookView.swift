@@ -176,6 +176,7 @@ struct BookDetailsSheet: View {
                 Section(LocalizedStringKey("pages")) {
                     HStack {
                         TextField(text: $numOfPagesString) {}
+                        .keyboardType(.numberPad)
                         .onChange(of: numOfPagesString) { pages in
                             book.numOfPages = Int16(pages)!
                         }

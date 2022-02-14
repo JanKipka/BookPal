@@ -60,7 +60,7 @@
 "Done" = "Fertig";
 "What page are you on?" = "Auf welcher Seite bist du?";
 "Reading activity" = "Leseaktivität";
-"Finish reading" = "Fertig";
+"Finish reading" = "Lesen beenden";
 "missing-page" = "Bitte gib an auf welcher Seite du bist.";
 "page-greater-than-total %lld" = "Deine aktuelle Seitenzahl kann nicht größer sein als die Gesamtseitenzahl (%lld).";
 "finished" = "Ich bin fertig";

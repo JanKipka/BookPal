@@ -46,27 +46,19 @@ struct ReadingActivityDetailView: View {
                 Form {
                     TappedBookButton(book: (readingActivity.readingCycle?.book!)!)
                     if readingActivity.active {
-                        Section(LocalizedStringKey("Started on page")) {
-                            Text("\(readingActivity.startedActivityOnPage)")
-                        }
-                        Section(LocalizedStringKey("Finished on page")) {
-                            if !readingActivity.active {
+                        if !readingActivity.active {
+                            Section(LocalizedStringKey("Finished on page")) {
                                 Text("\(readingActivity.finishedActivityOnPage)")
-                            } else {
+                            }
+                        } else {
+                            Section {
                                 HStack {
                                     TextField("What page are you on?", text: $pagesRead)
+                                        .keyboardType(.numberPad)
                                     Button("finished") {
                                         pagesRead = String(readingActivity.readingCycle?.book?.numOfPages ?? 0)
                                     }
                                 }
-                            }
-                        }
-                        Section(LocalizedStringKey("start-date")) {
-                            Text(readingActivity.startedAt?.asLocalizedStringHoursMinutes ?? Date().formatted())
-                        }
-                        Section(LocalizedStringKey("Time spent reading")) {
-                            TimelineView(.everyMinute) { context in
-                                Text("\(context.date.timeIntervalSince(readingActivity.startedAt!).asDaysHoursMinutesString )")
                             }
                         }
                     } else {
@@ -91,6 +83,7 @@ struct ReadingActivityDetailView: View {
                     }
                     Section(LocalizedStringKey("Notes")) {
                         TextEditor(text: $notes)
+                            .frame(height: 75)
                     }
                     
                     Button(readingActivity.active ? LocalizedStringKey("Finish reading") : LocalizedStringKey("Done")) {

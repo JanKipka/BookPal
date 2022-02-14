@@ -58,6 +58,7 @@ struct AddBookView: View {
                     }
                     .sheet(isPresented: $showSearchSheet, onDismiss: {
                         titleAsString = selectedVolume.title ?? ""
+                        showSearchSheet = false
                     }){
                         SearchView(selectedVolume: $selectedVolume, searchMode: $searchMode)
                     }
