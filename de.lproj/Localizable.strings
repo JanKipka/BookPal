@@ -52,6 +52,8 @@
 "Save" = "Speichern";
 "delete-book" = "Möchtest du dieses Buch und alle Lese-Einträge wirklich löschen?";
 "not-added" = "Das Buch konnte aufgrund fehlender Metadaten nicht hinzugefügt werden. Versuche es über die Titel-Suche.";
+"Cancel" = "Abbrechen";
+"barcode" = "Barcode Scanner";
 
 "Pages per minute" = "Seiten pro Minute";
 "Started on page" = "Begonnen auf Seite";

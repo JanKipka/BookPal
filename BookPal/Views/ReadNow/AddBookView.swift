@@ -7,6 +7,7 @@
 
 import Foundation
 import SwiftUI
+import CodeScanner
 
 struct AddBookView: View {
     
@@ -147,6 +148,7 @@ struct SearchView: View {
     @State var apiController: GoogleBooksAPIController = GoogleBooksAPIController()
     @Environment(\.dismiss) var dismiss
     @Binding var searchMode: SearchMode
+    @State private var isShowingScanner = false
     
     var body: some View {
         NavigationView {
@@ -180,13 +182,46 @@ struct SearchView: View {
             }
             .navigationTitle("Search")
             .navigationBarTitleDisplayMode(.inline)
+            .toolbar {
+                ToolbarItem(placement: .navigationBarTrailing) {
+                    Button {
+                        searchMode = .isbn
+                        isShowingScanner = true
+                    } label: {
+                        Image(systemName: "camera")
+                    }
+                }
+            }
         }
         .searchable(text: $searchQuery, placement: .navigationBarDrawer(displayMode: .always))
         .onChange(of: searchQuery) { query in
             checkAndCall()
         }
-        
-        
+        .sheet(isPresented: $isShowingScanner) {
+            NavigationView {
+                CodeScannerView(codeTypes: [.ean13, .ean8],showViewfinder: true, simulatedData: "9780571364886", completion: handleScan)
+                    .toolbar {
+                        ToolbarItem {
+                            Button("Cancel") {
+                                isShowingScanner = false
+                            }
+                        }
+                    }
+                    .navigationBarTitleDisplayMode(.inline)
+                    .navigationTitle(LocalizedStringKey("barcode"))
+            }
+            
+        }
+    }
+    
+    private func handleScan(result: Result<ScanResult, ScanError>) {
+        isShowingScanner = false
+        switch result {
+        case .success(let result):
+            searchQuery = result.string.trimmingCharacters(in: .whitespacesAndNewlines)
+        case .failure(let error):
+            print("Scanning failed: \(error.localizedDescription)")
+        }
     }
     
     private func checkAndCall() {
@@ -248,7 +283,7 @@ struct VolumeInfoView: View {
             }
             VStack(alignment: .leading) {
                 Text(volumeInfo.title ?? "").fontWeight(.bold)
-                Text(String("Page Count: \(volumeInfo.pageCount ?? 0)"))
+                Text(volumeInfo.authors?.joined(separator: ", ") ?? "") + Text(" | ") + Text(LocalizedStringKey("\(volumeInfo.pageCount ?? 0) pages"))
             }
         }
         .onTapGesture(perform: onTap)

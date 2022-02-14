@@ -21,6 +21,7 @@
 		24341F8327AC4EE200DB7F58 /* Localizable.stringsdict in Resources */ = {isa = PBXBuildFile; fileRef = 24341F8527AC4EE200DB7F58 /* Localizable.stringsdict */; };
 		243598A727A4923E00764CD3 /* Model.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 243598A527A4923E00764CD3 /* Model.xcdatamodeld */; };
 		243598A927A493CD00764CD3 /* DataController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 243598A827A493CD00764CD3 /* DataController.swift */; };
+		248E287A27BA9ADE0079967F /* CodeScanner in Frameworks */ = {isa = PBXBuildFile; productRef = 248E287927BA9ADE0079967F /* CodeScanner */; };
 		24DD566727A55C11006949DB /* BooksAPIController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24DD566627A55C11006949DB /* BooksAPIController.swift */; };
 		24DD566D27A57B79006949DB /* AddBookView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24DD566C27A57B79006949DB /* AddBookView.swift */; };
 		24DD567127A6CA14006949DB /* SharedViewComponents.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24DD567027A6CA14006949DB /* SharedViewComponents.swift */; };
@@ -106,6 +107,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				248E287A27BA9ADE0079967F /* CodeScanner in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -297,6 +299,9 @@
 			dependencies = (
 			);
 			name = BookPal;
+			packageProductDependencies = (
+				248E287927BA9ADE0079967F /* CodeScanner */,
+			);
 			productName = BookPal;
 			productReference = 241B36C227A335A5002C233A /* BookPal.app */;
 			productType = "com.apple.product-type.application";
@@ -370,6 +375,9 @@
 				de,
 			);
 			mainGroup = 241B36B927A335A5002C233A;
+			packageReferences = (
+				248E287827BA9ADE0079967F /* XCRemoteSwiftPackageReference "CodeScanner" */,
+			);
 			productRefGroup = 241B36C327A335A5002C233A /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -625,6 +633,7 @@
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = BookPal/Info.plist;
+				INFOPLIST_KEY_NSCameraUsageDescription = "The app needs to scan bar codes to obtain ISBNs from print books.";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -656,6 +665,7 @@
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = BookPal/Info.plist;
+				INFOPLIST_KEY_NSCameraUsageDescription = "The app needs to scan bar codes to obtain ISBNs from print books.";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -787,6 +797,25 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		248E287827BA9ADE0079967F /* XCRemoteSwiftPackageReference "CodeScanner" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/twostraws/CodeScanner";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 2.0.0;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		248E287927BA9ADE0079967F /* CodeScanner */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 248E287827BA9ADE0079967F /* XCRemoteSwiftPackageReference "CodeScanner" */;
+			productName = CodeScanner;
+		};
+/* End XCSwiftPackageProductDependency section */
 
 /* Begin XCVersionGroup section */
 		243598A527A4923E00764CD3 /* Model.xcdatamodeld */ = {
