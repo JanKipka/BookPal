@@ -123,6 +123,7 @@ struct AddBookView: View {
         if book == nil {
             booksController.createNewBookFromVolume(selectedVolume, searchMode: searchMode) { createdBook in
                 if createdBook == nil {
+                    selectedVolume.title = nil
                     showNotAddedAlert = true
                     return
                 }

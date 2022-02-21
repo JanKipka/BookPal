@@ -8,21 +8,20 @@
 import Foundation
 import SwiftUI
 
-protocol IGoogleBooksAPIController {
-    mutating func queryForBooks(_ searchQuery: String, startIndex: Int, maxResults: Int, searchMode: SearchMode, completion:@escaping ([Volume]) -> ()) async throws
-}
-
-struct GoogleBooksAPIController: IGoogleBooksAPIController {
+struct GoogleBooksAPIController {
     
     let volumePrefix = "https://www.googleapis.com/books/v1/volumes?q="
     let plus = "+"
     var prevSearchQuery = ""
     var prevSearchMode: SearchMode?
     
-    mutating func queryForBooks(_ searchQuery: String, startIndex: Int = 0, maxResults: Int = 40, searchMode: SearchMode = .query, completion:@escaping ([Volume]) -> ()) throws {
-        if (searchQuery.isEmpty) {
+    mutating func queryForBooks(_ searchQuery1: String, startIndex: Int = 0, maxResults: Int = 40, searchMode: SearchMode = .query, completion:@escaping ([Volume]) -> ()) throws {
+        if (searchQuery1.isEmpty) {
             completion([])
         }
+        
+        let searchQuery = searchQuery1
+            .addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) ?? ""
         
         if (prevSearchMode == searchMode && prevSearchQuery == searchQuery) {
             return
@@ -54,7 +53,8 @@ struct GoogleBooksAPIController: IGoogleBooksAPIController {
     
     func enrichVolumeWithCategoryInformation(title: String, authors: [String]) async -> VolumeInfo? {
         do {
-            let urlString = volumePrefix + "intitle:\(convertToSearchString(inputString: title))+inauthor:\(convertAuthorToSearchString(authors.first ?? ""))" + "&filter=ebooks"
+            var urlString = volumePrefix + "intitle:\(title)+inauthor:\(authors.first ?? "")" + "&filter=ebooks"
+            urlString = urlString.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) ?? ""
 #if DEBUG
             print(urlString)
 #endif
@@ -78,10 +78,6 @@ struct GoogleBooksAPIController: IGoogleBooksAPIController {
         }
         
         
-    }
-    
-    private func convertAuthorToSearchString(_ author: String) -> String {
-        return author.split(separator: " ").joined(separator: "%20")
     }
     
     private func buildURLString(query: String, startIndex: Int, maxResults: Int, searchMode: SearchMode) -> String {

@@ -31,7 +31,7 @@ struct GenreView: View {
                 .ignoresSafeArea()
             List {
                 ForEach(filteredGenres) { genre in
-                    NavigationLink(destination: BookListView(navigationTitle: "\(genre.name ?? "")", predicate: NSPredicate(format: "ANY genre = %@", genre))) {
+                    NavigationLink(destination: BookListView(navigationTitle: "\(genre.name ?? "")", predicate: NSPredicate(format: "genre = %@", genre))) {
                         Text(LocalizedStringKey(genre.name ?? ""))
                             .font(.title)
                     }.listRowBackground(Color.clear)
@@ -40,6 +40,6 @@ struct GenreView: View {
             }
             .listStyle(.grouped)
         }.navigationTitle("Genres")
-            .searchable(text: $searchQuery)
+            .searchable(text: $searchQuery, placement: .navigationBarDrawer(displayMode: .always))
     }
 }

@@ -54,6 +54,7 @@
 "not-added" = "Das Buch konnte aufgrund fehlender Metadaten nicht hinzugefügt werden. Versuche es über die Titel-Suche.";
 "Cancel" = "Abbrechen";
 "barcode" = "Barcode Scanner";
+"edit-book-info" = "Buchinfos bearbeiten";
 
 "Pages per minute" = "Seiten pro Minute";
 "Started on page" = "Begonnen auf Seite";
@@ -79,6 +80,7 @@
 "currently-reading" = "Du liest gerade dieses Buch.";
 "more-info" = "Mehr Infos";
 "edit" = "Bearbeiten";
+"title" = "Titel";
 
 "Books" = "Bücher";
 "Authors" = "Autor:innen";

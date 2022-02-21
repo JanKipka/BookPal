@@ -55,6 +55,7 @@ struct ReadingActivityDetailView: View {
                                 HStack {
                                     TextField("What page are you on?", text: $pagesRead)
                                         .keyboardType(.numberPad)
+                                    Spacer()
                                     Button("finished") {
                                         pagesRead = String(readingActivity.readingCycle?.book?.numOfPages ?? 0)
                                     }

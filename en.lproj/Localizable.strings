@@ -53,6 +53,7 @@
 "not-added" = "The book couldn't be added due to missing meta data. Try the title search.";
 "Cancel" = "Cancel";
 "barcode" = "Barcode Scanner";
+"edit-book-info" = "Edit book info";
 
 "Pages per minute" = "Pages per minute";
 "Started on page" = "Started on page";
@@ -78,6 +79,7 @@
 "currently-reading" = "You're currently reading this book.";
 "more-info" = "More Info";
 "edit" = "Bearbeiten";
+"title" = "Titel";
 
 "Books" = "Books";
 "Authors" = "Authors";

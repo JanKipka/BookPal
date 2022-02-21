@@ -11,6 +11,7 @@ import SwiftUI
 struct BookView: View {
     @ObservedObject var book: Book
     var isSheet: Bool = false
+    @State var editButtonClicked = false
     
     var body: some View {
         ZStack {
@@ -56,6 +57,11 @@ struct BookView: View {
         }
         .navigationBarTitleDisplayMode(.inline)
         .toolbar {
+            ToolbarItem(placement: .navigationBarTrailing) {
+                NavigationLink(destination: BookDetailsEditView(book: book)) {
+                    Image(systemName: "pencil")
+                }
+            }
             ToolbarItem(placement: .navigationBarTrailing) {
                 Button {
                     book.isFavorite.toggle()
@@ -140,6 +146,72 @@ struct BookDetailsComponent: View {
     }
 }
 
+struct BookDetailsEditView: View {
+    
+    @FetchRequest(sortDescriptors: []) var genres: FetchedResults<Genre>
+    var book: Book
+    @Environment(\.dismiss) var dismiss
+    
+    @State var bookTitle: String
+    @State var numOfPages: String
+    @State var selGenre: Genre
+    
+    init(book: Book) {
+        self.book = book
+        _bookTitle = State(initialValue: book.title!)
+        _numOfPages = State(initialValue: String(book.numOfPages))
+        _selGenre = State(initialValue: book.genre!)
+    }
+    
+    var body: some View {
+        ZStack {
+            Form {
+                Section(LocalizedStringKey("title")) {
+                    TextField("Title", text: $bookTitle)
+                }
+                Section(LocalizedStringKey("pages")) {
+                    TextField("Number of Pages", text: $numOfPages)
+                        .keyboardType(.numberPad)
+                }
+                Section("Genre") {
+                    Picker("Genre", selection: $selGenre) {
+                        ForEach(genres) { genre in
+                            Text(genre.name!)
+                                .tag(genre)
+                        }
+                    }
+                }
+                Button("Save") {
+                    var valuesChanged = false
+                    if book.title != bookTitle {
+                        book.title = bookTitle
+                        valuesChanged = true
+                    }
+                    
+                    let pagesInt = Int16(numOfPages)!
+                    if book.numOfPages != pagesInt {
+                        book.numOfPages = Int16(numOfPages)!
+                        valuesChanged = true
+                    }
+                    
+                    if book.genre != selGenre {
+                        book.genre = selGenre
+                        valuesChanged = true
+                    }
+                    
+                    if valuesChanged {
+                        DataController.shared.save()
+                    }
+                    dismiss()
+                }.listRowBackground(Color.blue)
+                    .foregroundColor(.white)
+            }.navigationTitle("edit-book-info")
+                .navigationBarTitleDisplayMode(.large)
+                
+        }
+    }
+}
+
 struct BookDetailsSheet: View {
     @State var numOfPagesString: String = ""
     var book: Book
@@ -219,6 +291,9 @@ struct BookViewPreviews: PreviewProvider {
     static var previews: some View {
         let book = PreviewController().createNewBookForPreview()
         return Group {
+            NavigationView {
+                BookDetailsEditView(book: book)
+            }
             NavigationView {
                 BookView(book: book, isSheet: true)
             }
