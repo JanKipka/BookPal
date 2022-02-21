@@ -156,6 +156,7 @@ struct ReadNowView: View {
                     }
                     .sheet(isPresented: $navigateToNewCycleView, onDismiss: {
                         selectedVolume = VolumeInfo()
+                        navigateToNewCycleView = false
                     }) {
                         AddBookView(selectedVolume: $selectedVolume, titleAsString: $titleAsString, searchMode: $searchMode)
                     }

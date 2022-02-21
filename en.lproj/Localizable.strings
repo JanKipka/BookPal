@@ -51,6 +51,9 @@
 "Save" = "Save";
 "delete-book" = "Do you really want to delete this book and all reading logs?";
 "not-added" = "The book couldn't be added due to missing meta data. Try the title search.";
+"Cancel" = "Cancel";
+"barcode" = "Barcode Scanner";
+"edit-book-info" = "Edit book info";
 
 "Pages per minute" = "Pages per minute";
 "Started on page" = "Started on page";
@@ -59,7 +62,7 @@
 "Done" = "Done";
 "What page are you on?" = "What page are you on?";
 "Reading activity" = "Reading activity";
-"Finish reading" = "Done";
+"Finish reading" = "Finish reading";
 "missing-page" = "Please enter the page you're on.";
 "page-greater-than-total %lld" = "The page you're on can't be greater than the total page number (%lld).";
 "finished" = "I'm done";
@@ -76,6 +79,7 @@
 "currently-reading" = "You're currently reading this book.";
 "more-info" = "More Info";
 "edit" = "Bearbeiten";
+"title" = "Titel";
 
 "Books" = "Books";
 "Authors" = "Authors";

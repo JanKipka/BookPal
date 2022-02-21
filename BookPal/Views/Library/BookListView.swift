@@ -44,11 +44,7 @@ struct BookListView: View {
                 .ignoresSafeArea()
             List {
                 ForEach(filteredBooks, id: \.isbn) { book in
-                    NavigationLink(destination: BookView(book: book)) {
-                        BookComponent(book: book, font: .system(size: 22))
-                    }
-                    .padding(.vertical, 3)
-                    .listRowBackground(Color.clear)
+                    BookNavigationComponent(book: book, font: .system(size: 22))
                 }
             }
             .listStyle(.grouped)

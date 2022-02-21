@@ -54,7 +54,7 @@ extension ReadingController {
     }
     
     func finishReadingActivity(readingActivity: ReadingActivity, onPage: Int16, notes: String) {
-        let maxPages = readingActivity.readingCycle!.maxPages
+        let maxPages = readingActivity.readingCycle!.book!.numOfPages
         readingActivity.finishedActivityOnPage = onPage
         let onPageBefore = readingActivity.readingCycle?.currentPage ?? 0
         readingActivity.pagesRead = onPage - onPageBefore

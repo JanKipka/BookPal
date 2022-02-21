@@ -53,7 +53,6 @@ struct ImageComponent: View {
         } placeholder: {
             Image("placeholder")
                 .resizable()
-                .frame(width: width, height: height, alignment: .center)
         }
         .cornerRadius(5)
         .aspectRatio(contentMode: .fit)
@@ -85,7 +84,7 @@ struct ReadingActivityComponent: View {
     }
 }
 
-struct BookComponent: View {
+struct BookNavigationComponent: View {
     
     @ObservedObject var book: Book
     var authors: Authors
@@ -106,13 +105,17 @@ struct BookComponent: View {
     }
     
     var body: some View {
-        HStack {
-            ImageComponent(thumbnail: book.coverLinks?.thumbnail ?? "")
-            VStack(alignment: .leading, spacing: 5) {
-                Text("\(book.title ?? "")").font(font)
-                Text("\(authors.names)")
+        NavigationLink(destination: BookView(book: book)) {
+            HStack {
+                ImageComponent(thumbnail: book.coverLinks?.thumbnail ?? "")
+                VStack(alignment: .leading, spacing: 5) {
+                    Text("\(book.title ?? "")").font(font)
+                    Text("\(authors.names)")
+                }
             }
         }
+        .padding(.vertical, 3)
+        .listRowBackground(Color.clear)
         .swipeActions(edge: .leading) {
             if hasSwipeActions {
                 BookSwipeActions(book: book, presentAlert: $presentAlert, hasActiveActivityAlert: $hasActiveActivityAlert)
@@ -223,7 +226,7 @@ struct TappedBookButton: View {
         Button {
             tappedBook = book
         } label: {
-            BookComponent(book: book, hasSwipeActions: false)
+            BookNavigationComponent(book: book, hasSwipeActions: false)
         }
         .padding(.vertical)
         .foregroundColor(.primary)
@@ -237,7 +240,7 @@ struct TappedBookButton: View {
 
 struct ImageComponentPreviews: PreviewProvider {
     static var previews: some View {
-        ImageComponent(thumbnail: "https://assets.thalia.media/img/artikel/537d8abe0db2fc7bccb7a989a135a06553028624-00-00.jpeg", width: 100, height: 180)
+        ImageComponent(thumbnail: "https://assets.thalia.media/img/artikel1/537d8abe0db2fc7bccb7a989a135a06553028624-00-00.jpeg", width: 100, height: 180)
     }
     
 }
@@ -254,7 +257,7 @@ struct BookComponentPreviews: PreviewProvider {
     static var previews: some View {
         let book = PreviewController().createNewBookForPreview()
         return List {
-            BookComponent(book: book)
+            BookNavigationComponent(book: book)
         }
         .listStyle(.grouped)
     }
